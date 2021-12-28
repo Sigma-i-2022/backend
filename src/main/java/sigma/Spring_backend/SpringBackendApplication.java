@@ -10,8 +10,6 @@ public class SpringBackendApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBackendApplication.class, args);
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
 	}
 
 }
