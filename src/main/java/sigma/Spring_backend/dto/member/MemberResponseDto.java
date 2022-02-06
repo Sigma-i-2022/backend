@@ -9,9 +9,8 @@ import sigma.Spring_backend.entity.member.Gender;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberResponseDto {
-    private String name;
     private String email;
-    private String address;
+    private String password;
+    private String signupType;
     private Gender gender;
-    private int age;
 }

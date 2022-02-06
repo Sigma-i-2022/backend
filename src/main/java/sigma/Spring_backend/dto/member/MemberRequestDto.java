@@ -9,19 +9,15 @@ import sigma.Spring_backend.entity.member.Member;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberRequestDto {
-    private String name;
     private String email;
-    private String address;
+    private String password;
     private Gender gender;
-    private int age;
 
     public Member toEntity() {
         return Member.builder()
-                .name(name)
-                .age(age)
                 .email(email)
                 .gender(gender)
-                .address(address)
+                .password(password)
                 .build();
     }
 }

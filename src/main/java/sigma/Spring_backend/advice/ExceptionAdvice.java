@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import sigma.Spring_backend.advice.exception.EmailException;
 import sigma.Spring_backend.advice.exception.MemberEmailExistException;
 import sigma.Spring_backend.advice.exception.MemberNotFoundException;
 import sigma.Spring_backend.entity.base.CommonResult;
@@ -59,6 +60,19 @@ public class ExceptionAdvice {
         return responseService.getFailResult(
                 ErrorCode.MemberEmailExistException.getCode(),
                 ErrorCode.MemberEmailExistException.getMessage()
+        );
+    }
+
+    /*
+    Error Code : -1002
+    Message : Email Exception
+     */
+    @ExceptionHandler(EmailException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CommonResult emailException(HttpServletRequest request, Exception e) {
+        return responseService.getFailResult(
+                ErrorCode.EmailException.getCode(),
+                ErrorCode.EmailException.getMessage()
         );
     }
 }

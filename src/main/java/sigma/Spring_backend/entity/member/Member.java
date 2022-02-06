@@ -17,28 +17,23 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
-
     @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
-    private String address;
+    private String password;
 
-    @Column(nullable = false)
+    @Column
+    private String signupType;
+
+    @Column
     private Gender gender;
-
-    @Column(nullable = false)
-    private int age;
 
     public MemberResponseDto toDto() {
         return MemberResponseDto.builder()
-                .name(name)
                 .email(email)
-                .age(age)
                 .gender(gender)
-                .address(address)
+                .signupType(signupType)
                 .build();
     }
 }

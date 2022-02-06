@@ -36,20 +36,11 @@ public class MemberController {
     @PutMapping("/member")
     public SingleResult<MemberResponseDto> updateMember(
             @ApiParam(required = true)
-            @RequestParam String originEmail,
-            @ApiParam(required = false)
-            @RequestParam String newAddress,
-            @ApiParam(required = false)
-            @RequestParam int newAge
+            @RequestParam String originEmail
     ) {
         MemberResponseDto dto = memberService.findByEmail(originEmail);
-        if (newAge == 0) newAge = dto.getAge();
-        if (newAddress == null) newAddress = dto.getAddress();
         MemberResponseDto memberDto = memberService.updateMember(MemberRequestDto.builder()
-                .name(dto.getName())
                 .email(dto.getEmail())
-                .age(newAge)
-                .address(newAddress)
                 .gender(dto.getGender())
                 .build());
         return responseService.getSingleResult(memberDto);
@@ -63,15 +54,6 @@ public class MemberController {
     ) {
         MemberResponseDto byEmail = memberService.findByEmail(email);
         return responseService.getSingleResult(byEmail);
-    }
-
-    @ApiOperation(value = "이름으로 회원 조회", notes = "이름이 같은 모든 회원을 조회합니다.")
-    @GetMapping("member/search/name/{name}")
-    public ListResult<MemberResponseDto> findAllMemberByName(
-            @ApiParam(required = true) @PathVariable("name") String memberName
-    ) {
-        List<MemberResponseDto> allByName = memberService.findAllByName(memberName);
-        return responseService.getListResult(allByName);
     }
 
     @ApiOperation(value = "모든 회원 조회", notes = "모든 회원을 조회합니다.")
