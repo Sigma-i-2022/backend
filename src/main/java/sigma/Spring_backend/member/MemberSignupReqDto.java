@@ -1,7 +1,6 @@
-package sigma.Spring_backend.userSignup.dto;
+package sigma.Spring_backend.member;
 
 import lombok.*;
-import sigma.Spring_backend.entity.member.Member;
 
 @Getter
 @Setter

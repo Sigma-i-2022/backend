@@ -1,4 +1,4 @@
-package sigma.Spring_backend.userSignup.service;
+package sigma.Spring_backend.memberSignup;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,17 +6,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import sigma.Spring_backend.advice.ErrorCode;
+import sigma.Spring_backend.advice.BussinessExceptionMessage;
+import sigma.Spring_backend.advice.exception.BussinessException;
 import sigma.Spring_backend.advice.exception.EmailException;
-import sigma.Spring_backend.advice.exception.MemberEmailExistException;
-import sigma.Spring_backend.entity.base.CommonResult;
-import sigma.Spring_backend.entity.base.SingleResult;
-import sigma.Spring_backend.repository.user.MemberRepository;
+import sigma.Spring_backend.member.Member;
 import sigma.Spring_backend.service.base.ResponseService;
-import sigma.Spring_backend.service.member.MemberService;
-import sigma.Spring_backend.userSignup.entity.AuthorizeEntity;
-import sigma.Spring_backend.userSignup.dto.MemberSignupReqDto;
-import sigma.Spring_backend.userSignup.repository.AuthorizeCodeRepo;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -24,69 +18,107 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EmailServiceImpl implements EmailService {
+public class MemberSignupService {
 
 	private final JavaMailSender emailSender;
 	private final AuthorizeCodeRepo authorizeCodeRepo;
-	private final ResponseService responseService;
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
 
 	@Value("${email.id}")
-	private String id;
+	private String sigmaEmail;
 
-	@Override
-	public CommonResult sendAuthorizeCodeMail(String to) throws EmailException {
+	public void sendAuthorizeCodeMail(String to) {
+		verifyUserEmail(to);
 		memberEmailDuplicateValidation(to);
 		MimeMessage mail = createMessage(to);
 		emailSender.send(mail);
-
-		return responseService.getSuccessResult();
 	}
 
-	@Override
 	@Transactional
-	public CommonResult verifyEmail(String email, String code) {
+	public void verifyAuthorizeCodeAndEmail(String email, String userInputCode)
+	{
 		Optional<AuthorizeEntity> dbCode = authorizeCodeRepo.findByEmail(email);
-		if (dbCode.isPresent() && dbCode.get().getCode().equals(code) && !dbCode.get().isExpired()) {
+		if (dbCode.isPresent() && dbCode.get().getCode().equals(userInputCode) && !dbCode.get().isExpired()) {
 			dbCode.get().useCode();
-			return responseService.getSuccessResult();
+		} else {
+			throw new BussinessException(BussinessExceptionMessage.EMAIL_ERROR_FORMAT);
 		}
-		return responseService.getFailResult(
-				ErrorCode.EmailException.getCode(),
-				ErrorCode.EmailException.getMessage()
-		);
 	}
 
-	@Override
 	@Transactional
-	public SingleResult<Long> signUp(MemberSignupReqDto memberSignupReqDto) {
-		String email = memberSignupReqDto.getEmail();
-		String password = memberSignupReqDto.getPassword();
+	public void signUp(Map<String, String> userInfoMap) {
+
+		String name = userInfoMap.get("name");
+		String email = userInfoMap.get("email");
+		String password = userInfoMap.get("password1");
+
+		if (name == null || email == null || password == null) {
+			throw new BussinessException("회원정보가 제대로 입력되지 않았습니다.");
+		}
+
+		verifyUserInfo(userInfoMap);
 
 		if (memberRepository.findByEmail(email).isPresent()) {
-			throw new MemberEmailExistException();
-		} else if (authorizeCodeRepo.findByEmail(email).isEmpty()) {
-			throw new EmailException();
+			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_DUPLICATE);
 		} else if (!authorizeCodeRepo.findByEmail(email).get().isExpired()) {
-			throw new EmailException();
+			throw new BussinessException("인증되지 않은 이메일입니다. 인증된 이메일로 가입해주세요.");
 		} else {
-			memberSignupReqDto.setPassword(passwordEncoder.encode(password));
-			memberSignupReqDto.setSignupType("email");
-			Long id = memberRepository.save(memberSignupReqDto.toEntity()).getId();
-			return responseService.getSingleResult(id);
+			try {
+				password = passwordEncoder.encode(password);
+				memberRepository.save(Member.builder()
+						.email(email)
+						.name(name)
+						.password(password)
+						.build());
+			} catch (Exception e) {
+				throw new BussinessException("회원가입에 실패하였습니다.");
+			}
+		}
+	}
+
+	private void verifyUserInfo(Map<String, String> userInfoMap) {
+
+		verifyUserName(userInfoMap.get("name"));
+
+		verifyUserEmail(userInfoMap.get("email"));
+
+		verifyUserPassword(userInfoMap.get("password1"), userInfoMap.get("password2"));
+	}
+
+	private void verifyUserPassword(String password1, String password2) {
+		String passwordExpression = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*\\W).{8,20}$";
+		if (password1.matches(passwordExpression)) {
+			throw new BussinessException("비밀번호는 영문자와 특수문자를 포함하여 8자 이상으로 이뤄져야 합니다.");
+		} else if (!password1.equals(password2)) {
+			throw new BussinessException("입력한 비밀번호가 서로 다름니다.");
+		}
+	}
+
+	private void verifyUserEmail(String email) {
+		String emailExpression = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
+		if (emailExpression.matches(email)) {
+			throw new BussinessException(BussinessExceptionMessage.EMAIL_ERROR_FORMAT);
+		}
+	}
+
+	private void verifyUserName(String name) {
+		String nameExpression = "^[가-힣].{2,4}$";
+		if (nameExpression.matches(name)) {
+			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NAME_FORMAT);
 		}
 	}
 
 	private void memberEmailDuplicateValidation(String email) {
 		if (memberRepository.findByEmail(email).isPresent()) {
-			throw new MemberEmailExistException();
+			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_DUPLICATE);
 		}
 	}
 
@@ -126,7 +158,7 @@ public class EmailServiceImpl implements EmailService {
 			msg.append("</div>");
 
 			mail.setText(msg.toString(), "utf-8", "html");
-			mail.setFrom(new InternetAddress(id, "Sigma"));
+			mail.setFrom(new InternetAddress(sigmaEmail, "Sigma"));
 		} catch (MessagingException | UnsupportedEncodingException e) {
 			throw new EmailException();
 		}

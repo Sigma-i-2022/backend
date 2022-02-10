@@ -1,8 +1,6 @@
-package sigma.Spring_backend.dto.member;
+package sigma.Spring_backend.member;
 
 import lombok.*;
-import sigma.Spring_backend.entity.member.Gender;
-import sigma.Spring_backend.entity.member.Member;
 
 @Getter
 @Builder
@@ -10,13 +8,14 @@ import sigma.Spring_backend.entity.member.Member;
 @NoArgsConstructor
 public class MemberRequestDto {
     private String email;
+    private String name;
     private String password;
-    private Gender gender;
+    private String gender;
 
     public Member toEntity() {
         return Member.builder()
                 .email(email)
-                .gender(gender)
+                .name(name)
                 .password(password)
                 .build();
     }

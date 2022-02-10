@@ -1,7 +1,6 @@
-package sigma.Spring_backend.entity.member;
+package sigma.Spring_backend.member;
 
 import lombok.*;
-import sigma.Spring_backend.dto.member.MemberResponseDto;
 
 import javax.persistence.*;
 
@@ -17,6 +16,9 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String name;
+
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -26,13 +28,10 @@ public class Member {
     @Column
     private String signupType;
 
-    @Column
-    private Gender gender;
-
     public MemberResponseDto toDto() {
         return MemberResponseDto.builder()
+                .name(name)
                 .email(email)
-                .gender(gender)
                 .signupType(signupType)
                 .build();
     }

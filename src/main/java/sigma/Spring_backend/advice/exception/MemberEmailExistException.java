@@ -1,6 +1,6 @@
 package sigma.Spring_backend.advice.exception;
 
-import sigma.Spring_backend.entity.member.Member;
+import sigma.Spring_backend.member.Member;
 
 public class MemberEmailExistException extends RuntimeException{
     public MemberEmailExistException() {

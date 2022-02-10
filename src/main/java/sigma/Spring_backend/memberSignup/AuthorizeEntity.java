@@ -1,4 +1,4 @@
-package sigma.Spring_backend.userSignup.entity;
+package sigma.Spring_backend.memberSignup;
 
 import lombok.*;
 import org.springframework.context.annotation.Bean;

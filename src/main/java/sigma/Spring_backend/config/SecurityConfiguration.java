@@ -1,4 +1,4 @@
-package sigma.Spring_backend.userSignup.config;
+package sigma.Spring_backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

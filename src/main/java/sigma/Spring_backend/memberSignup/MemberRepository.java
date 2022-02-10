@@ -1,10 +1,9 @@
-package sigma.Spring_backend.repository.user;
+package sigma.Spring_backend.memberSignup;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import sigma.Spring_backend.entity.member.Member;
+import sigma.Spring_backend.member.Member;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Repository
