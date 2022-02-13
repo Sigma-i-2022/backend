@@ -1,6 +1,7 @@
 package sigma.Spring_backend.memberSignup.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -22,6 +23,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Service
@@ -67,6 +70,8 @@ public class MemberSignupService {
 
 		verifyUserInfo(userInfoMap);
 
+		log.info(userId + ", " + email + ", " + password);
+
 		if (memberRepository.findByEmail(email).isPresent()) {
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_DUPLICATE);
 		} else if (!authorizeCodeRepository.findByEmail(email).get().isExpired()) {
@@ -80,6 +85,7 @@ public class MemberSignupService {
 						.password(password)
 						.build());
 			} catch (Exception e) {
+				log.error(e.getMessage());
 				throw new BussinessException("회원가입에 실패하였습니다.");
 			}
 		}
@@ -95,8 +101,8 @@ public class MemberSignupService {
 	}
 
 	private void verifyUserPassword(String password1, String password2) {
-		String passwordExpression = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*\\W).{8,20}$";
-		if (password1.matches(passwordExpression)) {
+		Pattern passwordExpression = Pattern.compile("^(?=.*[a-zA-Z])(?=.*\\d)(?=.*\\W).{8,20}$");
+		if (!passwordExpression.matcher(password1).matches()) {
 			throw new BussinessException("비밀번호는 영문자와 특수문자를 포함하여 8자 이상으로 이뤄져야 합니다.");
 		} else if (!password1.equals(password2)) {
 			throw new BussinessException("입력한 비밀번호가 서로 다름니다.");
@@ -104,16 +110,16 @@ public class MemberSignupService {
 	}
 
 	private void verifyUserEmail(String email) {
-		String emailExpression = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
-		if (emailExpression.matches(email)) {
+		Pattern emailExpression = Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
+		if (!emailExpression.matcher(email).matches()) {
 			throw new BussinessException(BussinessExceptionMessage.EMAIL_ERROR_FORMAT);
 		}
 	}
 
 	private void verifyUserId(String userId) {
 		// 시작은 영문으로만, '_'를 제외한 특수문자 안되며 영문, 숫자, '_'으로만 이루어진 5 ~ 12자 이하
-		String nameExpression = "^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$";
-		if (nameExpression.matches(userId)) {
+		Pattern nameExpression = Pattern.compile("^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$");
+		if (!nameExpression.matcher(userId).matches()) {
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_USER_ID_FORMAT);
 		}
 	}
@@ -125,6 +131,7 @@ public class MemberSignupService {
 	}
 
 	@Transactional
+	@Synchronized
 	public MimeMessage createMessage(String toEmail) throws BussinessException {
 		log.info("To : " + toEmail);
 

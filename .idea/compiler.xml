@@ -11,6 +11,6 @@
         <module name="Spring_backend.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="11" />
+    <bytecodeTargetLevel target="1.8" />
   </component>
 </project>

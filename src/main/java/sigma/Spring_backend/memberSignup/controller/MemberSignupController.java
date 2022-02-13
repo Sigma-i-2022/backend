@@ -4,18 +4,21 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
+import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
 import sigma.Spring_backend.memberSignup.service.MemberSignupService;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Api(tags = "2. 회원가입")
 @RestController
 @RequiredArgsConstructor
@@ -35,9 +38,10 @@ public class MemberSignupController {
 			memberSignupService.sendAuthorizeCodeMail(email);
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			return responseService.getFailResult(
 					-1,
-					BussinessExceptionMessage.EMAIL_ERROR_SEND.getMessage()
+					e.getMessage()
 			);
 		}
 	}
@@ -79,10 +83,11 @@ public class MemberSignupController {
 		try {
 			memberSignupService.signUp(userInfoMap);
 			return responseService.getSuccessResult();
-		} catch (Exception e){
+		} catch (Exception e) {
+			log.error(e.getMessage());
 			return responseService.getFailResult(
 					-1,
-					"회원가입에 실패하였습니다."
+					e.getMessage()
 			);
 		}
 	}

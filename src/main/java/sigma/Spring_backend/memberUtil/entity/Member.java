@@ -1,6 +1,7 @@
 package sigma.Spring_backend.memberUtil.entity;
 
 import lombok.*;
+import sigma.Spring_backend.memberSignup.entity.AuthorizeEntity;
 import sigma.Spring_backend.memberUtil.dto.MemberResponseDto;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @ToString
+@Table(name = "member")
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +36,10 @@ public class Member {
 
     @Column
     private int age;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JoinColumn(name = "auth_email", referencedColumnName = "email")
+    private AuthorizeEntity authorizeUser;
 
     public MemberResponseDto toDto() {
         MemberResponseDto dto = new MemberResponseDto();
