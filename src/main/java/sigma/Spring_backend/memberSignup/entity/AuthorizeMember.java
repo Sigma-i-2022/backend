@@ -1,7 +1,6 @@
 package sigma.Spring_backend.memberSignup.entity;
 
 import lombok.*;
-import org.springframework.context.annotation.Bean;
 import sigma.Spring_backend.memberUtil.entity.Member;
 
 import javax.persistence.*;
@@ -12,15 +11,15 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "authorizeEntity")
-public class AuthorizeEntity {
+@Table(name = "authorize_member")
+public class AuthorizeMember {
 
 	@Id
-	@Column(name = "SEQ", nullable = false)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Column(name = "AUTH_SEQ", nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long seq;
 
-	@Column(name = "auth_email", unique = true, nullable = false)
+	@Column(unique = true, nullable = false)
 	String email;
 
 	@Column(nullable = false)
@@ -29,8 +28,7 @@ public class AuthorizeEntity {
 	@Column(nullable = false)
 	boolean expired = false;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "authorizeUser")
+	@OneToOne(mappedBy = "authorizeUser", fetch = FetchType.EAGER)
 	private Member user;
 
 	public void useCode() {

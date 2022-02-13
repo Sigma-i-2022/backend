@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
-import sigma.Spring_backend.memberSignup.entity.AuthorizeEntity;
+import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
 import sigma.Spring_backend.memberSignup.repository.AuthorizeCodeRepository;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
@@ -23,7 +23,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -49,7 +48,7 @@ public class MemberSignupService {
 	@Transactional
 	public void verifyAuthorizeCodeAndEmail(String email, String userInputCode)
 	{
-		Optional<AuthorizeEntity> dbCode = authorizeCodeRepository.findByEmail(email);
+		Optional<AuthorizeMember> dbCode = authorizeCodeRepository.findByEmail(email);
 		if (dbCode.isPresent() && dbCode.get().getCode().equals(userInputCode) && !dbCode.get().isExpired()) {
 			dbCode.get().useCode();
 		} else {
@@ -136,12 +135,12 @@ public class MemberSignupService {
 		log.info("To : " + toEmail);
 
 		if (!authorizeCodeRepository.findByEmail(toEmail).isPresent()) {
-			authorizeCodeRepository.save(AuthorizeEntity.builder()
+			authorizeCodeRepository.save(AuthorizeMember.builder()
 					.email(toEmail)
 					.code(createCode())
 					.build());
 		} else {
-			AuthorizeEntity authorize = authorizeCodeRepository.findByEmail(toEmail).get();
+			AuthorizeMember authorize = authorizeCodeRepository.findByEmail(toEmail).get();
 			authorize.setCode(createCode());
 		}
 
