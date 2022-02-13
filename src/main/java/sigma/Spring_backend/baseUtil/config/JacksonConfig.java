@@ -1,4 +1,4 @@
-package sigma.Spring_backend.config;
+package sigma.Spring_backend.baseUtil.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;

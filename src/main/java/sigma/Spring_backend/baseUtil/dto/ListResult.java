@@ -1,4 +1,4 @@
-package sigma.Spring_backend.entity.base;
+package sigma.Spring_backend.baseUtil.dto;
 
 import lombok.Getter;
 import lombok.Setter;

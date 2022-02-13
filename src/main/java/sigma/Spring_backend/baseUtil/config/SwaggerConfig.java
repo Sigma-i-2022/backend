@@ -1,4 +1,4 @@
-package sigma.Spring_backend.config;
+package sigma.Spring_backend.baseUtil.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,7 +35,7 @@ public class SwaggerConfig implements WebMvcConfigurer{
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(swaggerInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("sigma.Spring_backend.controller"))
+                .apis(RequestHandlerSelectors.basePackage("sigma.Spring_backend"))
                 .paths(PathSelectors.any())
                 .build()
                 .useDefaultResponseMessages(false);

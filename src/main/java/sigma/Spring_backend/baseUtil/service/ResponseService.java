@@ -1,10 +1,10 @@
-package sigma.Spring_backend.service.base;
+package sigma.Spring_backend.baseUtil.service;
 
 import org.springframework.stereotype.Service;
-import sigma.Spring_backend.entity.base.CommonResponse;
-import sigma.Spring_backend.entity.base.CommonResult;
-import sigma.Spring_backend.entity.base.ListResult;
-import sigma.Spring_backend.entity.base.SingleResult;
+import sigma.Spring_backend.baseUtil.dto.CommonResponse;
+import sigma.Spring_backend.baseUtil.dto.CommonResult;
+import sigma.Spring_backend.baseUtil.dto.ListResult;
+import sigma.Spring_backend.baseUtil.dto.SingleResult;
 
 import java.util.List;
 
