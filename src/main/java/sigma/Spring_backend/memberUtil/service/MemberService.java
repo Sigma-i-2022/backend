@@ -20,7 +20,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public MemberResponseDto findByEmail(String email) {
-        if (memberRepository.findByEmail(email).isEmpty()) {
+        if (!memberRepository.findByEmail(email).isPresent()) {
             throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND);
         } else {
             return memberRepository.findByEmail(email).get().toDto();
@@ -35,7 +35,7 @@ public class MemberService {
     }
 
     public MemberResponseDto save(MemberRequestDto memberRequestDto) {
-        if (memberRepository.findByEmail(memberRequestDto.getEmail()).isEmpty())
+        if (!memberRepository.findByEmail(memberRequestDto.getEmail()).isPresent())
             return memberRepository.save(memberRequestDto.toEntity()).toDto();
         throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_DUPLICATE);
     }
