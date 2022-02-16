@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
+import sigma.Spring_backend.memberSignup.dto.MemberSessionDto;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
 import sigma.Spring_backend.memberSignup.repository.AuthorizeCodeRepository;
 import sigma.Spring_backend.memberUtil.entity.Member;
@@ -18,6 +19,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
@@ -34,6 +36,8 @@ public class MemberSignupService {
 	private final AuthorizeCodeRepository authorizeCodeRepository;
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final HttpSession session;
+
 
 	@Value("${email.id}")
 	private String sigmaEmail;
@@ -89,6 +93,30 @@ public class MemberSignupService {
 			}
 		}
 	}
+
+	@Transactional
+	public void signIn(Map<String, String> userInfoMap) {
+
+		String email = userInfoMap.get("email");
+		String password = userInfoMap.get("password");
+		if (email == null || password == null) {
+			throw new BussinessException("이메일 및 패스워드를 입력해주세요.");
+		}
+
+		Member member = memberRepository.findByEmail(email).orElseThrow(()->
+				new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND));
+
+		if(!passwordEncoder.matches(password, member.getPassword())) {
+			System.out.println("비밀번호가 일치하지 않습니다.");
+			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_PASSWORD);
+		}
+
+
+		session.setAttribute("member", new MemberSessionDto(member));
+		log.info("로그인성공");
+
+	}
+
 
 	private void verifyUserInfo(Map<String, String> userInfoMap) {
 
