@@ -17,7 +17,8 @@ public enum BussinessExceptionMessage {
 	, MEMBER_MYPAGE_ERROR_REGIST("회원 마이페이지 등록에 실패하였습니다.")
 	, MEMBER_MYPAGE_ERROR_UPDATE("회원의 마이페이지를 업데이트하는데 실패했습니다.")
 	, MEMBER_MYPAGE_ERROR_DELETE("회원의 마이페이지 삭제에 실패했습니다.")
-	, MEMBER_ERROR_USER_ID_FORMAT("회원의 아이디 형식이 잘못되었습니다.");
+	, MEMBER_ERROR_USER_ID_FORMAT("회원의 아이디 형식이 잘못되었습니다.")
+	, MEMBER_ERROR_PASSWORD("비밀번호가 일치하지 않습니다.");
 
 	private final String message;
 }

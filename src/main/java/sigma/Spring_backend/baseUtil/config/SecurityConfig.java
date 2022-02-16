@@ -1,4 +1,4 @@
-package sigma.Spring_backend.socialSingin.config;
+package sigma.Spring_backend.baseUtil.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import sigma.Spring_backend.socialSingin.service.CustomOAuth2UserService;
 
 @Configuration
@@ -19,9 +20,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private CustomOAuth2UserService customOAuth2UserService; // encoder를 빈으로 등록.
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    } // WebSecurity에 필터를 거는 게 훨씬 빠름. HttpSecrity에 필터를 걸면, 이미 스프링 시큐리티 내부에 들어온 상태기 때문에..
+    }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -31,7 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http
+                .csrf().disable()
+                .cors().disable()
+                .authorizeRequests()
                 .anyRequest() // 모든 요청에 대해서 허용하라.
                 .permitAll().and().logout().logoutSuccessUrl("/") // 로그아웃에 대해서 성공하면 "/"로 이동
                 .and().oauth2Login().defaultSuccessUrl("/login-success").userInfoEndpoint().userService(customOAuth2UserService); // oauth2 로그인에 성공하면, 유저 데이터를 가지고 우리가 생성한 // customOAuth2UserService에서 처리를 하겠다. 그리고 "/login-success"로 이동하라. } }
