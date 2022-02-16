@@ -22,7 +22,7 @@ import java.util.Map;
 @Api(tags = "2. 회원가입")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/v1/api")
 public class MemberSignupController {
 
 	private final MemberSignupService memberSignupService;

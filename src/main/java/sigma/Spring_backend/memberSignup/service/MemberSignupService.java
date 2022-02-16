@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
@@ -15,11 +16,8 @@ import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.transaction.Transactional;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
@@ -29,8 +27,8 @@ import java.util.regex.Pattern;
 @Service
 @RequiredArgsConstructor
 public class MemberSignupService {
-
 	private final JavaMailSender emailSender;
+
 	private final AuthorizeCodeRepository authorizeCodeRepository;
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
@@ -38,6 +36,7 @@ public class MemberSignupService {
 	@Value("${email.id}")
 	private String sigmaEmail;
 
+	@Transactional(readOnly = true)
 	public void sendAuthorizeCodeMail(String to) {
 		verifyUserEmail(to);
 		memberEmailDuplicateValidation(to);
@@ -58,7 +57,6 @@ public class MemberSignupService {
 
 	@Transactional
 	public void signUp(Map<String, String> userInfoMap) {
-
 		String userId = userInfoMap.get("userId");
 		String email = userInfoMap.get("email");
 		String password = userInfoMap.get("password1");
@@ -82,12 +80,60 @@ public class MemberSignupService {
 						.email(email)
 						.userId(userId)
 						.password(password)
+						.signupType("E")
 						.build());
 			} catch (Exception e) {
 				log.error(e.getMessage());
 				throw new BussinessException("회원가입에 실패하였습니다.");
 			}
 		}
+	}
+
+	@Transactional
+	@Synchronized
+	public MimeMessage createMessage(String toEmail) throws BussinessException {
+		log.info("To : " + toEmail);
+		if (!authorizeCodeRepository.findByEmail(toEmail).isPresent()) {
+			authorizeCodeRepository.save(AuthorizeMember.builder()
+					.email(toEmail)
+					.code(createCode())
+					.build());
+		} else {
+			AuthorizeMember authorize = authorizeCodeRepository.findByEmail(toEmail).get();
+			authorize.setCode(createCode());
+		}
+
+		MimeMessage mail = emailSender.createMimeMessage();
+		try {
+			String messageBody = createMailMessage(toEmail);
+			mail.addRecipients(Message.RecipientType.TO, toEmail);
+			mail.setSubject("Sigma 회원가입 이메일 인증");
+			mail.setText(messageBody, "utf-8", "html");
+			mail.setFrom(new InternetAddress(sigmaEmail, "Sigma"));
+		} catch (Exception e) {
+			throw new BussinessException(BussinessExceptionMessage.EMAIL_ERROR_SEND);
+		}
+
+		return mail;
+	}
+
+	private String createMailMessage(String toEmail) {
+		StringBuilder msg = new StringBuilder();
+		msg.append("<div style='margin:100px;'>");
+		msg.append("<h1> 안녕하세요 Sigma입니다. </h1>");
+		msg.append("<br>");
+		msg.append("<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>");
+		msg.append("<br>");
+		msg.append("<p>감사합니다!<p>");
+		msg.append("<br>");
+		msg.append("<div align='center' style='border:1px solid black; font-family:verdana';>");
+		msg.append("<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>");
+		msg.append("<div style='font-size:130%'>");
+		msg.append("CODE : <strong>");
+		msg.append(authorizeCodeRepository.findByEmail(toEmail).get().getCode()).append("</strong><div><br/> ");
+		msg.append("</div>");
+
+		return msg.toString();
 	}
 
 	private void verifyUserInfo(Map<String, String> userInfoMap) {
@@ -127,51 +173,6 @@ public class MemberSignupService {
 		if (memberRepository.findByEmail(email).isPresent()) {
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_DUPLICATE);
 		}
-	}
-
-	@Transactional
-	@Synchronized
-	public MimeMessage createMessage(String toEmail) throws BussinessException {
-		log.info("To : " + toEmail);
-
-		if (!authorizeCodeRepository.findByEmail(toEmail).isPresent()) {
-			authorizeCodeRepository.save(AuthorizeMember.builder()
-					.email(toEmail)
-					.code(createCode())
-					.build());
-		} else {
-			AuthorizeMember authorize = authorizeCodeRepository.findByEmail(toEmail).get();
-			authorize.setCode(createCode());
-		}
-
-		MimeMessage mail = emailSender.createMimeMessage();
-
-		try {
-			mail.addRecipients(Message.RecipientType.TO, toEmail);
-			mail.setSubject("Sigma 회원가입 이메일 인증");
-
-			StringBuilder msg = new StringBuilder();
-			msg.append("<div style='margin:100px;'>");
-			msg.append("<h1> 안녕하세요 Sigma입니다. </h1>");
-			msg.append("<br>");
-			msg.append("<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>");
-			msg.append("<br>");
-			msg.append("<p>감사합니다!<p>");
-			msg.append("<br>");
-			msg.append("<div align='center' style='border:1px solid black; font-family:verdana';>");
-			msg.append("<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>");
-			msg.append("<div style='font-size:130%'>");
-			msg.append("CODE : <strong>");
-			msg.append(authorizeCodeRepository.findByEmail(toEmail).get().getCode()).append("</strong><div><br/> ");
-			msg.append("</div>");
-
-			mail.setText(msg.toString(), "utf-8", "html");
-			mail.setFrom(new InternetAddress(sigmaEmail, "Sigma"));
-		} catch (MessagingException | UnsupportedEncodingException e) {
-			throw new BussinessException(BussinessExceptionMessage.EMAIL_ERROR_SEND);
-		}
-
-		return mail;
 	}
 
 	private String createCode() {

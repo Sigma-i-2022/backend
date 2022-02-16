@@ -1,6 +1,7 @@
 package sigma.Spring_backend.memberUtil.entity;
 
 import lombok.*;
+import sigma.Spring_backend.memberMypage.entity.MemberMypage;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
 import sigma.Spring_backend.memberUtil.dto.MemberResponseDto;
 
@@ -38,17 +39,21 @@ public class Member {
     private int age;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "seq", referencedColumnName = "MYPAGE_SEQ")
+    private MemberMypage mypage;
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "seq", referencedColumnName = "AUTH_SEQ")
     private AuthorizeMember authorizeUser;
 
     public MemberResponseDto toDto() {
-        MemberResponseDto dto = new MemberResponseDto();
-        dto.setUserId(userId);
-        dto.setEmail(email);
-        dto.setPassword(password);
-        dto.setSignupType(signupType);
-        dto.setGender(gender);
-        dto.setAge(age);
-        return dto;
+        return MemberResponseDto.builder()
+                .userId(userId)
+                .email(email)
+                .password(password)
+                .signupType(signupType)
+                .gender(gender)
+                .age(age)
+                .build();
     }
 }

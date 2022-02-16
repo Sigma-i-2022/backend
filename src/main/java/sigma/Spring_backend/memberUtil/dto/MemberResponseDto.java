@@ -3,6 +3,7 @@ package sigma.Spring_backend.memberUtil.dto;
 import lombok.*;
 
 @Data
+@Builder
 public class MemberResponseDto {
     private String userId;
     private String email;
