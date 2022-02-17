@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
+import sigma.Spring_backend.memberSignup.dto.MemberSessionDto;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
 import sigma.Spring_backend.memberSignup.repository.AuthorizeCodeRepository;
 import sigma.Spring_backend.memberUtil.entity.Member;
@@ -18,6 +19,7 @@ import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
@@ -28,15 +30,14 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class MemberSignupService {
 	private final JavaMailSender emailSender;
-
 	private final AuthorizeCodeRepository authorizeCodeRepository;
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final HttpSession session;
 
 	@Value("${email.id}")
 	private String sigmaEmail;
 
-	@Transactional(readOnly = true)
 	public void sendAuthorizeCodeMail(String to) {
 		verifyUserEmail(to);
 		memberEmailDuplicateValidation(to);
@@ -57,6 +58,7 @@ public class MemberSignupService {
 
 	@Transactional
 	public void signUp(Map<String, String> userInfoMap) {
+
 		String userId = userInfoMap.get("userId");
 		String email = userInfoMap.get("email");
 		String password = userInfoMap.get("password1");
@@ -90,9 +92,73 @@ public class MemberSignupService {
 	}
 
 	@Transactional
+	public void signIn(Map<String, String> userInfoMap) {
+
+		String email = userInfoMap.get("email");
+		String password = userInfoMap.get("password");
+		if (email == null || password == null) {
+			throw new BussinessException("이메일 및 패스워드를 입력해주세요.");
+		}
+
+		Member member = memberRepository.findByEmail(email).orElseThrow(()->
+				new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND));
+
+		if(!passwordEncoder.matches(password, member.getPassword())) {
+			System.out.println("비밀번호가 일치하지 않습니다.");
+			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_PASSWORD);
+		}
+
+
+		session.setAttribute("member", new MemberSessionDto(member));
+		log.info("로그인성공");
+
+	}
+
+
+	private void verifyUserInfo(Map<String, String> userInfoMap) {
+
+		verifyUserId(userInfoMap.get("userId"));
+
+		verifyUserEmail(userInfoMap.get("email"));
+
+		verifyUserPassword(userInfoMap.get("password1"), userInfoMap.get("password2"));
+	}
+
+	private void verifyUserPassword(String password1, String password2) {
+		Pattern passwordExpression = Pattern.compile("^(?=.*[a-zA-Z])(?=.*\\d)(?=.*\\W).{8,20}$");
+		if (!passwordExpression.matcher(password1).matches()) {
+			throw new BussinessException("비밀번호는 영문자와 특수문자를 포함하여 8자 이상으로 이뤄져야 합니다.");
+		} else if (!password1.equals(password2)) {
+			throw new BussinessException("입력한 비밀번호가 서로 다름니다.");
+		}
+	}
+
+	private void verifyUserEmail(String email) {
+		Pattern emailExpression = Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
+		if (!emailExpression.matcher(email).matches()) {
+			throw new BussinessException(BussinessExceptionMessage.EMAIL_ERROR_FORMAT);
+		}
+	}
+
+	private void verifyUserId(String userId) {
+		// 시작은 영문으로만, '_'를 제외한 특수문자 안되며 영문, 숫자, '_'으로만 이루어진 5 ~ 12자 이하
+		Pattern nameExpression = Pattern.compile("^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$");
+		if (!nameExpression.matcher(userId).matches()) {
+			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_USER_ID_FORMAT);
+		}
+	}
+
+	private void memberEmailDuplicateValidation(String email) {
+		if (memberRepository.findByEmail(email).isPresent()) {
+			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_DUPLICATE);
+		}
+	}
+
+	@Transactional
 	@Synchronized
 	public MimeMessage createMessage(String toEmail) throws BussinessException {
 		log.info("To : " + toEmail);
+
 		if (!authorizeCodeRepository.findByEmail(toEmail).isPresent()) {
 			authorizeCodeRepository.save(AuthorizeMember.builder()
 					.email(toEmail)
@@ -134,45 +200,6 @@ public class MemberSignupService {
 		msg.append("</div>");
 
 		return msg.toString();
-	}
-
-	private void verifyUserInfo(Map<String, String> userInfoMap) {
-
-		verifyUserId(userInfoMap.get("userId"));
-
-		verifyUserEmail(userInfoMap.get("email"));
-
-		verifyUserPassword(userInfoMap.get("password1"), userInfoMap.get("password2"));
-	}
-
-	private void verifyUserPassword(String password1, String password2) {
-		Pattern passwordExpression = Pattern.compile("^(?=.*[a-zA-Z])(?=.*\\d)(?=.*\\W).{8,20}$");
-		if (!passwordExpression.matcher(password1).matches()) {
-			throw new BussinessException("비밀번호는 영문자와 특수문자를 포함하여 8자 이상으로 이뤄져야 합니다.");
-		} else if (!password1.equals(password2)) {
-			throw new BussinessException("입력한 비밀번호가 서로 다름니다.");
-		}
-	}
-
-	private void verifyUserEmail(String email) {
-		Pattern emailExpression = Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
-		if (!emailExpression.matcher(email).matches()) {
-			throw new BussinessException(BussinessExceptionMessage.EMAIL_ERROR_FORMAT);
-		}
-	}
-
-	private void verifyUserId(String userId) {
-		// 시작은 영문으로만, '_'를 제외한 특수문자 안되며 영문, 숫자, '_'으로만 이루어진 5 ~ 12자 이하
-		Pattern nameExpression = Pattern.compile("^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$");
-		if (!nameExpression.matcher(userId).matches()) {
-			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_USER_ID_FORMAT);
-		}
-	}
-
-	private void memberEmailDuplicateValidation(String email) {
-		if (memberRepository.findByEmail(email).isPresent()) {
-			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_DUPLICATE);
-		}
 	}
 
 	private String createCode() {

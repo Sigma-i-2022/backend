@@ -91,4 +91,28 @@ public class MemberSignupController {
 			);
 		}
 	}
+
+	@PostMapping("/login")
+	@ApiOperation(value = "로그인", notes = "이메일, 비밀번호를 이용하여 로그인")
+	public CommonResult memberSignIn(
+			@ApiParam(value = "회원 이메일", required = true) @RequestParam(name = "email") String email,
+			@ApiParam(value = "회원 패스워드", required = true) @RequestParam(name = "password") String password
+	) {
+		Map<String, String> userInfoMap = new HashMap<>();
+		userInfoMap.put("email", email);
+		userInfoMap.put("password", password);
+
+		try {
+			log.info(email+password);
+			memberSignupService.signIn(userInfoMap);
+			return responseService.getSuccessResult();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return responseService.getFailResult(
+					-1,
+					e.getMessage()
+			);
+		}
+	}
+
 }

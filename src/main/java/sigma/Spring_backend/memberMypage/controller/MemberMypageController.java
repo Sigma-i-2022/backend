@@ -73,7 +73,7 @@ public class MemberMypageController {
 		}
 	}
 
-	@PutMapping("/memberProfile")
+	@PutMapping("/mypage")
 	@ApiOperation(value = "회원의 마이페이지 수정", notes = "회원의 마이페이지의 소개란을 수정합니다.")
 	public CommonResult memberMypageUpdate(
 			@ApiParam(value = "회원 이메일", required = true) @RequestParam String memberEmail,
@@ -97,7 +97,7 @@ public class MemberMypageController {
 		}
 	}
 
-	@DeleteMapping("/memberProfile")
+	@DeleteMapping("/mypage")
 	@ApiOperation(value = "회원의 마이페이지 삭제", notes = "회원의 마이페이지를 삭제합니다..")
 	public CommonResult memberMypageDelete(
 			@ApiParam(value = "회원 이메일", required = true) @RequestParam String memberEmail,

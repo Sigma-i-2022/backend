@@ -5,16 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b7c31a88-6593-4f50-a1aa-131cc6f006ff" name="변경" comment="# &lt;type&gt;: &lt;subject&gt;&#10;##### Subject 50 characters ################# -&gt; |&#10;# If applied, this commit will&#10;&#10;&#10;# Body Message&#10;######## Body 72 characters ####################################### -&gt; |">
+      <change afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberSignup/dto/MemberSessionDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/baseUtil/advice/BussinessExceptionMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/baseUtil/advice/BussinessExceptionMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberSignup/config/SecurityConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberMypage/controller/MemberMypageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberMypage/controller/MemberMypageController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberSignup/controller/MemberSignupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberSignup/controller/MemberSignupController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberSignup/entity/AuthorizeMember.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberSignup/entity/AuthorizeMember.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberSignup/service/MemberSignupService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberSignup/service/MemberSignupService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberUtil/dto/MemberResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberUtil/dto/MemberResponseDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberUtil/entity/Member.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberUtil/entity/Member.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberUtil/repository/MemberRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberUtil/repository/MemberRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/socialSingin/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/socialSingin/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/socialSingin/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/baseUtil/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/socialSingin/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/socialSingin/repository/UserRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
