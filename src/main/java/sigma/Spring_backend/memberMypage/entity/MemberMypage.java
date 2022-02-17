@@ -25,5 +25,6 @@ public class MemberMypage {
 	private String userId;
 
 	@Column
+	@Builder.Default
 	private String introduction = "";
 }

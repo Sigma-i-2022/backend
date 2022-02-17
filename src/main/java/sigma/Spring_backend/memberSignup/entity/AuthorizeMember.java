@@ -25,6 +25,7 @@ public class AuthorizeMember {
 	String code;
 
 	@Column(nullable = false)
+	@Builder.Default
 	boolean expired = false;
 
 	public void useCode() {

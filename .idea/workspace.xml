@@ -5,14 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b7c31a88-6593-4f50-a1aa-131cc6f006ff" name="변경" comment="# &lt;type&gt;: &lt;subject&gt;&#10;##### Subject 50 characters ################# -&gt; |&#10;# If applied, this commit will&#10;&#10;&#10;# Body Message&#10;######## Body 72 characters ####################################### -&gt; |">
-      <change afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberSignup/dto/MemberSessionDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/baseUtil/advice/BussinessExceptionMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/baseUtil/advice/BussinessExceptionMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberMypage/controller/MemberMypageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberMypage/controller/MemberMypageController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberSignup/controller/MemberSignupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberSignup/controller/MemberSignupController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberSignup/service/MemberSignupService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberSignup/service/MemberSignupService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/socialSingin/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/baseUtil/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/socialSingin/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/socialSingin/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberMypage/entity/MemberMypage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberMypage/entity/MemberMypage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberSignup/entity/AuthorizeMember.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberSignup/entity/AuthorizeMember.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,12 +22,26 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
             <expand>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="Spring_backend" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Spring_backend" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Spring_backend" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
               </path>
             </expand>
             <select />
@@ -119,7 +128,28 @@
       <recent name="$PROJECT_DIR$/src/main/java/sigma/Spring_backend/memberSignup/config" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Gradle.sigma_devlop [jar]">
+    <configuration name="sigma_devlop [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="jar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <module name="sigma_devlop" />
       <method v="2">
@@ -148,6 +178,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.sigma_devlop [jar]" />
         <item itemvalue="Spring Boot.SpringBackendApplication" />
         <item itemvalue="Spring Boot.SpringBackendApplication" />
         <item itemvalue="Spring Boot.SpringBackendApplication" />
