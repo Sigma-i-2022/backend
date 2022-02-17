@@ -1,4 +1,4 @@
-package sigma.Spring_backend.memberSignup.service;
+package sigma.Spring_backend.member.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
@@ -9,9 +9,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
-import sigma.Spring_backend.memberSignup.dto.MemberSessionDto;
-import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
-import sigma.Spring_backend.memberSignup.repository.AuthorizeCodeRepository;
+import sigma.Spring_backend.member.dto.CrdiResponseDto;
+import sigma.Spring_backend.member.dto.MemberSessionDto;
+import sigma.Spring_backend.member.entity.AuthorizeMember;
+import sigma.Spring_backend.member.entity.JoinCrdi;
+import sigma.Spring_backend.member.repository.AuthorizeCodeRepository;
+import sigma.Spring_backend.member.repository.CrdiJoinRepository;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
@@ -22,6 +25,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
@@ -30,11 +34,12 @@ import java.util.regex.Pattern;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MemberSignupService {
+public class MemberSignService {
 
 	private final JavaMailSender emailSender;
 	private final AuthorizeCodeRepository authorizeCodeRepository;
 	private final MemberRepository memberRepository;
+	private final CrdiJoinRepository crdiJoinRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final HttpSession session;
 
@@ -117,6 +122,35 @@ public class MemberSignupService {
 
 	}
 
+	@Transactional
+	public CrdiResponseDto crdiJoin(Map<String, String> crdiInfoMap) {
+
+		String email = crdiInfoMap.get("email");
+		String userId = crdiInfoMap.get("userId");
+		String career = crdiInfoMap.get("career");
+		String joinYN = "N"; // 신청(N) 성공(S) 거절(R)
+		LocalDateTime regDt = LocalDateTime.now();
+
+		if (career == null || "".equals(career)) {
+			throw new BussinessException("경력사항을 입력해주세요.");
+		}
+
+		JoinCrdi joinCrdi = crdiJoinRepository.findByEmail(email).get();
+
+		 if(joinCrdi.getJoinYN().equals("R")){
+			joinYN = "N";
+		}else if(joinCrdi.getJoinYN().equals("S")){
+			 throw new BussinessException("이미 코디네이터가 되셨습니다.");
+		}
+
+		return crdiJoinRepository.save(JoinCrdi.builder()
+				.email(email)
+				.userId(userId)
+				.career(career)
+				.regDt(regDt)
+				.joinYN(joinYN)
+				.build()).toDto();
+	}
 
 	private void verifyUserInfo(Map<String, String> userInfoMap) {
 

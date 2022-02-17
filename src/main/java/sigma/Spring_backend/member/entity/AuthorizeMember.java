@@ -1,4 +1,4 @@
-package sigma.Spring_backend.memberSignup.entity;
+package sigma.Spring_backend.member.entity;
 
 import lombok.*;
 import sigma.Spring_backend.memberUtil.entity.Member;

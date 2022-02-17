@@ -1,7 +1,7 @@
 package sigma.Spring_backend.memberUtil.entity;
 
 import lombok.*;
-import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
+import sigma.Spring_backend.member.entity.AuthorizeMember;
 import sigma.Spring_backend.memberUtil.dto.MemberResponseDto;
 
 import javax.persistence.*;

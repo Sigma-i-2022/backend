@@ -1,4 +1,4 @@
-package sigma.Spring_backend.memberSignup.config;
+package sigma.Spring_backend.member.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

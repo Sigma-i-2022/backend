@@ -1,4 +1,4 @@
-package sigma.Spring_backend.memberSignup.controller;
+package sigma.Spring_backend.member.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,21 +11,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
-import sigma.Spring_backend.baseUtil.exception.BussinessException;
+import sigma.Spring_backend.baseUtil.dto.SingleResult;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
-import sigma.Spring_backend.memberSignup.service.MemberSignupService;
+import sigma.Spring_backend.member.dto.CrdiResponseDto;
+import sigma.Spring_backend.member.service.MemberSignService;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-@Api(tags = "2. 회원가입")
+@Api(tags = "2. 회원")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-public class MemberSignupController {
+public class MemberSignController {
 
-	private final MemberSignupService memberSignupService;
+	private final MemberSignService memberSignService;
 	private final ResponseService responseService;
 
 	@PostMapping("/email")
@@ -35,7 +36,7 @@ public class MemberSignupController {
 			@RequestParam String email
 	) {
 		try {
-			memberSignupService.sendAuthorizeCodeMail(email);
+			memberSignService.sendAuthorizeCodeMail(email);
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -55,7 +56,7 @@ public class MemberSignupController {
 			@RequestParam String email
 	) {
 		try {
-			memberSignupService.verifyAuthorizeCodeAndEmail(email, code);
+			memberSignService.verifyAuthorizeCodeAndEmail(email, code);
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
 			return responseService.getFailResult(
@@ -81,7 +82,7 @@ public class MemberSignupController {
 
 
 		try {
-			memberSignupService.signUp(userInfoMap);
+			memberSignService.signUp(userInfoMap);
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -104,7 +105,7 @@ public class MemberSignupController {
 
 		try {
 			log.info(email+password);
-			memberSignupService.signIn(userInfoMap);
+			memberSignService.signIn(userInfoMap);
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -113,6 +114,21 @@ public class MemberSignupController {
 					e.getMessage()
 			);
 		}
+	}
+
+	@PostMapping("/join")
+	@ApiOperation(value = "코디 자격 신청", notes = "코디네이터 신청")
+	public SingleResult<CrdiResponseDto> crdiJoin(
+			@ApiParam(value = "코디 이메일", required = true) @RequestParam(name = "email") String email,
+			@ApiParam(value = "코디 아이디", required = true) @RequestParam(name = "userId") String userId,
+			@ApiParam(value = "코디 경력사항", required = true) @RequestParam(name = "career") String career
+	) {
+		Map<String, String> crdiInfoMap = new HashMap<>();
+		crdiInfoMap.put("email", email);
+		crdiInfoMap.put("userId", userId);
+		crdiInfoMap.put("career", career);
+
+		return responseService.getSingleResult(memberSignService.crdiJoin(crdiInfoMap));
 	}
 
 }

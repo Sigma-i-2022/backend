@@ -1,4 +1,4 @@
-package sigma.Spring_backend.memberSignup.dto;
+package sigma.Spring_backend.member.dto;
 
 import lombok.Getter;
 import sigma.Spring_backend.memberUtil.entity.Member;
