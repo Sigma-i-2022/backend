@@ -5,16 +5,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.baseUtil.dto.SingleResult;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
 import sigma.Spring_backend.member.dto.CrdiResponseDto;
 import sigma.Spring_backend.member.service.MemberSignService;
+import sigma.Spring_backend.memberUtil.dto.MemberResponseDto;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -131,4 +129,15 @@ public class MemberSignController {
 		return responseService.getSingleResult(memberSignService.crdiJoin(crdiInfoMap));
 	}
 
+	@GetMapping("/joinState")
+	@ApiOperation(value = "코디 신청 여부", notes = "코디네이터 신청여부")
+	public SingleResult<CrdiResponseDto> crdiJoin(
+			@ApiParam(value = "코디 이메일", required = true) @RequestParam(name = "email") String email
+	) {
+		Map<String, String> crdiInfoMap = new HashMap<>();
+		crdiInfoMap.put("email", email);
+
+		CrdiResponseDto byEmail = memberSignService.findCrdiJoinYn(email);
+		return responseService.getSingleResult(byEmail);
+	}
 }

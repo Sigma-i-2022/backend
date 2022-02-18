@@ -15,6 +15,7 @@ import sigma.Spring_backend.member.entity.AuthorizeMember;
 import sigma.Spring_backend.member.entity.JoinCrdi;
 import sigma.Spring_backend.member.repository.AuthorizeCodeRepository;
 import sigma.Spring_backend.member.repository.CrdiJoinRepository;
+import sigma.Spring_backend.memberUtil.dto.MemberResponseDto;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
@@ -135,14 +136,6 @@ public class MemberSignService {
 			throw new BussinessException("경력사항을 입력해주세요.");
 		}
 
-		JoinCrdi joinCrdi = crdiJoinRepository.findByEmail(email).get();
-
-		 if(joinCrdi.getJoinYN().equals("R")){
-			joinYN = "N";
-		}else if(joinCrdi.getJoinYN().equals("S")){
-			 throw new BussinessException("이미 코디네이터가 되셨습니다.");
-		}
-
 		return crdiJoinRepository.save(JoinCrdi.builder()
 				.email(email)
 				.userId(userId)
@@ -150,6 +143,14 @@ public class MemberSignService {
 				.regDt(regDt)
 				.joinYN(joinYN)
 				.build()).toDto();
+	}
+
+	public CrdiResponseDto findCrdiJoinYn(String email) {
+		if (!crdiJoinRepository.findByEmail(email).isPresent()) {
+			throw new BussinessException("코디신청 내역이 없습니다.");
+		} else {
+			return crdiJoinRepository.findByEmail(email).get().toDto();
+		}
 	}
 
 	private void verifyUserInfo(Map<String, String> userInfoMap) {

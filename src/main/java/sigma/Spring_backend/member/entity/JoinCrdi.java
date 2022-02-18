@@ -21,7 +21,7 @@ public class JoinCrdi {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     String email;
 
     @Column(nullable = false)
@@ -35,10 +35,6 @@ public class JoinCrdi {
 
     @Column(nullable = false)
     String joinYN;
-
-    @ManyToOne
-    @JoinColumn(name = "seq")
-    private Member member;
 
     public CrdiResponseDto toDto() {
         CrdiResponseDto dto = new CrdiResponseDto();
