@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b7c31a88-6593-4f50-a1aa-131cc6f006ff" name="변경" comment="# &lt;type&gt;: &lt;subject&gt;&#10;##### Subject 50 characters ################# -&gt; |&#10;# If applied, this commit will&#10;&#10;&#10;# Body Message&#10;######## Body 72 characters ####################################### -&gt; |">
+    <list default="true" id="312bad21-2b7b-4665-bdd9-1aa9fd93497f" name="변경" comment="# &lt;type&gt;: &lt;subject&gt;&#10;##### Subject 50 characters ################# -&gt; |&#10;# If applied, this commit will&#10;&#10;&#10;# Body Message&#10;######## Body 72 characters ####################################### -&gt; |">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
