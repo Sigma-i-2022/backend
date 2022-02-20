@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import sigma.Spring_backend.awsUtil.service.AwsService;
 import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
+import sigma.Spring_backend.memberMypage.dto.MemberProfileImgReq;
 import sigma.Spring_backend.memberMypage.entity.MemberMypage;
 import sigma.Spring_backend.memberMypage.repository.MemberMypageRepository;
 import sigma.Spring_backend.memberUtil.entity.Member;
@@ -21,6 +24,7 @@ public class MemberMypageService {
 
 	private final MemberMypageRepository memberMypageRepository;
 	private final MemberRepository memberRepository;
+	private final AwsService awsService;
 
 	@Transactional(readOnly = true)
 	public MemberMypage getMemberProfile(Map<String, String> memberProfileInfoMap) {
@@ -57,11 +61,15 @@ public class MemberMypageService {
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_INTRO_LENGTH);
 		}
 
-		saveMemberMypage(MemberMypage.builder()
-				.email(userEmail)
-				.userId(userId)
-				.introduction(userIntro)
-				.build());
+		try {
+			memberMypageRepository.save(MemberMypage.builder()
+					.email(userEmail)
+					.userId(userId)
+					.introduction(userIntro)
+					.build());
+		} catch (Exception e) {
+			throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_DB);
+		}
 	}
 
 	@Transactional
@@ -74,14 +82,14 @@ public class MemberMypageService {
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND);
 		}
 
-		MemberMypage originMypage = memberMypageRepository.findByEmail(userEmail).get();
+		MemberMypage originMypage = memberMypageRepository.findByEmail(userEmail);
 
 		if (!originMypage.getUserId().equals(userId)) {
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND);
 		} else if (!originMypage.getIntroduction().equals(userIntro)) {
 			try {
 				originMypage.setIntroduction(userIntro);
-				saveMemberMypage(originMypage);
+				memberMypageRepository.save(originMypage);
 			} catch (Exception e) {
 				throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_DB);
 			}
@@ -94,7 +102,7 @@ public class MemberMypageService {
 		String userId = memberProfileInfoMap.get("userId");
 
 		try {
-			MemberMypage originProfile = memberMypageRepository.findByEmail(userEmail).get();
+			MemberMypage originProfile = memberMypageRepository.findByEmail(userEmail);
 
 			if (!originProfile.getUserId().equals(userId)) {
 				throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND);
@@ -104,10 +112,6 @@ public class MemberMypageService {
 		} catch (Exception e){
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND);
 		}
-	}
-
-	private void saveMemberMypage(MemberMypage memberMypage) {
-		memberMypageRepository.save(memberMypage);
 	}
 
 	private boolean verifyMypage(String email) {
@@ -125,4 +129,35 @@ public class MemberMypageService {
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND);
 		}
 	}
+
+	@Transactional
+	public void registProfileImage(MemberProfileImgReq memberProfileImgReq) {
+
+		boolean verify = verifyRequest(memberProfileImgReq);
+		if (!verify) throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_IMG_FORMAT);
+
+		try {
+			MemberMypage memberMypage = memberMypageRepository.findByEmail(memberProfileImgReq.getMemberEmail());
+			String url = awsService.imageUploadToS3("/profileImage", memberProfileImgReq.getMemberImageFile());
+			memberMypage.setProfileImgUrl(url);
+//			memberMypageRepository.save(memberMypage);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BussinessException("DB 회원 프로필 이미지 url 저장 실패");
+		}
+	}
+
+	private boolean verifyRequest(MemberProfileImgReq request) {
+		String email = request.getMemberEmail();
+		MultipartFile imageFile = request.getMemberImageFile();
+
+		if (email == null || !memberRepository.existsByEmail(email)) {
+			return false;
+		}
+		if (imageFile.isEmpty() || imageFile.getSize() == 0) {
+			return false;
+		}
+		return true;
+	}
 }
+
