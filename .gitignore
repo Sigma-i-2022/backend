@@ -143,6 +143,8 @@ replay_pid*
 build/classes
 build/generated
 build/resources
+build/reports
+build/test-results
 build/tmp
 !src/**/build/
 
