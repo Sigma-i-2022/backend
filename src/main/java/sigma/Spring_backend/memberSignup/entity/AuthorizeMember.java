@@ -13,7 +13,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "authorize_member")
 public class AuthorizeMember {
-
 	@Id
 	@Column(name = "AUTH_SEQ", nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,10 +25,8 @@ public class AuthorizeMember {
 	String code;
 
 	@Column(nullable = false)
+	@Builder.Default
 	boolean expired = false;
-
-	@OneToOne(mappedBy = "authorizeUser", fetch = FetchType.EAGER)
-	private Member user;
 
 	public void useCode() {
 		if (!expired) expired = true;
