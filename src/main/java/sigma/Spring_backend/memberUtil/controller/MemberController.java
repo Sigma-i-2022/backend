@@ -27,7 +27,7 @@ public class MemberController {
     @PostMapping("/member")
     public SingleResult<MemberResponseDto> saveMember(
             @ApiParam(value = "회원 객체", required = true)
-            @RequestBody MemberRequestDto member
+            @ModelAttribute MemberRequestDto member
     ) {
         return responseService.getSingleResult(memberService.save(member));
     }

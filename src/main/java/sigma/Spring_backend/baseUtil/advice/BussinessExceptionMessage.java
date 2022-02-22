@@ -22,7 +22,8 @@ public enum BussinessExceptionMessage {
 	, MEMBER_MYPAGE_ERROR_NOT_FOUND("해당하는 마이페이지가 없습니다.")
 	, MEMBER_MYPAGE_ERROR_INTRO_LENGTH("자기소개란의 입력 가능한 범위 500자를 초과하였습니다.")
 	, MEMBER_MYPAGE_ERROR_EXIST("마이페이지가 이미 등록되어 있습니다.")
-	, MEMBER_MYPAGE_ERROR_DB("DB에 마이페이지를 저장하는데 실패했습니다.");
+	, MEMBER_MYPAGE_ERROR_DB("DB에 마이페이지를 저장하는데 실패했습니다.")
+	, MEMBER_MYPAGE_IMG_FORMAT("마이페이지 이미지 등록 양식이 잘못되었습니다.");
 
 	private final String message;
 }
