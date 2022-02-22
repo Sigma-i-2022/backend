@@ -1,7 +1,6 @@
 package sigma.Spring_backend.memberSignup.entity;
 
 import lombok.*;
-import sigma.Spring_backend.memberUtil.entity.Member;
 
 import javax.persistence.*;
 
@@ -11,7 +10,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "authorize_member")
 public class AuthorizeMember {
 	@Id
 	@Column(name = "AUTH_SEQ", nullable = false)

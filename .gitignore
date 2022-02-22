@@ -143,6 +143,8 @@ replay_pid*
 build/classes
 build/generated
 build/resources
+build/reports
+build/test-results
 build/tmp
 !src/**/build/
 
@@ -162,6 +164,7 @@ gradle-app.setting
 .classpath
 
 # private file
+build/resources/*
 /src/main/resources/application-dev-private.yml
 /src/main/resources/application-real-private.yml
 /src/main/resources/application-oauth.yml

@@ -11,7 +11,6 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "member_mypage")
 public class MemberMypage {
 	@Id
 	@Column(name = "MYPAGE_SEQ", nullable = false)
@@ -27,4 +26,8 @@ public class MemberMypage {
 	@Column
 	@Builder.Default
 	private String introduction = "";
+
+	@Column
+	@Builder.Default
+	private String profileImgUrl = "";
 }

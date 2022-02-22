@@ -10,7 +10,7 @@ spring:
     properties.hibernate:
       format_sql: auto
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     open-in-view: false
   config:

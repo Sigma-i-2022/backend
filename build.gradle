@@ -29,11 +29,19 @@ dependencies {
     // 회원가입 시 비밀번호 암호화
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-//	implementation "io.springfox:springfox-boot-starter:3.0.0"
+    //	implementation "io.springfox:springfox-boot-starter:3.0.0"
     implementation 'io.springfox:springfox-swagger2:2.7.0'
     implementation 'io.springfox:springfox-swagger-ui:2.7.0'
 
     implementation 'mysql:mysql-connector-java'
+
+    // aws s3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    /*
+    aws s3 test
+     */
+    implementation group: 'io.findify', name: 's3mock_2.12', version: '0.2.5'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
