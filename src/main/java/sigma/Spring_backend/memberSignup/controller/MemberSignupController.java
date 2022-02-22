@@ -116,7 +116,7 @@ public class MemberSignupController {
 
 	@PostMapping("/join")
 	@ApiOperation(value = "코디 자격 신청", notes = "코디네이터 신청")
-	public SingleResult<CrdiResponseDto> crdiJoin(
+	public  CommonResult crdiJoin(
 			@ApiParam(value = "코디 이메일", required = true) @RequestParam(name = "email") String email,
 			@ApiParam(value = "코디 아이디", required = true) @RequestParam(name = "userId") String userId,
 			@ApiParam(value = "코디 경력사항", required = true) @RequestParam(name = "career") String career
@@ -126,7 +126,16 @@ public class MemberSignupController {
 		crdiInfoMap.put("userId", userId);
 		crdiInfoMap.put("career", career);
 
-		return responseService.getSingleResult(memberSignupService.crdiJoin(crdiInfoMap));
+		try {
+			memberSignupService.crdiJoin(crdiInfoMap);
+			return responseService.getSuccessResult();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return responseService.getFailResult(
+					-1,
+					e.getMessage()
+			);
+		}
 	}
 
 	@GetMapping("/joinState")
