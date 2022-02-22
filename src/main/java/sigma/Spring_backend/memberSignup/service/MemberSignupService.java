@@ -10,9 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
+import sigma.Spring_backend.memberSignup.dto.CrdiResponseDto;
 import sigma.Spring_backend.memberSignup.dto.MemberSessionDto;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
+import sigma.Spring_backend.memberSignup.entity.JoinCrdi;
 import sigma.Spring_backend.memberSignup.repository.AuthorizeCodeRepository;
+import sigma.Spring_backend.memberSignup.repository.CrdiJoinRepository;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
@@ -20,6 +23,7 @@ import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
@@ -32,6 +36,7 @@ public class MemberSignupService {
 	private final JavaMailSender emailSender;
 	private final AuthorizeCodeRepository authorizeCodeRepository;
 	private final MemberRepository memberRepository;
+	private final CrdiJoinRepository crdiJoinRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final HttpSession session;
 
@@ -112,6 +117,36 @@ public class MemberSignupService {
 		session.setAttribute("member", new MemberSessionDto(member));
 		log.info("로그인성공");
 
+	}
+
+	@Transactional
+	public CrdiResponseDto crdiJoin(Map<String, String> crdiInfoMap) {
+
+		String email = crdiInfoMap.get("email");
+		String userId = crdiInfoMap.get("userId");
+		String career = crdiInfoMap.get("career");
+		String joinYN = "N"; // 신청(N) 성공(S) 거절(R)
+		LocalDateTime regDt = LocalDateTime.now();
+
+		if (career == null || "".equals(career)) {
+			throw new BussinessException("경력사항을 입력해주세요.");
+		}
+
+		return crdiJoinRepository.save(JoinCrdi.builder()
+				.email(email)
+				.userId(userId)
+				.career(career)
+				.regDt(regDt)
+				.joinYN(joinYN)
+				.build()).toDto();
+	}
+
+	public CrdiResponseDto findCrdiJoinYn(String email) {
+		if (!crdiJoinRepository.findByEmail(email).isPresent()) {
+			throw new BussinessException("코디신청 내역이 없습니다.");
+		} else {
+			return crdiJoinRepository.findByEmail(email).get().toDto();
+		}
 	}
 
 
