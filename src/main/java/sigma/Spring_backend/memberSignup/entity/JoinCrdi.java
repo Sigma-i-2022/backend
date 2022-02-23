@@ -16,11 +16,11 @@ import java.time.LocalDateTime;
 public class JoinCrdi {
 
     @Id
-    @Column(name = "AUTH_SEQ", nullable = false)
+    @Column(name = "JOIN_SEQ", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     String email;
 
     @Column(nullable = false)
@@ -28,6 +28,21 @@ public class JoinCrdi {
 
     @Column(nullable = false)
     String career;
+
+    @Column
+    String url1;
+
+    @Column
+    String url2;
+
+    @Column
+    String url3;
+
+    @Column
+    String url4;
+
+    @Column
+    String url5;
 
     @Column(nullable = false)
     LocalDateTime regDt;
@@ -40,6 +55,11 @@ public class JoinCrdi {
         dto.setEmail(email);
         dto.setUserId(userId);
         dto.setCareer(career);
+        dto.setUrl1(url1);
+        dto.setUrl2(url2);
+        dto.setUrl3(url3);
+        dto.setUrl4(url4);
+        dto.setUrl5(url5);
         dto.setRegDt(regDt);
         dto.setJoinYN(joinYN);
 
