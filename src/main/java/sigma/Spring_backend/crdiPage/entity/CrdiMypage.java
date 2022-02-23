@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CrdiMyPage {
+public class CrdiMypage {
     @Id
     @Column(name = "CRDIMYPAGE_SEQ", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

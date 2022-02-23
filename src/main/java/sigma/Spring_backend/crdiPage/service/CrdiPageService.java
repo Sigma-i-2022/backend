@@ -14,6 +14,7 @@ import sigma.Spring_backend.crdiPage.repository.CrdiPageRepository;
 import sigma.Spring_backend.memberMypage.dto.MemberProfileImgReq;
 import sigma.Spring_backend.memberMypage.entity.MemberMypage;
 import sigma.Spring_backend.memberUtil.entity.Member;
+import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -25,12 +26,13 @@ import java.util.Optional;
 public class CrdiPageService {
 
     private final CrdiPageRepository crdiPageRepository;
+    private final MemberRepository memberRepository;
     private final AwsService awsService;
 
     @Transactional
     public void registCrdiMypage(CrdiProfileReq crdiProfileReq) {
 
-        if (!crdiPageRepository.existsByEmail(crdiProfileReq.getEmail())) {
+        if (!memberRepository.existsByEmail(crdiProfileReq.getEmail())) {
             throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND);
         }
 
