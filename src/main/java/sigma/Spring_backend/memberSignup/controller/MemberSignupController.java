@@ -5,14 +5,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
+import sigma.Spring_backend.baseUtil.dto.SingleResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
+import sigma.Spring_backend.memberSignup.dto.CrdiResponseDto;
 import sigma.Spring_backend.memberSignup.service.MemberSignupService;
 
 import java.util.HashMap;
@@ -113,6 +112,42 @@ public class MemberSignupController {
 					e.getMessage()
 			);
 		}
+	}
+
+	@PostMapping("/join")
+	@ApiOperation(value = "코디 자격 신청", notes = "코디네이터 신청")
+	public  CommonResult crdiJoin(
+			@ApiParam(value = "코디 이메일", required = true) @RequestParam(name = "email") String email,
+			@ApiParam(value = "코디 아이디", required = true) @RequestParam(name = "userId") String userId,
+			@ApiParam(value = "코디 경력사항", required = true) @RequestParam(name = "career") String career
+	) {
+		Map<String, String> crdiInfoMap = new HashMap<>();
+		crdiInfoMap.put("email", email);
+		crdiInfoMap.put("userId", userId);
+		crdiInfoMap.put("career", career);
+
+		try {
+			memberSignupService.crdiJoin(crdiInfoMap);
+			return responseService.getSuccessResult();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return responseService.getFailResult(
+					-1,
+					e.getMessage()
+			);
+		}
+	}
+
+	@GetMapping("/joinState")
+	@ApiOperation(value = "코디 신청 여부", notes = "코디네이터 신청여부")
+	public SingleResult<CrdiResponseDto> crdiJoin(
+			@ApiParam(value = "코디 이메일", required = true) @RequestParam(name = "email") String email
+	) {
+		Map<String, String> crdiInfoMap = new HashMap<>();
+		crdiInfoMap.put("email", email);
+
+		CrdiResponseDto byEmail = memberSignupService.findCrdiJoinYn(email);
+		return responseService.getSingleResult(byEmail);
 	}
 
 }

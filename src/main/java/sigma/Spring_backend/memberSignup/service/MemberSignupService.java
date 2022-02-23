@@ -10,9 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
+import sigma.Spring_backend.memberSignup.dto.CrdiResponseDto;
 import sigma.Spring_backend.memberSignup.dto.MemberSessionDto;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
+import sigma.Spring_backend.memberSignup.entity.JoinCrdi;
 import sigma.Spring_backend.memberSignup.repository.AuthorizeCodeRepository;
+import sigma.Spring_backend.memberSignup.repository.CrdiJoinRepository;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
@@ -20,6 +23,7 @@ import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
@@ -32,6 +36,7 @@ public class MemberSignupService {
 	private final JavaMailSender emailSender;
 	private final AuthorizeCodeRepository authorizeCodeRepository;
 	private final MemberRepository memberRepository;
+	private final CrdiJoinRepository crdiJoinRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final HttpSession session;
 
@@ -41,7 +46,7 @@ public class MemberSignupService {
 	public void sendAuthorizeCodeMail(String to) {
 		verifyUserEmail(to);
 		memberEmailDuplicateValidation(to);
-		MimeMessage mail = createMessage(to);
+		MimeMessage mail = createMessage(to,"USER");
 		emailSender.send(mail);
 	}
 
@@ -114,6 +119,43 @@ public class MemberSignupService {
 
 	}
 
+	@Transactional
+	public void crdiJoin(Map<String, String> crdiInfoMap) {
+
+		String email = crdiInfoMap.get("email");
+		String userId = crdiInfoMap.get("userId");
+		String career = crdiInfoMap.get("career");
+		String joinYN = "N"; // 신청(N) 성공(S) 거절(R)
+		LocalDateTime regDt = LocalDateTime.now();
+
+		if (career == null || "".equals(career)) {
+			throw new BussinessException("경력사항을 입력해주세요.");
+		}
+
+		try {
+			crdiJoinRepository.save(JoinCrdi.builder()
+					.email(email)
+					.userId(userId)
+					.career(career)
+					.regDt(regDt)
+					.joinYN(joinYN)
+					.build()).toDto();
+			MimeMessage mail = createMessage(email,"CRDI");
+			emailSender.send(mail);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			throw new BussinessException("코디신청에 실패하였습니다.");
+		}
+	}
+
+	public CrdiResponseDto findCrdiJoinYn(String email) {
+		if (!crdiJoinRepository.findByEmail(email).isPresent()) {
+			throw new BussinessException("코디신청 내역이 없습니다.");
+		} else {
+			return crdiJoinRepository.findByEmail(email).get().toDto();
+		}
+	}
+
 
 	private void verifyUserInfo(Map<String, String> userInfoMap) {
 
@@ -156,7 +198,7 @@ public class MemberSignupService {
 
 	@Transactional
 	@Synchronized
-	public MimeMessage createMessage(String toEmail) throws BussinessException {
+	public MimeMessage createMessage(String toEmail, String member) throws BussinessException {
 		log.info("To : " + toEmail);
 
 		if (!authorizeCodeRepository.findByEmail(toEmail).isPresent()) {
@@ -171,11 +213,19 @@ public class MemberSignupService {
 
 		MimeMessage mail = emailSender.createMimeMessage();
 		try {
-			String messageBody = createMailMessage(toEmail);
-			mail.addRecipients(Message.RecipientType.TO, toEmail);
-			mail.setSubject("Sigma 회원가입 이메일 인증");
+			String messageBody = "";
+			if(member.equals("USER")) {
+				messageBody = createMailMessage(toEmail);
+				mail.setSubject("Sigma 회원가입 이메일 인증");
+				mail.addRecipients(Message.RecipientType.TO, toEmail);
+			}else if(member.equals("CRDI")) {
+				messageBody = createCrdiMailMessage(toEmail);
+				mail.setSubject("Sigma 코디네이터 가입신청");
+				mail.addRecipients(Message.RecipientType.TO, "sigma.idea.insight@gmail.com");
+			}
 			mail.setText(messageBody, "utf-8", "html");
 			mail.setFrom(new InternetAddress(sigmaEmail, "Sigma"));
+
 		} catch (Exception e) {
 			throw new BussinessException(BussinessExceptionMessage.EMAIL_ERROR_SEND);
 		}
@@ -197,6 +247,24 @@ public class MemberSignupService {
 		msg.append("<div style='font-size:130%'>");
 		msg.append("CODE : <strong>");
 		msg.append(authorizeCodeRepository.findByEmail(toEmail).get().getCode()).append("</strong><div><br/> ");
+		msg.append("</div>");
+
+		return msg.toString();
+	}
+
+	private String createCrdiMailMessage(String toEmail) {
+		StringBuilder msg = new StringBuilder();
+		msg.append("<div style='margin:100px;'>");
+		msg.append("<h1> 코디네이터신청 </h1>");
+		msg.append("<br>");
+		msg.append("<p>");
+		msg.append(toEmail+"님이 코디네이터신청을 하였습니다.");
+		msg.append("<p>");
+		msg.append("<br>");
+		msg.append("<div align='center' style='border:3px solid black; font-family:verdana';>");
+		msg.append("<h3 style='color:black;'>경력사항</h3>");
+		msg.append("<br>");
+		msg.append(crdiJoinRepository.findByEmail(toEmail).get().getCareer());
 		msg.append("</div>");
 
 		return msg.toString();
