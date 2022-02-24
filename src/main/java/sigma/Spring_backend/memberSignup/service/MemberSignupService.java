@@ -125,6 +125,13 @@ public class MemberSignupService {
 		String email = crdiInfoMap.get("email");
 		String userId = crdiInfoMap.get("userId");
 		String career = crdiInfoMap.get("career");
+		String url1 = crdiInfoMap.get("url1");
+		String url2 = crdiInfoMap.get("url2");
+		String url3 = crdiInfoMap.get("url3");
+		String url4 = crdiInfoMap.get("url4");
+		String url5 = crdiInfoMap.get("url5");
+
+
 		String joinYN = "N"; // 신청(N) 성공(S) 거절(R)
 		LocalDateTime regDt = LocalDateTime.now();
 
@@ -133,10 +140,16 @@ public class MemberSignupService {
 		}
 
 		try {
+			log.info("dflsdkjfasdlkfjadlksfasl");
 			crdiJoinRepository.save(JoinCrdi.builder()
 					.email(email)
 					.userId(userId)
 					.career(career)
+					.url1(url1)
+					.url2(url2)
+					.url3(url3)
+					.url4(url4)
+					.url5(url5)
 					.regDt(regDt)
 					.joinYN(joinYN)
 					.build()).toDto();
@@ -265,6 +278,16 @@ public class MemberSignupService {
 		msg.append("<h3 style='color:black;'>경력사항</h3>");
 		msg.append("<br>");
 		msg.append(crdiJoinRepository.findByEmail(toEmail).get().getCareer());
+		msg.append("<br>");
+		msg.append(crdiJoinRepository.findByEmail(toEmail).get().getUrl1());
+		msg.append("<br>");
+		msg.append(crdiJoinRepository.findByEmail(toEmail).get().getUrl2());
+		msg.append("<br>");
+		msg.append(crdiJoinRepository.findByEmail(toEmail).get().getUrl3());
+		msg.append("<br>");
+		msg.append(crdiJoinRepository.findByEmail(toEmail).get().getUrl4());
+		msg.append("<br>");
+		msg.append(crdiJoinRepository.findByEmail(toEmail).get().getUrl5());
 		msg.append("</div>");
 
 		return msg.toString();

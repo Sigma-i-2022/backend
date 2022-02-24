@@ -3,6 +3,7 @@ package sigma.Spring_backend.memberUtil.entity;
 import lombok.*;
 import sigma.Spring_backend.memberMypage.entity.MemberMypage;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
+import sigma.Spring_backend.memberSignup.entity.JoinCrdi;
 import sigma.Spring_backend.memberUtil.dto.MemberResponseDto;
 
 import javax.persistence.*;
@@ -44,6 +45,10 @@ public class Member {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "seq", referencedColumnName = "AUTH_SEQ")
     private AuthorizeMember authorizeUser;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "seq", referencedColumnName = "JOIN_SEQ")
+    private JoinCrdi joinCrdi;
 
     public MemberResponseDto toDto() {
         return MemberResponseDto.builder()
