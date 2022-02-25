@@ -10,5 +10,7 @@ public class MemberResponseDto {
     private String password;
     private String signupType;
     private String gender;
+    private String registDate;
+    private String updateDate;
     private int age;
 }

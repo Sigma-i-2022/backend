@@ -26,6 +26,7 @@ public class MemberSignupController {
 
 	private final MemberSignupService memberSignupService;
 	private final ResponseService responseService;
+	private final int FAIL = -1;
 
 	@PostMapping("/email")
 	@ApiOperation(value = "회원 가입 시 이메일 인증 코드 발송", notes = "회원의 이메일로 인증 코드 발송")
@@ -39,7 +40,7 @@ public class MemberSignupController {
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return responseService.getFailResult(
-					-1,
+					FAIL,
 					e.getMessage()
 			);
 		}
@@ -58,7 +59,7 @@ public class MemberSignupController {
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
 			return responseService.getFailResult(
-					-1,
+					FAIL,
 					BussinessExceptionMessage.EMAIL_ERROR_CODE.getMessage()
 			);
 		}
@@ -83,9 +84,9 @@ public class MemberSignupController {
 			memberSignupService.signUp(userInfoMap);
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			e.printStackTrace();
 			return responseService.getFailResult(
-					-1,
+					FAIL,
 					e.getMessage()
 			);
 		}
@@ -108,7 +109,7 @@ public class MemberSignupController {
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return responseService.getFailResult(
-					-1,
+					FAIL,
 					e.getMessage()
 			);
 		}

@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
+import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberSignup.dto.CrdiResponseDto;
 import sigma.Spring_backend.memberSignup.dto.MemberSessionDto;
@@ -39,6 +40,7 @@ public class MemberSignupService {
 	private final CrdiJoinRepository crdiJoinRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final HttpSession session;
+	private final DateConfig dateConfig;
 
 	@Value("${email.id}")
 	private String sigmaEmail;
@@ -74,25 +76,37 @@ public class MemberSignupService {
 
 		verifyUserInfo(userInfoMap);
 
-		log.info(userId + ", " + email + ", " + password);
-
-		if (memberRepository.findByEmail(email).isPresent()) {
+		AuthorizeMember authorizeMember = authorizeCodeRepository.findByEmail(email).get();
+		if (memberRepository.findMemberByEmailUsingFetchJoin(email).isPresent()) {
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_DUPLICATE);
-		} else if (!authorizeCodeRepository.findByEmail(email).get().isExpired()) {
-			throw new BussinessException("인증되지 않은 이메일입니다. 인증된 이메일로 가입해주세요.");
+		} else if (!authorizeMember.isExpired()) {
+			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NON_VERIFIED_EMAIL);
 		} else {
+			saveMember(password, email, userId);
 			try {
-				password = passwordEncoder.encode(password);
-				memberRepository.save(Member.builder()
-						.email(email)
-						.userId(userId)
-						.password(password)
-						.signupType("E")
-						.build());
+				memberRepository.findByEmail(email).get()
+						.registAuthorizeUser(authorizeMember);
 			} catch (Exception e) {
-				log.error(e.getMessage());
+				e.printStackTrace();
 				throw new BussinessException("회원가입에 실패하였습니다.");
 			}
+		}
+	}
+
+	@Transactional
+	public void saveMember(String password, String email, String userId) {
+		password = passwordEncoder.encode(password);
+		try {
+			memberRepository.save(Member.builder()
+					.email(email)
+					.userId(userId)
+					.password(password)
+					.signupType("E")
+					.registDate(dateConfig.getNowDate())
+					.updateDate(dateConfig.getNowDate())
+					.build());
+		} catch (Exception e) {
+			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_DB_SAVE);
 		}
 	}
 
@@ -234,7 +248,7 @@ public class MemberSignupService {
 			}else if(member.equals("CRDI")) {
 				messageBody = createCrdiMailMessage(toEmail);
 				mail.setSubject("Sigma 코디네이터 가입신청");
-				mail.addRecipients(Message.RecipientType.TO, "sigma.idea.insight@gmail.com");
+				mail.addRecipients(Message.RecipientType.TO, sigmaEmail);
 			}
 			mail.setText(messageBody, "utf-8", "html");
 			mail.setFrom(new InternetAddress(sigmaEmail, "Sigma"));
