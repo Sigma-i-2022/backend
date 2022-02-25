@@ -5,14 +5,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
+import sigma.Spring_backend.baseUtil.dto.SingleResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
+import sigma.Spring_backend.memberSignup.dto.CrdiResponseDto;
 import sigma.Spring_backend.memberSignup.service.MemberSignupService;
 
 import java.util.HashMap;
@@ -114,6 +113,52 @@ public class MemberSignupController {
 					e.getMessage()
 			);
 		}
+	}
+
+	@PostMapping("/join")
+	@ApiOperation(value = "코디 자격 신청", notes = "코디네이터 신청")
+	public  CommonResult crdiJoin(
+			@ApiParam(value = "코디 이메일", required = true) @RequestParam(name = "email") String email,
+			@ApiParam(value = "코디 아이디", required = true) @RequestParam(name = "userId") String userId,
+			@ApiParam(value = "코디 경력사항", required = true) @RequestParam(name = "career") String career,
+			@ApiParam(value = "코디 URL1") @RequestParam(name = "url1", required = false) String url1,
+			@ApiParam(value = "코디 URL2") @RequestParam(name = "url2", required = false) String url2,
+			@ApiParam(value = "코디 URL3") @RequestParam(name = "url3", required = false) String url3,
+			@ApiParam(value = "코디 URL4") @RequestParam(name = "url4", required = false) String url4,
+			@ApiParam(value = "코디 URL5") @RequestParam(name = "url5", required = false) String url5
+	) {
+		Map<String, String> crdiInfoMap = new HashMap<>();
+		crdiInfoMap.put("email", email);
+		crdiInfoMap.put("userId", userId);
+		crdiInfoMap.put("career", career);
+		crdiInfoMap.put("url1",url1);
+		crdiInfoMap.put("url2",url2);
+		crdiInfoMap.put("url3",url3);
+		crdiInfoMap.put("url4",url4);
+		crdiInfoMap.put("url5",url5);
+
+		try {
+			memberSignupService.crdiJoin(crdiInfoMap);
+			return responseService.getSuccessResult();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return responseService.getFailResult(
+					-1,
+					e.getMessage()
+			);
+		}
+	}
+
+	@GetMapping("/joinState")
+	@ApiOperation(value = "코디 신청 여부", notes = "코디네이터 신청여부")
+	public SingleResult<CrdiResponseDto> crdiJoin(
+			@ApiParam(value = "코디 이메일", required = true) @RequestParam(name = "email") String email
+	) {
+		Map<String, String> crdiInfoMap = new HashMap<>();
+		crdiInfoMap.put("email", email);
+
+		CrdiResponseDto byEmail = memberSignupService.findCrdiJoinYn(email);
+		return responseService.getSingleResult(byEmail);
 	}
 
 }
