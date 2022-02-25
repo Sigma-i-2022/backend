@@ -9,16 +9,10 @@ import sigma.Spring_backend.awsUtil.service.AwsService;
 import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.crdiPage.dto.CrdiProfileReq;
-import sigma.Spring_backend.crdiPage.entity.CrdiMyPage;
+import sigma.Spring_backend.crdiPage.entity.CrdiMypage;
 import sigma.Spring_backend.crdiPage.repository.CrdiPageRepository;
-import sigma.Spring_backend.memberMypage.dto.MemberProfileImgReq;
-import sigma.Spring_backend.memberMypage.entity.MemberMypage;
-import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -45,7 +39,7 @@ public class CrdiPageService {
 
         try {
             String url = awsService.imageUploadToS3("/profileImage", crdiProfileReq.getProfileImg());
-            crdiPageRepository.save(CrdiMyPage.builder()
+            crdiPageRepository.save(CrdiMypage.builder()
                     .email(crdiProfileReq.getEmail())
                     .userId(crdiProfileReq.getUserId())
                     .introduction(crdiProfileReq.getIntro())
@@ -58,6 +52,27 @@ public class CrdiPageService {
         } catch (Exception e) {
             throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_DB);
         }
+    }
+
+    @Transactional
+    public void updateCrdiMypage(CrdiProfileReq crdiProfileReq) {
+
+        if (!memberRepository.existsByEmail(crdiProfileReq.getEmail())) {
+            throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND);
+        }
+
+        if (!crdiPageRepository.existsByEmail(crdiProfileReq.getEmail())) {
+            throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND);
+        }else{
+            try{
+                CrdiMypage myPage = crdiPageRepository.findByEmail(crdiProfileReq.getEmail());
+                myPage.setIntroduction(crdiProfileReq.getIntro());
+                crdiPageRepository.save(myPage);
+            }catch (Exception e) {
+                throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_DB);
+            }
+        }
+
     }
 
     private boolean verifyRequest(CrdiProfileReq request) {

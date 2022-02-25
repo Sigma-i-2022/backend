@@ -41,4 +41,23 @@ public class CrdiPageController {
             );
         }
     }
+
+    @PostMapping("/mypageUpdate")
+    @ApiOperation(value = "코디네이터 마이페이지 수정", notes = "코디네이터의 마이페이지를 수정합니다.")
+    public CommonResult crdiMypageUpdate(
+            @ApiParam(name = "코디마이페이지등록") @ModelAttribute CrdiProfileReq crdiProfileReq
+    ) {
+        try {
+            crdiPageService.updateCrdiMypage(crdiProfileReq);
+            return responseService.getSuccessResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return responseService.getFailResult(
+                    -1,
+                    e.getMessage()
+            );
+        }
+    }
+
+
 }
