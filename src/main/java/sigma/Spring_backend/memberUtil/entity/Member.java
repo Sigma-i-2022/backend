@@ -69,6 +69,7 @@ public class Member {
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<MemberLookPage> pages = new ArrayList<>();
 
     public void addLookPage(MemberLookPage memberLookPage) {

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="sigma.Spring_backend.memberMypage.controller.MemberMypageControllerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-02-20T09:05:13" hostname="choeunsig-ui-MacBookAir.local" time="1.008">
-  <properties/>
-  <testcase name="파일 업로드 성공" classname="sigma.Spring_backend.memberMypage.controller.MemberMypageControllerTest" time="1.008"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
