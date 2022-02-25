@@ -29,8 +29,7 @@ public class MemberMypageController {
 
 	private final ResponseService responseService;
 	private final MemberMypageService memberMypageService;
-	private final String SUCCESS = "S";
-	private final String FAIL = "F";
+	private final int FAIL = -1;
 
 	@GetMapping("/mypage")
 	@ApiOperation(value = "회원 마이페이지 조회", notes = "회원의 마이페이지를 가져옵니다.")
@@ -72,7 +71,7 @@ public class MemberMypageController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return responseService.getFailResult(
-					-1,
+					FAIL,
 					e.getMessage()
 			);
 		}
@@ -96,7 +95,7 @@ public class MemberMypageController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return responseService.getFailResult(
-					-1,
+					FAIL,
 					e.getMessage()
 			);
 		}
@@ -118,7 +117,7 @@ public class MemberMypageController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return responseService.getFailResult(
-					-1,
+					FAIL,
 					e.getMessage()
 			);
 		}
@@ -127,7 +126,7 @@ public class MemberMypageController {
 	@PostMapping("/profileImage")
 	@ApiOperation(value = "회원 프로필 이미지 등록", notes = "회원의 이미지를 S3에 업로드하고 해당 URL을 등록합니다.")
 	public CommonResult registMemberProfileImage(
-			@ApiParam(name = "이미지 파일") @ModelAttribute MemberProfileImgReq memberProfileImgReq
+			@ApiParam(value = "이미지 파일") @ModelAttribute MemberProfileImgReq memberProfileImgReq
 	) {
 		try {
 			memberMypageService.registProfileImage(memberProfileImgReq);
@@ -135,27 +134,10 @@ public class MemberMypageController {
 		} catch (Exception e){
 			e.printStackTrace();
 			return responseService.getFailResult(
-					-1,
-					FAIL
+					FAIL,
+					e.getMessage()
 			);
 		}
 	}
-
-//	@PostMapping("")
-//	@ApiOperation(value = "", notes = "")
-//	public CommonResult function(
-//			@ApiParam(name = "") @RequestParam String value
-//	) {
-//		try {
-//			// 서비스 로직
-//			return responseService.getSuccessResult();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return responseService.getFailResult(
-//					-1,
-//					e.getMessage()
-//			);
-//		}
-//	}
 }
 

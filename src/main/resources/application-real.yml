@@ -10,9 +10,10 @@ spring:
     properties.hibernate:
       format_sql: auto
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     open-in-view: false
+    generate-ddl: true
   config:
     activate:
       on-profile: real

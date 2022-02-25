@@ -11,6 +11,8 @@ public enum BussinessExceptionMessage {
 	, MEMBER_ERROR_DUPLICATE("회원이 중복되었습니다.")
 	, MEMBER_ERROR_NAME_FORMAT("이름 형식이 잘못 되었습니다.")
 	, MEMBER_ERROR_NOT_FOUND("해당 회원이 존재하지 않습니다.")
+	, MEMBER_ERROR_DB_SAVE("회원을 DB 저장하는 중에 문제가 발생했습니다.")
+	, MEMBER_ERROR_NON_VERIFIED_EMAIL("인증되지 않은 이메일입니다. 인증된 이메일로 가입해주세요.")
 	, EMAIL_ERROR_CODE("이메일 인증코드가 잘못 되었습니다.")
 	, EMAIL_ERROR_FORMAT("이메일 형식이 잘못 되었습니다.")
 	, EMAIL_ERROR_SEND("회원가입 이메일 인증을 위한 메일 전송에 실패하였습니다.")

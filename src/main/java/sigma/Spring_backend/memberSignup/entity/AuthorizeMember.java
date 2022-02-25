@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Entity
 public class AuthorizeMember {
 	@Id
-	@Column(name = "AUTH_SEQ", nullable = false)
+	@Column(unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long seq;
 

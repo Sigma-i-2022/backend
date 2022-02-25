@@ -68,7 +68,7 @@ public class AwsService {
 					new PutObjectRequest(bucketName + path, fileName, multipartFile.getInputStream(), metadata)
 							.withCannedAcl(CannedAccessControlList.PublicRead)
 			);
-			log.info("회원 프로필 이미지 경로 : " + imagePathUrl);
+			log.info("AWS 이미지 경로 : " + imagePathUrl);
 			return imagePathUrl.toString();
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -13,11 +13,11 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class MemberMypage {
 	@Id
-	@Column(name = "MYPAGE_SEQ", nullable = false)
+	@Column(unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long seq;
 
-	@Column(name = "mypage_email", unique = true, nullable = false)
+	@Column(unique = true, nullable = false)
 	private String email;
 
 	@Column(unique = true, nullable = false)

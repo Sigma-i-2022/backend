@@ -47,13 +47,11 @@ public class MemberMypageService {
 			userIntro = memberMypage.get("intro");
 		}
 
-		boolean verifyUserInfo = verifyUserInfo(memberMypage);
-		if (!verifyUserInfo) {
+		if (!memberRepository.findByEmail(userEmail).isPresent()) {
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND);
 		}
 
-		boolean verifyMypage = verifyMypage(userEmail);
-		if (!verifyMypage) {
+		if (memberMypageRepository.existsByEmail(userEmail)) {
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_EXIST);
 		}
 
@@ -62,11 +60,13 @@ public class MemberMypageService {
 		}
 
 		try {
-			memberMypageRepository.save(MemberMypage.builder()
+			MemberMypage mypage = memberMypageRepository.save(MemberMypage.builder()
 					.email(userEmail)
 					.userId(userId)
 					.introduction(userIntro)
 					.build());
+			memberRepository.findByEmail(userEmail)
+					.ifPresent(m -> m.registMypage(mypage));
 		} catch (Exception e) {
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_DB);
 		}
@@ -86,13 +86,16 @@ public class MemberMypageService {
 
 		if (!originMypage.getUserId().equals(userId)) {
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND);
-		} else if (!originMypage.getIntroduction().equals(userIntro)) {
-			try {
-				originMypage.setIntroduction(userIntro);
-				memberMypageRepository.save(originMypage);
-			} catch (Exception e) {
-				throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_DB);
-			}
+		}
+
+		if (originMypage.getIntroduction().equals(userIntro)) return;
+
+		try {
+			originMypage.setIntroduction(userIntro);
+			memberRepository.findMemberByEmailUsingFetchJoin(userEmail)
+					.ifPresent(m -> m.registMypage(originMypage));
+		} catch (Exception e) {
+			throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_DB);
 		}
 	}
 
@@ -108,25 +111,10 @@ public class MemberMypageService {
 				throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND);
 			}
 
-			memberRepository.deleteById(originProfile.getSeq());
-		} catch (Exception e){
+			memberRepository.findByEmail(userEmail)
+					.ifPresent(Member::removeMyPage);
+		} catch (Exception e) {
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND);
-		}
-	}
-
-	private boolean verifyMypage(String email) {
-		return !memberMypageRepository.existsByEmail(email);
-	}
-
-	private boolean verifyUserInfo(Map<String, String> memberProfileInfoMap) {
-		String userEmail = memberProfileInfoMap.get("email");
-		String userId = memberProfileInfoMap.get("userId");
-
-		if (memberRepository.existsByEmail(userEmail)) {
-			Member member = memberRepository.findByEmail(userEmail).get();
-			return member.getUserId().equals(userId);
-		} else {
-			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND);
 		}
 	}
 
@@ -140,7 +128,6 @@ public class MemberMypageService {
 			MemberMypage memberMypage = memberMypageRepository.findByEmail(memberProfileImgReq.getMemberEmail());
 			String url = awsService.imageUploadToS3("/profileImage", memberProfileImgReq.getMemberImageFile());
 			memberMypage.setProfileImgUrl(url);
-//			memberMypageRepository.save(memberMypage);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BussinessException("DB 회원 프로필 이미지 url 저장 실패");
@@ -154,7 +141,7 @@ public class MemberMypageService {
 		if (email == null || !memberRepository.existsByEmail(email)) {
 			return false;
 		}
-		if (imageFile.isEmpty() || imageFile.getSize() == 0) {
+		if (imageFile == null || imageFile.isEmpty() || imageFile.getSize() == 0) {
 			return false;
 		}
 		return true;
