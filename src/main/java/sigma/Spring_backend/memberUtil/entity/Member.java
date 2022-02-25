@@ -93,6 +93,8 @@ public class Member {
                 .signupType(signupType)
                 .gender(gender)
                 .age(age)
+                .registDate(registDate)
+                .updateDate(updateDate)
                 .build();
     }
 }
