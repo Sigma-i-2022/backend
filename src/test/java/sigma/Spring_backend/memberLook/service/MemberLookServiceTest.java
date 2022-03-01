@@ -99,7 +99,7 @@ class MemberLookServiceTest {
 	void registLookPage() {
 		//given
 		given(awsService.imageUploadToS3("/memberLookImage", multipartFile)).willReturn("test aws url");
-		given(memberRepository.findMemberByEmailUsingFetchJoin(memberLookPageReq.getMemberEmail()))
+		given(memberRepository.findByEmailFJ(memberLookPageReq.getMemberEmail()))
 				.willReturn(Optional.of(member));
 
 		// when
@@ -135,7 +135,7 @@ class MemberLookServiceTest {
 		member.addLookPage(MemberLookPage.builder().seq(2L).build());
 		member.addLookPage(MemberLookPage.builder().seq(3L).build());
 		member.addLookPage(MemberLookPage.builder().seq(4L).build());
-		given(memberRepository.findMemberByEmailUsingFetchJoin(member.getEmail()))
+		given(memberRepository.findByEmailFJ(member.getEmail()))
 				.willReturn(Optional.of(member));
 
 		//when
