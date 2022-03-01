@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import sigma.Spring_backend.memberUtil.entity.Member;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -16,6 +15,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Boolean existsByEmail(String email);
 
+    @Query("select m from Member m join fetch m.mypage join fetch m.authorizeUser join fetch m.joinCrdi where m.email=?1")
+    Optional<Member> findByEmailFjWithJoinCrdi(String email);
+
     @Query("select m from Member m join fetch m.mypage join fetch m.authorizeUser where m.email=?1")
-    Optional<Member> findMemberByEmailUsingFetchJoin(String email);
+    Optional<Member> findByEmailFJ(String email);
 }

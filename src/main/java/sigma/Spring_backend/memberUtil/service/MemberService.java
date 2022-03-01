@@ -1,7 +1,9 @@
 package sigma.Spring_backend.memberUtil.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberUtil.dto.MemberRequestDto;
@@ -12,6 +14,7 @@ import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -19,14 +22,23 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    @Transactional(readOnly = true)
     public MemberResponseDto findByEmail(String email) {
-        if (!memberRepository.findMemberByEmailUsingFetchJoin(email).isPresent()) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND));
+        return member.toDto();
+    }
+
+    @Transactional(readOnly = true)
+    public MemberResponseDto findByEmailWithFetch(String email) {
+        if (!memberRepository.findByEmailFJ(email).isPresent()) {
             throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND);
         } else {
-            return memberRepository.findMemberByEmailUsingFetchJoin(email).get().toDto();
+            return memberRepository.findByEmailFJ(email).get().toDto();
         }
     }
 
+    @Transactional(readOnly = true)
     public List<MemberResponseDto> findAll() {
         return memberRepository.findAll()
                 .stream()
@@ -34,9 +46,11 @@ public class MemberService {
                 .collect(Collectors.toList());
     }
 
-    public MemberResponseDto save(MemberRequestDto memberRequestDto) {
-        if (!memberRepository.findByEmail(memberRequestDto.getEmail()).isPresent())
-            return memberRepository.save(memberRequestDto.toEntity()).toDto();
-        throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_DUPLICATE);
+    @Transactional
+    public Member save(MemberRequestDto memberRequestDto) {
+        if (memberRepository.existsByEmail(memberRequestDto.getEmail())) {
+            throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_DUPLICATE);
+        }
+        return memberRepository.save(memberRequestDto.toEntity());
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
 import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
+import sigma.Spring_backend.memberMypage.entity.MemberMypage;
 import sigma.Spring_backend.memberSignup.dto.CrdiResponseDto;
 import sigma.Spring_backend.memberSignup.dto.MemberSessionDto;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
@@ -77,15 +78,22 @@ public class MemberSignupService {
 		verifyUserInfo(userInfoMap);
 
 		AuthorizeMember authorizeMember = authorizeCodeRepository.findByEmail(email).get();
-		if (memberRepository.findMemberByEmailUsingFetchJoin(email).isPresent()) {
+		if (memberRepository.findByEmailFJ(email).isPresent()) {
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_DUPLICATE);
 		} else if (!authorizeMember.isExpired()) {
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NON_VERIFIED_EMAIL);
 		} else {
 			saveMember(password, email, userId);
+			MemberMypage mypage = MemberMypage.builder()
+					.email(email)
+					.introduction("")
+					.profileImgUrl("")
+					.userId(userId)
+					.build();
 			try {
-				memberRepository.findByEmail(email).get()
-						.registAuthorizeUser(authorizeMember);
+				Member member = memberRepository.findByEmail(email).get();
+				member.registAuthorizeUser(authorizeMember);
+				member.registMypage(mypage);
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new BussinessException("회원가입에 실패하였습니다.");
@@ -175,6 +183,7 @@ public class MemberSignupService {
 		}
 	}
 
+	@Transactional(readOnly = true)
 	public CrdiResponseDto findCrdiJoinYn(String email) {
 		if (!crdiJoinRepository.findByEmail(email).isPresent()) {
 			throw new BussinessException("코디신청 내역이 없습니다.");

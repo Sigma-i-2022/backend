@@ -15,7 +15,6 @@ import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -27,15 +26,10 @@ public class MemberMypageService {
 	private final AwsService awsService;
 
 	@Transactional(readOnly = true)
-	public MemberMypage getMemberProfile(Map<String, String> memberProfileInfoMap) {
-		String userEmail = memberProfileInfoMap.get("email");
-
-		Optional<Member> optionalMember = memberRepository.findMemberByEmailUsingFetchJoin(userEmail);
-		if (optionalMember.isPresent()) {
-			return optionalMember.get().getMypage();
-		} else {
-			throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND);
-		}
+	public MemberMypage getMemberProfile(String memberEmail) {
+		return memberMypageRepository.findByEmail(memberEmail).orElseThrow(
+				() -> new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND)
+		);
 	}
 
 	@Transactional
@@ -47,7 +41,7 @@ public class MemberMypageService {
 			userIntro = memberMypage.get("intro");
 		}
 
-		if (!memberRepository.findByEmail(userEmail).isPresent()) {
+		if (!memberRepository.existsByEmail(userEmail)) {
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND);
 		}
 
@@ -82,7 +76,8 @@ public class MemberMypageService {
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND);
 		}
 
-		MemberMypage originMypage = memberMypageRepository.findByEmail(userEmail);
+		MemberMypage originMypage = memberMypageRepository.findByEmail(userEmail)
+				.orElseThrow(() -> new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND));
 
 		if (!originMypage.getUserId().equals(userId)) {
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND);
@@ -92,7 +87,7 @@ public class MemberMypageService {
 
 		try {
 			originMypage.setIntroduction(userIntro);
-			memberRepository.findMemberByEmailUsingFetchJoin(userEmail)
+			memberRepository.findByEmailFJ(userEmail)
 					.ifPresent(m -> m.registMypage(originMypage));
 		} catch (Exception e) {
 			throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_DB);
@@ -105,7 +100,8 @@ public class MemberMypageService {
 		String userId = memberProfileInfoMap.get("userId");
 
 		try {
-			MemberMypage originProfile = memberMypageRepository.findByEmail(userEmail);
+			MemberMypage originProfile = memberMypageRepository.findByEmail(userEmail)
+					.orElseThrow(() -> new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND));
 
 			if (!originProfile.getUserId().equals(userId)) {
 				throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND);
@@ -125,11 +121,11 @@ public class MemberMypageService {
 		if (!verify) throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_IMG_FORMAT);
 
 		try {
-			MemberMypage memberMypage = memberMypageRepository.findByEmail(memberProfileImgReq.getMemberEmail());
+			MemberMypage memberMypage = memberMypageRepository.findByEmail(memberProfileImgReq.getMemberEmail())
+					.orElseThrow(() -> new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND));
 			String url = awsService.imageUploadToS3("/profileImage", memberProfileImgReq.getMemberImageFile());
 			memberMypage.setProfileImgUrl(url);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new BussinessException("DB 회원 프로필 이미지 url 저장 실패");
 		}
 	}

@@ -4,13 +4,12 @@ import lombok.*;
 import sigma.Spring_backend.memberUtil.entity.Member;
 
 @Data
+@Builder
 public class MemberRequestDto {
     private String userId;
     private String email;
     private String password;
     private String signupType;
-    private String gender;
-    private int age;
 
     public Member toEntity() {
         return Member.builder()
@@ -18,8 +17,6 @@ public class MemberRequestDto {
                 .email(email)
                 .password(password)
                 .signupType(signupType)
-                .age(age)
-                .gender(gender)
                 .build();
     }
 }

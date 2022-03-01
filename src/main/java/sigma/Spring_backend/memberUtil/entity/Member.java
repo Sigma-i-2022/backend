@@ -36,12 +36,6 @@ public class Member {
     private String signupType;
 
     @Column
-    private String gender;
-
-    @Column
-    private int age;
-
-    @Column
     private String registDate;
 
     @Column
@@ -60,12 +54,16 @@ public class Member {
         this.mypage = null;
     }
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "authorizeUser_seq", referencedColumnName = "SEQ")
     private AuthorizeMember authorizeUser;
 
     public void registAuthorizeUser(AuthorizeMember authorizeUser) {
         this.authorizeUser = authorizeUser;
+    }
+
+    public void removeAuthorizeMember() {
+        this.authorizeUser = null;
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -92,8 +90,6 @@ public class Member {
                 .email(email)
                 .password(password)
                 .signupType(signupType)
-                .gender(gender)
-                .age(age)
                 .registDate(registDate)
                 .updateDate(updateDate)
                 .build();

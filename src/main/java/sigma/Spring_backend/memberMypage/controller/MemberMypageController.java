@@ -34,14 +34,10 @@ public class MemberMypageController {
 	@GetMapping("/mypage")
 	@ApiOperation(value = "회원 마이페이지 조회", notes = "회원의 마이페이지를 가져옵니다.")
 	public SingleResult<MemberMypage> memberMypageGet(
-			@ApiParam(value = "회원 이메일", required = true) @RequestParam String memberEmail,
-			@ApiParam(value = "회원 아이디", required = true) @RequestParam String memberId
+			@ApiParam(value = "회원 이메일", required = true) @RequestParam String memberEmail
 	) {
-		Map<String, String> memberMypageInfoMap = new HashMap<>();
-		memberMypageInfoMap.put("email", memberEmail);
-		memberMypageInfoMap.put("userId", memberId);
 		try {
-			MemberMypage mypage = memberMypageService.getMemberProfile(memberMypageInfoMap);
+			MemberMypage mypage = memberMypageService.getMemberProfile(memberEmail);
 			if (mypage != null) {
 				return responseService.getSingleResult(mypage);
 			} else {

@@ -44,7 +44,7 @@ public class MemberLookService {
 
 		// 3. 엔티티 생성 후 DB 저장
 		try {
-			Member member = memberRepository.findMemberByEmailUsingFetchJoin(memberLookPageReq.getMemberEmail())
+			Member member = memberRepository.findByEmailFJ(memberLookPageReq.getMemberEmail())
 					.orElseThrow(() -> new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND));
 			member.addLookPage(memberLookPageReq.toEntity(imagePathUrl));
 		} catch (Exception e) {
@@ -71,7 +71,7 @@ public class MemberLookService {
 
 	@Transactional(readOnly = true)
 	public List<MemberLookPageRes> getLookPages(String memberEmail) {
-		Optional<Member> memberOpt = memberRepository.findMemberByEmailUsingFetchJoin(memberEmail);
+		Optional<Member> memberOpt = memberRepository.findByEmailFJ(memberEmail);
 
 		return memberOpt.map(m -> m.getPages()
 				.stream()
@@ -113,6 +113,5 @@ public class MemberLookService {
 		MemberLookPage lookPage = memberLookPageRepo.findById(lookSeq)
 				.orElseThrow(() -> new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND));
 		lookPage.getMember().removeLookPage(lookPage);
-		memberLookPageRepo.deleteById(lookSeq);
 	}
 }
