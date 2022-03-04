@@ -9,8 +9,10 @@ import sigma.Spring_backend.awsUtil.service.AwsService;
 import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.crdiPage.dto.CrdiProfileReq;
+import sigma.Spring_backend.crdiPage.dto.CrdiWorkReq;
 import sigma.Spring_backend.crdiPage.entity.CrdiMypage;
 import sigma.Spring_backend.crdiPage.repository.CrdiPageRepository;
+import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
 
@@ -75,6 +77,23 @@ public class CrdiPageService {
 
     }
 
+    @Transactional
+    public void registCrdiWork(CrdiWorkReq crdiWorkReq){
+
+        if(!veifyWork(crdiWorkReq)) throw new BussinessException("작품에 필요한 정보가 없습니다.");
+
+        String imagePathUrl = awsService.imageUploadToS3("/crdiWorkImage", crdiWorkReq.getImageFile());
+
+        try{
+            Member member = memberRepository.findByEmail(crdiWorkReq.getCrdiEmail())
+                    .orElseThrow(() -> new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND));
+            member.addWork(crdiWorkReq.toEntity(imagePathUrl));
+        }catch (Exception e){
+            throw new BussinessException("DB 작품 저장 실패");
+        }
+
+    }
+
     private boolean verifyRequest(CrdiProfileReq request) {
         MultipartFile imageFile = request.getProfileImg();
         if (imageFile.isEmpty() || imageFile.getSize() == 0) {
@@ -82,5 +101,16 @@ public class CrdiPageService {
         }else{
             return true;
         }
+    }
+
+    private boolean veifyWork(CrdiWorkReq crdiWorkReq){
+        if(crdiWorkReq.getCrdiEmail() == null || crdiWorkReq.getCrdiEmail().equals("")){
+            return false;
+        }
+        if(crdiWorkReq.getImageFile() == null || crdiWorkReq.getImageFile().equals("")){
+            return false;
+        }
+
+        return true;
     }
 }

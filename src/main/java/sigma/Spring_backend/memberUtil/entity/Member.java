@@ -1,6 +1,7 @@
 package sigma.Spring_backend.memberUtil.entity;
 
 import lombok.*;
+import sigma.Spring_backend.crdiPage.entity.CrdiWork;
 import sigma.Spring_backend.memberLook.entity.MemberLookPage;
 import sigma.Spring_backend.memberMypage.entity.MemberMypage;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
@@ -80,6 +81,20 @@ public class Member {
     public void removeLookPage(MemberLookPage memberLookPage) {
         pages.remove(memberLookPage);
         memberLookPage.setMember(null);
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<CrdiWork> work = new ArrayList<>();
+
+    public void addWork(CrdiWork crdiWork){
+        work.add(crdiWork);
+        crdiWork.setMember(this);
+    }
+
+    public void removeWork(CrdiWork crdiWork){
+        work.add(crdiWork);
+        crdiWork.setMember(null);
     }
 
     @OneToOne(cascade = CascadeType.ALL)
