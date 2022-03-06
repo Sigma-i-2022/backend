@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.awsUtil.service.AwsService;
-import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
+import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.crdiPage.dto.CrdiProfileReq;
 import sigma.Spring_backend.crdiPage.entity.CrdiMypage;
@@ -27,14 +27,14 @@ public class CrdiPageService {
     public void registCrdiMypage(CrdiProfileReq crdiProfileReq) {
 
         if (!memberRepository.existsByEmail(crdiProfileReq.getEmail())) {
-            throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND);
+            throw new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND);
         }
 
         boolean verify = verifyRequest(crdiProfileReq);
-        if (!verify) throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_IMG_FORMAT);
+        if (!verify) throw new BussinessException(ExMessage.MEMBER_MYPAGE_IMG_FORMAT);
 
         if (crdiProfileReq.getIntro().length() > 500) {
-            throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_INTRO_LENGTH);
+            throw new BussinessException(ExMessage.MEMBER_MYPAGE_ERROR_INTRO_LENGTH);
         }
 
         try {
@@ -50,7 +50,7 @@ public class CrdiPageService {
                     .profileImgUrl(url)
                     .build());
         } catch (Exception e) {
-            throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_DB);
+            throw new BussinessException(ExMessage.MEMBER_MYPAGE_ERROR_DB);
         }
     }
 
@@ -58,18 +58,18 @@ public class CrdiPageService {
     public void updateCrdiMypage(CrdiProfileReq crdiProfileReq) {
 
         if (!memberRepository.existsByEmail(crdiProfileReq.getEmail())) {
-            throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND);
+            throw new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND);
         }
 
         if (!crdiPageRepository.existsByEmail(crdiProfileReq.getEmail())) {
-            throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND);
+            throw new BussinessException(ExMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND);
         }else{
             try{
                 CrdiMypage myPage = crdiPageRepository.findByEmail(crdiProfileReq.getEmail());
                 myPage.setIntroduction(crdiProfileReq.getIntro());
                 crdiPageRepository.save(myPage);
             }catch (Exception e) {
-                throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_DB);
+                throw new BussinessException(ExMessage.MEMBER_MYPAGE_ERROR_DB);
             }
         }
 

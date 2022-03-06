@@ -6,8 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.awsUtil.service.AwsService;
-import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
-import sigma.Spring_backend.baseUtil.config.DateConfig;
+import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberLook.dto.MemberLookPageReq;
 import sigma.Spring_backend.memberLook.dto.MemberLookPageRes;
@@ -16,6 +15,7 @@ import sigma.Spring_backend.memberLook.repository.MemberLookPageRepository;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +45,7 @@ public class MemberLookService {
 		// 3. 엔티티 생성 후 DB 저장
 		try {
 			Member member = memberRepository.findByEmailFJ(memberLookPageReq.getMemberEmail())
-					.orElseThrow(() -> new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND));
+					.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 			member.addLookPage(memberLookPageReq.toEntity(imagePathUrl));
 		} catch (Exception e) {
 			throw new BussinessException("DB 룩북 저장 실패");
@@ -74,9 +74,10 @@ public class MemberLookService {
 		Optional<Member> memberOpt = memberRepository.findByEmailFJ(memberEmail);
 
 		return memberOpt.map(m -> m.getPages()
-				.stream()
-				.map(MemberLookPage::toDto)
-				.collect(Collectors.toList()))
+						.stream()
+						.filter(page -> page.getActivateYn().equals("Y"))
+						.map(MemberLookPage::toDto)
+						.collect(Collectors.toList()))
 				.orElseGet(ArrayList::new);
 	}
 
@@ -84,7 +85,7 @@ public class MemberLookService {
 	public void updateLookPageInfo(Long key, MemberLookPageReq requestLook) {
 		if (key == null) throw new BussinessException("입력 값 문제");
 		MemberLookPage originLook = memberLookPageRepo.findById(key)
-				.orElseThrow(() -> new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND));
+				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 		originLook.setTopInfo(requestLook.getTopInfo());
 		originLook.setBottomInfo(requestLook.getBottomInfo());
 		originLook.setShoeInfo(requestLook.getShoeInfo());
@@ -94,24 +95,24 @@ public class MemberLookService {
 		originLook.setKeyword3(requestLook.getKeyword3());
 		originLook.setModelHeight(requestLook.getModelHeight());
 		originLook.setModelWeight(requestLook.getModelWeight());
-		originLook.setUpdateDate(new DateConfig().getNowDate());
+		originLook.setUpdateDate(LocalDateTime.now());
 	}
 
 	@Transactional
 	public void updateLookPageImage(Long key, MultipartFile requestImage) {
 		if (key == null) throw new BussinessException("입력 값 문제");
 		MemberLookPage lookPage = memberLookPageRepo.findById(key)
-				.orElseThrow(() -> new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND));
+				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 		String imagePathUrl = awsService.imageUploadToS3("/memberLookImage", requestImage);
 		lookPage.setImagePathUrl(imagePathUrl);
-		lookPage.setUpdateDate(new DateConfig().getNowDate());
+		lookPage.setUpdateDate(LocalDateTime.now());
 		memberLookPageRepo.save(lookPage);
 	}
 
 	@Transactional
 	public void deleteLookPage(Long lookSeq) {
 		MemberLookPage lookPage = memberLookPageRepo.findById(lookSeq)
-				.orElseThrow(() -> new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND));
+				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND));
 		lookPage.getMember().removeLookPage(lookPage);
 	}
 }

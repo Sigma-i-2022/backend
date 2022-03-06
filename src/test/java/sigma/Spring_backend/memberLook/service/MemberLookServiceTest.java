@@ -12,7 +12,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.awsUtil.service.AwsService;
-import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.memberLook.dto.Keyword;
 import sigma.Spring_backend.memberLook.dto.MemberLookPageReq;
 import sigma.Spring_backend.memberLook.dto.MemberLookPageRes;
@@ -23,6 +22,7 @@ import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,8 +39,6 @@ class MemberLookServiceTest {
 	private MemberRepository memberRepository;
 	@Mock
 	private AwsService awsService;
-	@Mock
-	private DateConfig dateConfig;
 
 	private static MultipartFile multipartFile;
 	private static MemberLookPage memberLookPage;
@@ -58,8 +56,8 @@ class MemberLookServiceTest {
 				.signupType("E")
 				.password("test1234!")
 				.userId("testtest")
-				.updateDate(dateConfig.getNowDate())
-				.registDate(dateConfig.getNowDate())
+				.updateDate(LocalDateTime.now())
+				.registDate(LocalDateTime.now())
 				.build();
 
 		memberLookPageReq = MemberLookPageReq.builder()
@@ -89,8 +87,8 @@ class MemberLookServiceTest {
 				.keyword1(Keyword.CASUAL)
 				.keyword2(Keyword.THIN)
 				.keyword3(Keyword.WARM)
-				.registDate(dateConfig.getNowDate())
-				.updateDate(dateConfig.getNowDate())
+				.registDate(LocalDateTime.now())
+				.updateDate(LocalDateTime.now())
 				.build();
 	}
 

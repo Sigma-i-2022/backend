@@ -5,13 +5,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
-import sigma.Spring_backend.baseUtil.config.DateConfig;
+import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberMypage.entity.MemberMypage;
 import sigma.Spring_backend.memberMypage.repository.MemberMypageRepository;
@@ -20,6 +18,7 @@ import sigma.Spring_backend.memberSignup.repository.AuthorizeCodeRepository;
 import sigma.Spring_backend.memberSignup.repository.CrdiJoinRepository;
 import sigma.Spring_backend.memberUtil.entity.Member;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
@@ -35,8 +34,6 @@ class MemberRepositoryTest {
 	private AuthorizeCodeRepository authorizeCodeRepository;
 	@Autowired
 	private CrdiJoinRepository crdiJoinRepository;
-	@Mock
-	private DateConfig dateConfig;
 
 	private Member member;
 
@@ -48,8 +45,8 @@ class MemberRepositoryTest {
 				.signupType("E")
 				.password("test1234!")
 				.userId("testtest")
-				.updateDate(dateConfig.getNowDate())
-				.registDate(dateConfig.getNowDate())
+				.updateDate(LocalDateTime.now())
+				.registDate(LocalDateTime.now())
 				.build();
 		System.out.println("START-SAVE========================================================================");
 		memberRepository.save(member);
@@ -62,7 +59,7 @@ class MemberRepositoryTest {
 		// when
 		System.out.println("START-QUERY========================================================================");
 		memberRepository.findByEmail(member.getEmail())
-				.orElseThrow(() -> new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND));
+				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 		System.out.println("END-QUERY========================================================================");
 
 		// then

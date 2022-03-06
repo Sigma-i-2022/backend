@@ -1,14 +1,12 @@
 package sigma.Spring_backend.memberMypage.controller;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
+import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.baseUtil.dto.SingleResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
@@ -41,7 +39,7 @@ public class MemberMypageController {
 			if (mypage != null) {
 				return responseService.getSingleResult(mypage);
 			} else {
-				throw new BussinessException(BussinessExceptionMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND);
+				throw new BussinessException(ExMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -87,28 +85,6 @@ public class MemberMypageController {
 			memberMypageInfoMap.put("intro", memberIntroPart);
 
 			memberMypageService.updateMemberProfile(memberMypageInfoMap);
-			return responseService.getSuccessResult();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return responseService.getFailResult(
-					FAIL,
-					e.getMessage()
-			);
-		}
-	}
-
-	@DeleteMapping("/mypage")
-	@ApiOperation(value = "회원의 마이페이지 삭제", notes = "회원의 마이페이지를 삭제합니다..")
-	public CommonResult memberMypageDelete(
-			@ApiParam(value = "회원 이메일", required = true) @RequestParam String memberEmail,
-			@ApiParam(value = "회원 아이디", required = true) @RequestParam String memberId
-	) {
-		try {
-			Map<String, String> memberMypageInfoMap = new HashMap<>();
-			memberMypageInfoMap.put("email", memberEmail);
-			memberMypageInfoMap.put("userId", memberId);
-
-			memberMypageService.deleteMemberMypage(memberMypageInfoMap);
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
 			e.printStackTrace();

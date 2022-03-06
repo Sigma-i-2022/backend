@@ -5,6 +5,8 @@ import sigma.Spring_backend.memberUtil.entity.Member;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MemberRequestDto {
     private String userId;
     private String email;

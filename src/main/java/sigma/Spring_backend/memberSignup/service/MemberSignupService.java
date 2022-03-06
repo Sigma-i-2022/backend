@@ -8,8 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
-import sigma.Spring_backend.baseUtil.config.DateConfig;
+import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberMypage.entity.MemberMypage;
 import sigma.Spring_backend.memberSignup.dto.CrdiResponseDto;
@@ -21,7 +20,6 @@ import sigma.Spring_backend.memberSignup.repository.CrdiJoinRepository;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
-import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
@@ -41,7 +39,6 @@ public class MemberSignupService {
 	private final CrdiJoinRepository crdiJoinRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final HttpSession session;
-	private final DateConfig dateConfig;
 
 	@Value("${email.id}")
 	private String sigmaEmail;
@@ -60,7 +57,7 @@ public class MemberSignupService {
 		if (dbCode.isPresent() && dbCode.get().getCode().equals(userInputCode) && !dbCode.get().isExpired()) {
 			dbCode.get().useCode();
 		} else {
-			throw new BussinessException(BussinessExceptionMessage.EMAIL_ERROR_FORMAT);
+			throw new BussinessException(ExMessage.EMAIL_ERROR_FORMAT);
 		}
 	}
 
@@ -79,9 +76,9 @@ public class MemberSignupService {
 
 		AuthorizeMember authorizeMember = authorizeCodeRepository.findByEmail(email).get();
 		if (memberRepository.findByEmailFJ(email).isPresent()) {
-			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_DUPLICATE);
+			throw new BussinessException(ExMessage.MEMBER_ERROR_DUPLICATE);
 		} else if (!authorizeMember.isExpired()) {
-			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NON_VERIFIED_EMAIL);
+			throw new BussinessException(ExMessage.MEMBER_ERROR_NON_VERIFIED_EMAIL);
 		} else {
 			saveMember(password, email, userId);
 			MemberMypage mypage = MemberMypage.builder()
@@ -110,11 +107,12 @@ public class MemberSignupService {
 					.userId(userId)
 					.password(password)
 					.signupType("E")
-					.registDate(dateConfig.getNowDate())
-					.updateDate(dateConfig.getNowDate())
+					.registDate(LocalDateTime.now())
+					.updateDate(LocalDateTime.now())
+					.activateYn("Y")
 					.build());
 		} catch (Exception e) {
-			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_DB_SAVE);
+			throw new BussinessException(ExMessage.MEMBER_ERROR_DB_SAVE);
 		}
 	}
 
@@ -127,12 +125,12 @@ public class MemberSignupService {
 			throw new BussinessException("이메일 및 패스워드를 입력해주세요.");
 		}
 
-		Member member = memberRepository.findByEmail(email).orElseThrow(()->
-				new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_NOT_FOUND));
+		Member member = memberRepository.findByEmailFJ(email).orElseThrow(()->
+				new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 
 		if(!passwordEncoder.matches(password, member.getPassword())) {
 			System.out.println("비밀번호가 일치하지 않습니다.");
-			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_PASSWORD);
+			throw new BussinessException(ExMessage.MEMBER_ERROR_PASSWORD);
 		}
 
 
@@ -214,7 +212,7 @@ public class MemberSignupService {
 	private void verifyUserEmail(String email) {
 		Pattern emailExpression = Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
 		if (!emailExpression.matcher(email).matches()) {
-			throw new BussinessException(BussinessExceptionMessage.EMAIL_ERROR_FORMAT);
+			throw new BussinessException(ExMessage.EMAIL_ERROR_FORMAT);
 		}
 	}
 
@@ -222,13 +220,13 @@ public class MemberSignupService {
 		// 시작은 영문으로만, '_'를 제외한 특수문자 안되며 영문, 숫자, '_'으로만 이루어진 5 ~ 12자 이하
 		Pattern nameExpression = Pattern.compile("^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$");
 		if (!nameExpression.matcher(userId).matches()) {
-			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_USER_ID_FORMAT);
+			throw new BussinessException(ExMessage.MEMBER_ERROR_USER_ID_FORMAT);
 		}
 	}
 
 	private void memberEmailDuplicateValidation(String email) {
 		if (memberRepository.findByEmail(email).isPresent()) {
-			throw new BussinessException(BussinessExceptionMessage.MEMBER_ERROR_DUPLICATE);
+			throw new BussinessException(ExMessage.MEMBER_ERROR_DUPLICATE);
 		}
 	}
 
@@ -253,17 +251,17 @@ public class MemberSignupService {
 			if(member.equals("USER")) {
 				messageBody = createMailMessage(toEmail);
 				mail.setSubject("Sigma 회원가입 이메일 인증");
-				mail.addRecipients(Message.RecipientType.TO, toEmail);
+				mail.addRecipients(javax.mail.Message.RecipientType.TO, toEmail);
 			}else if(member.equals("CRDI")) {
 				messageBody = createCrdiMailMessage(toEmail);
 				mail.setSubject("Sigma 코디네이터 가입신청");
-				mail.addRecipients(Message.RecipientType.TO, sigmaEmail);
+				mail.addRecipients(javax.mail.Message.RecipientType.TO, sigmaEmail);
 			}
 			mail.setText(messageBody, "utf-8", "html");
 			mail.setFrom(new InternetAddress(sigmaEmail, "Sigma"));
 
 		} catch (Exception e) {
-			throw new BussinessException(BussinessExceptionMessage.EMAIL_ERROR_SEND);
+			throw new BussinessException(ExMessage.EMAIL_ERROR_SEND);
 		}
 
 		return mail;

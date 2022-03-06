@@ -8,13 +8,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberUtil.dto.MemberRequestDto;
 import sigma.Spring_backend.memberUtil.dto.MemberResponseDto;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,8 +29,6 @@ class MemberServiceTest {
 	private MemberService memberService;
 	@Mock
 	private MemberRepository memberRepository;
-	@Mock
-	private DateConfig dateConfig;
 
 	private Member member;
 	private MemberRequestDto memberReq;
@@ -43,8 +41,8 @@ class MemberServiceTest {
 				.signupType("E")
 				.password("test1234!")
 				.userId("testtest")
-				.updateDate(dateConfig.getNowDate())
-				.registDate(dateConfig.getNowDate())
+				.updateDate(LocalDateTime.now())
+				.registDate(LocalDateTime.now())
 				.build();
 		memberReq = MemberRequestDto.builder()
 				.email("test@test.com")

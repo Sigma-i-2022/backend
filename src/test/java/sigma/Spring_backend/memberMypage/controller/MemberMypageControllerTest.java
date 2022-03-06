@@ -22,7 +22,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.awsUtil.service.AwsService;
-import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
 import sigma.Spring_backend.memberMypage.entity.MemberMypage;
 import sigma.Spring_backend.memberMypage.repository.MemberMypageRepository;
@@ -31,6 +30,7 @@ import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
 import java.io.InputStream;
+import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -53,8 +53,6 @@ class MemberMypageControllerTest {
 	private MemberMypageService memberMypageService;
 	@Autowired
 	private MemberMypageRepository memberMypageRepository;
-	@Autowired
-	private DateConfig dateConfig;
 	@Mock
 	private AwsService awsService;
 
@@ -77,8 +75,8 @@ class MemberMypageControllerTest {
 				.signupType("E")
 				.password("test1234!")
 				.userId("testtest")
-				.updateDate(dateConfig.getNowDate())
-				.registDate(dateConfig.getNowDate())
+				.updateDate(LocalDateTime.now())
+				.registDate(LocalDateTime.now())
 				.build();
 		member.registMypage(mypage1);
 		memberRepository.save(member);
@@ -147,24 +145,6 @@ class MemberMypageControllerTest {
 		);
 		actions
 				.andDo(print())
-				.andExpect(jsonPath("$.success").value(true))
-				.andExpect(jsonPath("$.code").value(1))
-				.andExpect(jsonPath("$.message").value("성공"));
-	}
-
-	@Test
-	@DisplayName("회원 마이페이지 삭제")
-	void memberMypageDelete() throws Exception {
-		params.add("memberEmail", mypage1.getEmail());
-		params.add("memberId", mypage1.getUserId());
-
-		ResultActions actions = mvc.perform(
-				delete("/v1/api/mypage")
-						.params(params)
-						.contentType(MediaType.APPLICATION_JSON)
-						.accept(MediaType.APPLICATION_JSON)
-		);
-		actions.andDo(print())
 				.andExpect(jsonPath("$.success").value(true))
 				.andExpect(jsonPath("$.code").value(1))
 				.andExpect(jsonPath("$.message").value("성공"));

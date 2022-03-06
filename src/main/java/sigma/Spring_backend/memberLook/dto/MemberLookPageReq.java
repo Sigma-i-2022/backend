@@ -1,24 +1,18 @@
 package sigma.Spring_backend.memberLook.dto;
 
 import io.swagger.annotations.ApiModelProperty;
-import javafx.scene.input.DataFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
-import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.memberLook.entity.MemberLookPage;
 
-import javax.persistence.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @Builder
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class MemberLookPageReq {
 
@@ -71,8 +65,9 @@ public class MemberLookPageReq {
 				.bottomInfo(this.bottomInfo)
 				.shoeInfo(this.shoeInfo)
 				.imagePathUrl(imagePathUrl)
-				.updateDate(new DateConfig().getNowDate())
-				.registDate(new DateConfig().getNowDate())
+				.updateDate(LocalDateTime.now())
+				.registDate(LocalDateTime.now())
+				.activateYn("Y")
 				.build();
 	}
 

@@ -1,11 +1,13 @@
 package sigma.Spring_backend.memberLook.entity;
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import sigma.Spring_backend.memberLook.dto.Keyword;
 import sigma.Spring_backend.memberLook.dto.MemberLookPageRes;
 import sigma.Spring_backend.memberUtil.entity.Member;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Builder
@@ -53,14 +55,17 @@ public class MemberLookPage {
 	@Column
 	private String shoeInfo;
 
-	@Column
-	private String registDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime registDate;
+
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime updateDate;
 
 	@Column
-	private String updateDate;
+	private String activateYn;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "pages_seq")
+	@JoinColumn(name = "MEMBER_SEQ")
 	private Member member;
 
 	public Member getMember() {

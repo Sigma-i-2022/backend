@@ -7,6 +7,7 @@ import lombok.Data;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -50,8 +51,8 @@ public class MemberLookPageRes {
 	private String shoeInfo;
 
 	@ApiModelProperty("등록 날짜")
-	private String registDate;
+	private LocalDateTime registDate;
 
 	@ApiModelProperty("수정 날짜")
-	private String updateDate;
+	private LocalDateTime updateDate;
 }
