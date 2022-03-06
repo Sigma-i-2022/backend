@@ -1,12 +1,10 @@
 package sigma.Spring_backend.chat.entity;
 
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 import sigma.Spring_backend.chat.dto.ChatRoomDto;
 import sigma.Spring_backend.chat.dto.ImageUrl;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,8 +35,7 @@ public class ChatRoom {
 	@Column
 	private String cordiProfileImageUrl;
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	private LocalDateTime regDate;
+	private String regDate;
 
 	public void setInitYn(String yn) {
 		this.initYn = yn;

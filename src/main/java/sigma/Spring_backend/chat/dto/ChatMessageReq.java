@@ -9,8 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.chat.entity.ChatMessage;
 import sigma.Spring_backend.chat.entity.MessageType;
 
-import java.time.LocalDateTime;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -21,7 +19,7 @@ public class ChatMessageReq {
 	private String senderProfileImgUrl;
 	private String senderId;
 	private String message;
-	private LocalDateTime regDate;
+	private String regDate;
 	private Long chatRoomId;
 
 	public ChatMessage toEntity(@Nullable String imagePath) {

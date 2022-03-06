@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
+import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberMypage.entity.MemberMypage;
 import sigma.Spring_backend.memberMypage.repository.MemberMypageRepository;
@@ -18,7 +19,6 @@ import sigma.Spring_backend.memberSignup.repository.AuthorizeCodeRepository;
 import sigma.Spring_backend.memberSignup.repository.CrdiJoinRepository;
 import sigma.Spring_backend.memberUtil.entity.Member;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
@@ -34,6 +34,7 @@ class MemberRepositoryTest {
 	private AuthorizeCodeRepository authorizeCodeRepository;
 	@Autowired
 	private CrdiJoinRepository crdiJoinRepository;
+	private DateConfig dateConfig;
 
 	private Member member;
 
@@ -45,8 +46,8 @@ class MemberRepositoryTest {
 				.signupType("E")
 				.password("test1234!")
 				.userId("testtest")
-				.updateDate(LocalDateTime.now())
-				.registDate(LocalDateTime.now())
+				.updateDate(dateConfig.getNowDate())
+				.registDate(dateConfig.getNowDate())
 				.build();
 		System.out.println("START-SAVE========================================================================");
 		memberRepository.save(member);

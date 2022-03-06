@@ -22,6 +22,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.awsUtil.service.AwsService;
+import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
 import sigma.Spring_backend.memberMypage.entity.MemberMypage;
 import sigma.Spring_backend.memberMypage.repository.MemberMypageRepository;
@@ -30,7 +31,6 @@ import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
 import java.io.InputStream;
-import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -55,6 +55,7 @@ class MemberMypageControllerTest {
 	private MemberMypageRepository memberMypageRepository;
 	@Mock
 	private AwsService awsService;
+	private DateConfig dateConfig;
 
 	private MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 	private MemberMypage mypage1;
@@ -75,8 +76,8 @@ class MemberMypageControllerTest {
 				.signupType("E")
 				.password("test1234!")
 				.userId("testtest")
-				.updateDate(LocalDateTime.now())
-				.registDate(LocalDateTime.now())
+				.updateDate(dateConfig.getNowDate())
+				.registDate(dateConfig.getNowDate())
 				.build();
 		member.registMypage(mypage1);
 		memberRepository.save(member);

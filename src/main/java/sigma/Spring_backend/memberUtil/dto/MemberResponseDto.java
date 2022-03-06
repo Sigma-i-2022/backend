@@ -1,8 +1,9 @@
 package sigma.Spring_backend.memberUtil.dto;
 
-import lombok.*;
-
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
@@ -16,6 +17,6 @@ public class MemberResponseDto {
     private String signupType;
     private String activateYn;
     private String crdiYn;
-    private LocalDateTime registDate;
-    private LocalDateTime updateDate;
+    private String registDate;
+    private String updateDate;
 }

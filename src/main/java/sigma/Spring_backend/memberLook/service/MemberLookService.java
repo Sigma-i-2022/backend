@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.awsUtil.service.AwsService;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
+import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberLook.dto.MemberLookPageReq;
 import sigma.Spring_backend.memberLook.dto.MemberLookPageRes;
@@ -15,7 +16,6 @@ import sigma.Spring_backend.memberLook.repository.MemberLookPageRepository;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +29,7 @@ public class MemberLookService {
 	private final MemberLookPageRepository memberLookPageRepo;
 	private final MemberRepository memberRepository;
 	private final AwsService awsService;
+	private DateConfig dateConfig;
 
 	/*
 		룩 페이지 등록
@@ -95,7 +96,7 @@ public class MemberLookService {
 		originLook.setKeyword3(requestLook.getKeyword3());
 		originLook.setModelHeight(requestLook.getModelHeight());
 		originLook.setModelWeight(requestLook.getModelWeight());
-		originLook.setUpdateDate(LocalDateTime.now());
+		originLook.setUpdateDate(dateConfig.getNowDate());
 	}
 
 	@Transactional
@@ -105,7 +106,7 @@ public class MemberLookService {
 				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 		String imagePathUrl = awsService.imageUploadToS3("/memberLookImage", requestImage);
 		lookPage.setImagePathUrl(imagePathUrl);
-		lookPage.setUpdateDate(LocalDateTime.now());
+		lookPage.setUpdateDate(dateConfig.getNowDate());
 		memberLookPageRepo.save(lookPage);
 	}
 

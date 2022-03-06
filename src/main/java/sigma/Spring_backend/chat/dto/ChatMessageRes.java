@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -17,6 +15,6 @@ public class ChatMessageRes {
 	private String senderProfileImgUrl;
 	private String message;
 	private String senderId;
-	private LocalDateTime regDate;
+	private String regDate;
 	private Long chatRoomId;
 }

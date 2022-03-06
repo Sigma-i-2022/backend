@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
+import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberMypage.entity.MemberMypage;
 import sigma.Spring_backend.memberSignup.dto.CrdiResponseDto;
@@ -39,6 +40,7 @@ public class MemberSignupService {
 	private final CrdiJoinRepository crdiJoinRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final HttpSession session;
+	private final DateConfig dateConfig;
 
 	@Value("${email.id}")
 	private String sigmaEmail;
@@ -107,8 +109,8 @@ public class MemberSignupService {
 					.userId(userId)
 					.password(password)
 					.signupType("E")
-					.registDate(LocalDateTime.now())
-					.updateDate(LocalDateTime.now())
+					.registDate(dateConfig.getNowDate())
+					.updateDate(dateConfig.getNowDate())
 					.activateYn("Y")
 					.build());
 		} catch (Exception e) {

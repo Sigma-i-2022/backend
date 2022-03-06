@@ -1,7 +1,9 @@
 package sigma.Spring_backend.memberUtil.entity;
 
-import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import sigma.Spring_backend.chat.entity.MemberChatRoomConnection;
 import sigma.Spring_backend.crdiPage.entity.CrdiWork;
 import sigma.Spring_backend.memberLook.entity.MemberLookPage;
@@ -11,7 +13,6 @@ import sigma.Spring_backend.memberSignup.entity.JoinCrdi;
 import sigma.Spring_backend.memberUtil.dto.MemberResponseDto;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,11 +39,11 @@ public class Member {
     @Column
     private String signupType;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime registDate;
+//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private String registDate;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime updateDate;
+//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private String updateDate;
 
     @Column
     private String activateYn;

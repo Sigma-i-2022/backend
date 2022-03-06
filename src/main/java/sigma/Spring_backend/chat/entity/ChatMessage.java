@@ -1,11 +1,12 @@
 package sigma.Spring_backend.chat.entity;
 
-import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import sigma.Spring_backend.chat.dto.ChatMessageRes;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -38,8 +39,7 @@ public class ChatMessage {
 	@Column
 	private Long chatRoomId;
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	private LocalDateTime regDate;
+	private String regDate;
 
 	public void setMessage(String message) {
 		this.message = message;

@@ -5,9 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import java.time.LocalDateTime;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -19,5 +16,5 @@ public class ChatRoomDto {
 	private String clientProfileImageUrl;
 	private String cordiId;
 	private String cordiProfileImageUrl;
-	private LocalDateTime regDate;
+	private String regDate;
 }

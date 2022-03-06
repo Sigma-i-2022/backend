@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sigma.Spring_backend.awsUtil.service.AwsService;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
+import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.chat.dto.*;
 import sigma.Spring_backend.chat.entity.ChatMessage;
@@ -20,7 +21,6 @@ import sigma.Spring_backend.chat.repository.MemberChatRoomConnectionRepository;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,7 +60,7 @@ public class ChatService {
 				.MemberChatRoomConnections(new ArrayList<>())
 				.messages(new ArrayList<>())
 				.initYn("N")
-				.regDate(LocalDateTime.now())
+				.regDate(new DateConfig().getNowDate())
 				.build();
 
 		try {
@@ -122,7 +122,7 @@ public class ChatService {
 		Member member = memberRepository.findByIdFJ(memberId)
 				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 
-		message.setRegDate(LocalDateTime.now());
+		message.setRegDate(new DateConfig().getNowDate());
 		message.setSenderProfileImgUrl(member.getMypage().getProfileImgUrl());
 
 		if (message.getChatType().equals(MessageType.ENTER)) {
