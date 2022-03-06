@@ -3,9 +3,7 @@ package sigma.Spring_backend.chat.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sigma.Spring_backend.awsUtil.service.AwsService;
@@ -19,7 +17,6 @@ import sigma.Spring_backend.chat.entity.MessageType;
 import sigma.Spring_backend.chat.repository.ChatMessageRepository;
 import sigma.Spring_backend.chat.repository.ChatRoomRepository;
 import sigma.Spring_backend.chat.repository.MemberChatRoomConnectionRepository;
-import sigma.Spring_backend.memberUtil.dto.MemberResponseDto;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 

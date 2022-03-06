@@ -3,6 +3,7 @@ package sigma.Spring_backend.memberUtil.entity;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import sigma.Spring_backend.chat.entity.MemberChatRoomConnection;
+import sigma.Spring_backend.crdiPage.entity.CrdiWork;
 import sigma.Spring_backend.memberLook.entity.MemberLookPage;
 import sigma.Spring_backend.memberMypage.entity.MemberMypage;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
@@ -62,6 +63,7 @@ public class Member {
     }
 
     public void removeMyPage() {
+        this.mypage.setEmail("");
         this.mypage = null;
     }
 
@@ -73,11 +75,7 @@ public class Member {
         this.authorizeUser = authorizeUser;
     }
 
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
-            mappedBy = "member"
-    )
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "member")
     @Builder.Default
     private List<MemberLookPage> pages = new ArrayList<>();
 
@@ -90,9 +88,19 @@ public class Member {
         memberLookPage.setActivateYn("N");
     }
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "seq", referencedColumnName = "JOIN_SEQ")
-    private JoinCrdi joinCrdi;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<CrdiWork> work = new ArrayList<>();
+    public void addWork(CrdiWork crdiWork){
+        work.add(crdiWork);
+        crdiWork.setMember(this);
+    }
+
+    public void removeWork(CrdiWork crdiWork){
+        work.add(crdiWork);
+        crdiWork.setMember(null);
+    }
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     @Builder.Default
@@ -103,9 +111,12 @@ public class Member {
         memberChatRoomConnection.setMember(this);
     }
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "seq", referencedColumnName = "JOIN_SEQ")
+    private JoinCrdi joinCrdi;
+
     public MemberResponseDto toDto() {
         return MemberResponseDto.builder()
-                .userSeq(seq)
                 .userId(userId)
                 .email(email)
                 .password(password)

@@ -63,11 +63,11 @@ class MemberServiceTest {
 	@Test
 	@DisplayName("회원 조회 성공")
 	void findMember() {
-		given(memberRepository.findByEmail(member.getEmail())).willReturn(Optional.of(member));
+		given(memberRepository.findByEmailFJ(member.getEmail())).willReturn(Optional.of(member));
 
 		MemberResponseDto memberDto = memberService.findByEmail(member.getEmail());
 
-		Assertions.assertThat(memberRepository.findByEmail(member.getEmail()).get().toDto())
+		Assertions.assertThat(memberRepository.findByEmailFJ(member.getEmail()).get().toDto())
 				.isEqualTo(memberDto);
 	}
 

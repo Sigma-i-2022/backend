@@ -17,6 +17,8 @@ import sigma.Spring_backend.memberLook.dto.MemberLookPageReq;
 import sigma.Spring_backend.memberLook.dto.MemberLookPageRes;
 import sigma.Spring_backend.memberLook.entity.MemberLookPage;
 import sigma.Spring_backend.memberLook.repository.MemberLookPageRepository;
+import sigma.Spring_backend.memberMypage.entity.MemberMypage;
+import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
@@ -89,6 +91,7 @@ class MemberLookServiceTest {
 				.keyword3(Keyword.WARM)
 				.registDate(LocalDateTime.now())
 				.updateDate(LocalDateTime.now())
+				.activateYn("Y")
 				.build();
 	}
 
@@ -130,9 +133,9 @@ class MemberLookServiceTest {
 	void getLookPages() {
 		//given
 		member.addLookPage(memberLookPage);
-		member.addLookPage(MemberLookPage.builder().seq(2L).build());
-		member.addLookPage(MemberLookPage.builder().seq(3L).build());
-		member.addLookPage(MemberLookPage.builder().seq(4L).build());
+		member.addLookPage(MemberLookPage.builder().seq(2L).activateYn("Y").build());
+		member.addLookPage(MemberLookPage.builder().seq(3L).activateYn("Y").build());
+		member.addLookPage(MemberLookPage.builder().seq(4L).activateYn("Y").build());
 		given(memberRepository.findByEmailFJ(member.getEmail()))
 				.willReturn(Optional.of(member));
 
@@ -192,11 +195,10 @@ class MemberLookServiceTest {
 		memberLookService.deleteLookPage(1L);
 
 		//then
-		org.junit.jupiter.api.Assertions.assertThrows(
-				NullPointerException.class,
-				() -> memberLookPage.getMember().getPages().size());
-		Assertions.assertThat(memberLookPageRepo.count())
-				.isEqualTo(0);
+		org.junit.jupiter.api.Assertions.assertEquals(
+				memberLookPageRepo.findById(1L).get().getActivateYn(),
+				"N"
+		);
 	}
 	//given
 

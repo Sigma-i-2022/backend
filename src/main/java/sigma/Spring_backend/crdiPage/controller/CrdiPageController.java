@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
 import sigma.Spring_backend.crdiPage.dto.CrdiProfileReq;
+import sigma.Spring_backend.crdiPage.dto.CrdiWorkReq;
 import sigma.Spring_backend.crdiPage.service.CrdiPageService;
 
 import java.util.HashMap;
@@ -24,6 +25,7 @@ public class CrdiPageController {
 
     private final ResponseService responseService;
     private final CrdiPageService crdiPageService;
+    private final int FAIL = -1;
 
     @PostMapping("/mypage")
     @ApiOperation(value = "코디네이터 마이페이지 등록", notes = "코디네이터의 마이페이지를 등록합니다.")
@@ -59,5 +61,20 @@ public class CrdiPageController {
         }
     }
 
-
+    @PostMapping("/work")
+    @ApiOperation(value = "코디네이터 작품 등록", notes = "코디네이터의 작품을 등록합니다.")
+    public CommonResult registCrdiWork(
+            @ApiParam(value = "코데네이터 작품 요청 객체") @ModelAttribute CrdiWorkReq crdiWorkReq
+    ){
+        try{
+            crdiPageService.registCrdiWork(crdiWorkReq);
+            return  responseService.getSuccessResult();
+        }catch (Exception e){
+            e.printStackTrace();;
+            return responseService.getFailResult(
+                    FAIL,
+                    e.getMessage()
+            );
+        }
+    }
 }

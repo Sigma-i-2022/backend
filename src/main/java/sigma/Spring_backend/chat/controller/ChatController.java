@@ -5,9 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
@@ -19,11 +17,7 @@ import sigma.Spring_backend.baseUtil.service.ResponseService;
 import sigma.Spring_backend.chat.dto.ChatMessageReq;
 import sigma.Spring_backend.chat.dto.ChatMessageRes;
 import sigma.Spring_backend.chat.dto.ChatRoomDto;
-import sigma.Spring_backend.chat.entity.ChatMessage;
 import sigma.Spring_backend.chat.service.ChatService;
-import sigma.Spring_backend.memberUtil.dto.MemberResponseDto;
-
-import java.util.List;
 
 @Slf4j
 @Api(tags = "6. 채팅")

@@ -4,7 +4,6 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import sigma.Spring_backend.chat.dto.ChatRoomDto;
 import sigma.Spring_backend.chat.dto.ImageUrl;
-import sigma.Spring_backend.memberUtil.entity.Member;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -44,10 +43,6 @@ public class ChatRoom {
 	public void setInitYn(String yn) {
 		this.initYn = yn;
 	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "MEMBER_SEQ")
-	private Member member;
 
 	@OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Builder.Default
