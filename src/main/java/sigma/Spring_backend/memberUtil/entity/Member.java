@@ -98,7 +98,7 @@ public class Member {
     }
 
     public void removeWork(CrdiWork crdiWork){
-        work.add(crdiWork);
+        work.remove(crdiWork);
         crdiWork.setMember(null);
     }
 
@@ -121,6 +121,8 @@ public class Member {
                 .email(email)
                 .password(password)
                 .signupType(signupType)
+                .activateYn(activateYn)
+                .crdiYn(crdiYn)
                 .registDate(registDate)
                 .updateDate(updateDate)
                 .build();

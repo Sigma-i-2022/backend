@@ -14,6 +14,8 @@ public class MemberResponseDto {
     private String email;
     private String password;
     private String signupType;
+    private String activateYn;
+    private String crdiYn;
     private LocalDateTime registDate;
     private LocalDateTime updateDate;
 }
