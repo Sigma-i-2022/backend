@@ -55,7 +55,6 @@ class MemberMypageControllerTest {
 	private MemberMypageRepository memberMypageRepository;
 	@Mock
 	private AwsService awsService;
-	private DateConfig dateConfig;
 
 	private MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 	private MemberMypage mypage1;
@@ -76,8 +75,8 @@ class MemberMypageControllerTest {
 				.signupType("E")
 				.password("test1234!")
 				.userId("testtest")
-				.updateDate(dateConfig.getNowDate())
-				.registDate(dateConfig.getNowDate())
+				.updateDate(new DateConfig().getNowDate())
+				.registDate(new DateConfig().getNowDate())
 				.build();
 		member.registMypage(mypage1);
 		memberRepository.save(member);

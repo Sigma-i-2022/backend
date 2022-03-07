@@ -40,7 +40,6 @@ public class MemberSignupService {
 	private final CrdiJoinRepository crdiJoinRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final HttpSession session;
-	private final DateConfig dateConfig;
 
 	@Value("${email.id}")
 	private String sigmaEmail;
@@ -109,8 +108,8 @@ public class MemberSignupService {
 					.userId(userId)
 					.password(password)
 					.signupType("E")
-					.registDate(dateConfig.getNowDate())
-					.updateDate(dateConfig.getNowDate())
+					.registDate(new DateConfig().getNowDate())
+					.updateDate(new DateConfig().getNowDate())
 					.activateYn("Y")
 					.build());
 		} catch (Exception e) {

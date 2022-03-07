@@ -34,7 +34,7 @@ class MemberRepositoryTest {
 	private AuthorizeCodeRepository authorizeCodeRepository;
 	@Autowired
 	private CrdiJoinRepository crdiJoinRepository;
-	private DateConfig dateConfig;
+	private final DateConfig dateConfig = new DateConfig();
 
 	private Member member;
 
