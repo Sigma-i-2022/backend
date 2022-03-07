@@ -26,7 +26,7 @@ public class JoinCrdi {
     @Column(nullable = false)
     String userId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     String career;
 
     @Column

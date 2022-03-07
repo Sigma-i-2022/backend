@@ -1,11 +1,11 @@
 package sigma.Spring_backend.baseUtil.exception;
 
-import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
+import sigma.Spring_backend.baseUtil.advice.ExMessage;
 
 public class BussinessException extends RuntimeException {
 
-	public BussinessException(BussinessExceptionMessage message) {
-		super(message.getMessage());
+	public BussinessException(ExMessage exMessage) {
+		super(exMessage.getMessage());
 	}
 
 	public BussinessException(String message) {

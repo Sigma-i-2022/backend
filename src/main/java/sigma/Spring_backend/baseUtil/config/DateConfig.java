@@ -1,16 +1,13 @@
 package sigma.Spring_backend.baseUtil.config;
 
-import lombok.Getter;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Configuration
 public class DateConfig {
-	@Bean
 	public String getNowDate() {
-		return new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss").format(new Date());
+		return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 	}
 }

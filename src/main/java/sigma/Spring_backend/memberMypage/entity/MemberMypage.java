@@ -23,7 +23,7 @@ public class MemberMypage {
 	@Column(unique = true, nullable = false)
 	private String userId;
 
-	@Column
+	@Column(length = 500)
 	@Builder.Default
 	private String introduction = "";
 

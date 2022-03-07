@@ -2,7 +2,6 @@ package sigma.Spring_backend.memberSignup.dto;
 
 import lombok.Data;
 
-import javax.persistence.Column;
 import java.time.LocalDateTime;
 
 @Data

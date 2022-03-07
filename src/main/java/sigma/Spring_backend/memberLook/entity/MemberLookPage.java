@@ -59,8 +59,11 @@ public class MemberLookPage {
 	@Column
 	private String updateDate;
 
+	@Column
+	private String activateYn;
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "pages_seq")
+	@JoinColumn(name = "MEMBER_SEQ")
 	private Member member;
 
 	public Member getMember() {

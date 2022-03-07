@@ -6,10 +6,9 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import sigma.Spring_backend.baseUtil.advice.BussinessExceptionMessage;
+import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.baseUtil.dto.SingleResult;
-import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
 import sigma.Spring_backend.memberSignup.dto.CrdiResponseDto;
 import sigma.Spring_backend.memberSignup.service.MemberSignupService;
@@ -60,7 +59,7 @@ public class MemberSignupController {
 		} catch (Exception e) {
 			return responseService.getFailResult(
 					FAIL,
-					BussinessExceptionMessage.EMAIL_ERROR_CODE.getMessage()
+					ExMessage.EMAIL_ERROR_CODE.getMessage()
 			);
 		}
 	}

@@ -33,7 +33,7 @@ public class ExceptionAdvice {
 
         return responseService.getFailResult(
                 -9999,
-                BussinessExceptionMessage.UNDEFINED_ERROR.getMessage()
+                ExMessage.UNDEFINED_ERROR.getMessage()
         );
     }
 
@@ -44,8 +44,11 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public CommonResult bussinessException(HttpServletRequest request, Exception e) {
 
-        log.error(request.getRequestURI());
-        log.error(Arrays.toString(e.getStackTrace()));
+        log.error("========================================ERROR START========================================");
+        log.error("요청 URL : " + request.getMethod() + " " + request.getRequestURI());
+        log.error("예외 메시지 : " + e.getMessage());
+        e.printStackTrace();
+        log.error("========================================ERROR END========================================");
 
         return responseService.getFailResult(
                 -1,

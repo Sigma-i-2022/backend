@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class CrdiWorkRes {
 
     private Long crdiWorkSeq;
-    private String explanation  = "";
+    private String explanation;
     private String imagePathUrl;
     private String weight;
     private String height;

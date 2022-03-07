@@ -29,7 +29,7 @@ public class MemberController {
             @ApiParam(value = "회원 객체", required = true)
             @ModelAttribute MemberRequestDto member
     ) {
-        return responseService.getSingleResult(memberService.save(member));
+        return responseService.getSingleResult(memberService.save(member).toDto());
     }
 
     @ApiOperation(value = "이메일로 회원 조회", notes = "이메일로 회원을 조회합니다.")
@@ -37,7 +37,7 @@ public class MemberController {
     public SingleResult<MemberResponseDto> findMemberByEmail(
             @ApiParam(value = "회원 이메일", required = true) @RequestParam(name = "email") String email
     ) {
-        MemberResponseDto byEmail = memberService.findByEmail(email);
+        MemberResponseDto byEmail = memberService.findByEmailWithFetch(email);
         return responseService.getSingleResult(byEmail);
     }
 
