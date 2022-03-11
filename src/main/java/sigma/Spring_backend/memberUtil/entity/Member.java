@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sigma.Spring_backend.chat.entity.MemberChatRoomConnection;
+import sigma.Spring_backend.crdiPage.entity.CrdiMypage;
 import sigma.Spring_backend.crdiPage.entity.CrdiWork;
 import sigma.Spring_backend.memberLook.entity.MemberLookPage;
 import sigma.Spring_backend.memberMypage.entity.MemberMypage;
@@ -67,6 +68,10 @@ public class Member {
         this.mypage.setEmail("");
         this.mypage = null;
     }
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "CRDIMYPAGE_SEQ")
+    private CrdiMypage crdiMypage;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "AUTHORIZE_USER_SEQ")

@@ -10,10 +10,20 @@ import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.crdiPage.dto.CrdiProfileReq;
 import sigma.Spring_backend.crdiPage.dto.CrdiWorkReq;
+import sigma.Spring_backend.crdiPage.dto.CrdiWorkRes;
 import sigma.Spring_backend.crdiPage.entity.CrdiMypage;
+import sigma.Spring_backend.crdiPage.entity.CrdiWork;
 import sigma.Spring_backend.crdiPage.repository.CrdiPageRepository;
+import sigma.Spring_backend.crdiPage.repository.CrdiWorkRepository;
+import sigma.Spring_backend.memberLook.dto.MemberLookPageRes;
+import sigma.Spring_backend.memberLook.entity.MemberLookPage;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -22,6 +32,7 @@ import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 public class CrdiPageService {
 
     private final CrdiPageRepository crdiPageRepository;
+    private final CrdiWorkRepository crdiWorkRepository;
     private final MemberRepository memberRepository;
     private final AwsService awsService;
 
@@ -91,7 +102,25 @@ public class CrdiPageService {
         }catch (Exception e){
             throw new BussinessException("DB 작품 저장 실패");
         }
+    }
 
+    @Transactional(readOnly = true)
+    public CrdiWorkRes getWork(Long key) {
+
+        CrdiWork crdiWork = crdiWorkRepository.findById(key)
+                .orElseThrow(() -> new BussinessException("해당하는 작품이 없습니다."));
+        return crdiWork.toDto();
+    }
+
+    @Transactional(readOnly = true)
+    public List<CrdiWorkRes> getWorks(String crdiEmail) {
+        Optional<Member> memberOpt = memberRepository.findByCrdiEmailFJ(crdiEmail);
+
+        return memberOpt.map(m -> m.getWork()
+                        .stream()
+                        .map(CrdiWork::toDto)
+                        .collect(Collectors.toList()))
+                .orElseGet(ArrayList::new);
     }
 
     private boolean verifyRequest(CrdiProfileReq request) {
