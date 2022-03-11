@@ -34,12 +34,6 @@ public class MemberLookPageRes {
 	@Enumerated(EnumType.STRING)
 	private Keyword keyword3;
 
-	@ApiModelProperty("모델 키")
-	private String modelHeight;
-
-	@ApiModelProperty("모델 몸무게")
-	private String modelWeight;
-
 	@ApiModelProperty("상의 설명")
 	private String topInfo;
 

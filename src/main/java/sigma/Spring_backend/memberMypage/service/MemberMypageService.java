@@ -59,7 +59,7 @@ public class MemberMypageService {
 					.introduction(userIntro)
 					.build());
 			memberRepository.findByEmail(userEmail)
-					.ifPresent(m -> m.registMypage(mypage));
+					.ifPresent(m -> m.setMypage(mypage));
 		} catch (Exception e) {
 			throw new BussinessException(ExMessage.MEMBER_MYPAGE_ERROR_DB);
 		}
@@ -87,7 +87,7 @@ public class MemberMypageService {
 		try {
 			originMypage.setIntroduction(userIntro);
 			memberRepository.findByEmailFJ(userEmail)
-					.ifPresent(m -> m.registMypage(originMypage));
+					.ifPresent(m -> m.setMypage(originMypage));
 		} catch (Exception e) {
 			throw new BussinessException(ExMessage.MEMBER_MYPAGE_ERROR_DB);
 		}

@@ -78,7 +78,7 @@ class MemberMypageControllerTest {
 				.updateDate(new DateConfig().getNowDate())
 				.registDate(new DateConfig().getNowDate())
 				.build();
-		member.registMypage(mypage1);
+		member.setMypage(mypage1);
 		memberRepository.save(member);
 //		memberMypageRepository.save(mypage1);
 		mvc = MockMvcBuilders

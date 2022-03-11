@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-@Api(tags = "4.코디 관련 페이지")
+@Api(tags = "5. 코디 관련 페이지")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/api/crdi")

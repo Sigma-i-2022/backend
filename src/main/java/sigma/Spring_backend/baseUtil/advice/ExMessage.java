@@ -7,7 +7,8 @@ import lombok.Getter;
 @Getter
 public enum ExMessage {
 
-	UNDEFINED_ERROR("미정된 에러입니다.")
+	UNDEFINED_ERROR("미정의된 에러입니다.")
+	, DB_ERROR_SAVE("객체 저장에 실패했습니다.")
 	, MEMBER_ERROR_DUPLICATE("회원이 중복되었습니다.")
 	, MEMBER_ERROR_NAME_FORMAT("이름 형식이 잘못 되었습니다.")
 	, MEMBER_ERROR_NOT_FOUND("해당 회원이 존재하지 않습니다.")
@@ -29,7 +30,18 @@ public enum ExMessage {
 	, CHAT_ERROR_CREATE("채팅방 생성에 실패했습니다.")
 	, CHAT_ERROR_MEMBER_ADD("채팅방 입장에 실패했습니다.")
 	, CHAT_ERROR_NOT_FOUND("채팅방 조회에 실패했습니다.")
-	, CHAT_ERROR_SEND_CHAT("채팅 전송에 실패했습니다.");
+	, CHAT_ERROR_SEND_CHAT("채팅 전송에 실패했습니다.")
+	, RESERVATION_ERROR("코디네이터 예약 실패")
+	, RESERVATION_ERROR_HIDE("예약내역을 감추는데 실패했습니다.")
+	, RESERVATION_ERROR_FORMAT("예약 양식이 잘못되었습니다.")
+	, RESERVATION_ERROR_CONFIRM("예약 확정에 실패했습니다.")
+	, RESERVATION_ERROR_PAY("예약 구매 완료에 실패했습니다.")
+	, RESERVATION_ERROR_NOT_FOUND("예약을 찾지 못했습니다.")
+	, RESERVATION_ERROR_NOT_FOUND_CLIENT("구매자에게서 해당 예약을 찾지 못했습니다.")
+	, RESERVATION_ERROR_NOT_FOUND_CRDI("코디네이터에게서 해당 예약을 찾지 못했습니다.")
+	, RESERVATION_ERROR_CANCEL_CASE_CLIENT("고객의 예약 취소에 실패했습니다.")
+	, RESERVATION_ERROR_CANCEL_CASE_CRDI("고객의 예약 취소에 실패했습니다.")
+	;
 
 	private final String message;
 }

@@ -19,7 +19,7 @@ public class MemberLookPage {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long seq;
 
-	@Column
+	@Column(length = 300)
 	@Builder.Default
 	private String explanation = "";
 
@@ -37,12 +37,6 @@ public class MemberLookPage {
 	@Column
 	@Enumerated(EnumType.STRING)
 	private Keyword keyword3;
-
-	@Column
-	private String modelHeight;
-
-	@Column
-	private String modelWeight;
 
 	@Column
 	private String topInfo;
@@ -82,8 +76,6 @@ public class MemberLookPage {
 				.keyword1(keyword1)
 				.keyword2(keyword2)
 				.keyword3(keyword3)
-				.modelHeight(modelHeight)
-				.modelWeight(modelWeight)
 				.topInfo(topInfo)
 				.bottomInfo(bottomInfo)
 				.shoeInfo(shoeInfo)

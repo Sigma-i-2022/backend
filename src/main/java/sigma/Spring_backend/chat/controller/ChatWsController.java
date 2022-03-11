@@ -13,7 +13,6 @@ import sigma.Spring_backend.chat.entity.ChatMessage;
 import sigma.Spring_backend.chat.service.ChatService;
 
 @Slf4j
-@Api(tags = "7. 채팅 - websocket")
 @RestController
 @RequiredArgsConstructor
 public class ChatWsController {

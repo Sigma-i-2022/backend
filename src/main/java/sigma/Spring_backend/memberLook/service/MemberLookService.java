@@ -93,8 +93,6 @@ public class MemberLookService {
 		originLook.setKeyword1(requestLook.getKeyword1());
 		originLook.setKeyword2(requestLook.getKeyword2());
 		originLook.setKeyword3(requestLook.getKeyword3());
-		originLook.setModelHeight(requestLook.getModelHeight());
-		originLook.setModelWeight(requestLook.getModelWeight());
 		originLook.setUpdateDate(new DateConfig().getNowDate());
 	}
 
