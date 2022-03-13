@@ -48,4 +48,8 @@ public class MemberLookPageRes {
 
 	@ApiModelProperty("수정 날짜")
 	private String updateDate;
+
+	private String reportedYn;
+
+	private String reportContent;
 }

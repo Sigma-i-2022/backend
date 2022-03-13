@@ -54,6 +54,12 @@ public class MemberLookPage {
 	private String updateDate;
 
 	@Column
+	private String reportedYn;
+
+	@Column
+	private String reportContent;
+
+	@Column
 	private String activateYn;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -72,6 +78,8 @@ public class MemberLookPage {
 				.bottomInfo(bottomInfo)
 				.shoeInfo(shoeInfo)
 				.updateDate(updateDate)
+				.reportedYn(reportedYn)
+				.reportContent(reportContent)
 				.registDate(registDate)
 				.build();
 	}

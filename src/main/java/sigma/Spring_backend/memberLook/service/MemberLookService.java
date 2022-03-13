@@ -113,4 +113,26 @@ public class MemberLookService {
 				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND));
 		lookPage.getMember().removeLookPage(lookPage);
 	}
+
+	@Transactional
+	public void reportLookPage(Long lookSeq, String reason) {
+		memberLookPageRepo.findById(lookSeq)
+				.ifPresentOrElse(
+						L -> {
+							L.setReportedYn("Y");
+							L.setReportContent(reason);
+						}, () -> {
+							throw new BussinessException(ExMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND);
+						}
+				);
+	}
+
+	@Transactional(readOnly = true)
+	public List<MemberLookPageRes> getAllReportedPage() {
+		return memberLookPageRepo.findAll()
+				.stream()
+				.filter(L -> L.getReportedYn().equals("Y"))
+				.map(MemberLookPage::toDto)
+				.collect(Collectors.toList());
+	}
 }

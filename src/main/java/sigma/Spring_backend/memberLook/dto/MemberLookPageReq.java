@@ -60,6 +60,7 @@ public class MemberLookPageReq {
 				.updateDate(new DateConfig().getNowDate())
 				.registDate(new DateConfig().getNowDate())
 				.activateYn("Y")
+				.reportedYn("N")
 				.build();
 	}
 
