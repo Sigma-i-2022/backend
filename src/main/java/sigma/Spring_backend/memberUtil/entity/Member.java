@@ -2,22 +2,18 @@ package sigma.Spring_backend.memberUtil.entity;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import sigma.Spring_backend.baseUtil.advice.ExMessage;
-import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.chat.entity.MemberChatRoomConnection;
 import sigma.Spring_backend.crdiPage.entity.CrdiWork;
 import sigma.Spring_backend.memberLook.entity.MemberLookPage;
 import sigma.Spring_backend.memberMypage.entity.MemberMypage;
+import sigma.Spring_backend.memberReport.entity.MemberReport;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
 import sigma.Spring_backend.memberSignup.entity.JoinCrdi;
 import sigma.Spring_backend.memberUtil.dto.MemberResponseDto;
 import sigma.Spring_backend.reservation.entity.MemberReservation;
-import sigma.Spring_backend.reservation.entity.Reservation;
 import sigma.Spring_backend.review.entity.Review;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +50,10 @@ public class Member {
 	@Setter
 	@Column
 	private String activateYn;
+
+	@Setter
+	@Column
+	private String reportedYn;
 
 	@Setter
 	@Column
@@ -130,6 +130,16 @@ public class Member {
 	public void addReview(Review review) {
 		this.reviews.add(review);
 		review.setCoordinator(this);
+	}
+
+	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@Builder.Default
+	private List<MemberReport> reports = new ArrayList<>();
+
+	public void addReport(MemberReport report) {
+		this.reports.add(report);
+		this.setReportedYn("Y");
+		report.setMember(this);
 	}
 
 	public MemberResponseDto toDto() {

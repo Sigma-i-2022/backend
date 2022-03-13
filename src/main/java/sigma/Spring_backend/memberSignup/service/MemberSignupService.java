@@ -110,6 +110,7 @@ public class MemberSignupService {
 					.registDate(new DateConfig().getNowDate())
 					.updateDate(new DateConfig().getNowDate())
 					.activateYn("Y")
+					.reportedYn("N")
 					.crdiYn("N")
 					.build());
 		} catch (Exception e) {
