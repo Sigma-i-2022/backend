@@ -13,6 +13,7 @@ import sigma.Spring_backend.memberSignup.entity.JoinCrdi;
 import sigma.Spring_backend.memberUtil.dto.MemberResponseDto;
 import sigma.Spring_backend.reservation.entity.MemberReservation;
 import sigma.Spring_backend.reservation.entity.Reservation;
+import sigma.Spring_backend.review.entity.Review;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -120,6 +121,15 @@ public class Member {
 	public void registReservation(MemberReservation memberReservation) {
 		this.memberReservations.add(memberReservation);
 		memberReservation.setMember(this);
+	}
+
+	@OneToMany(mappedBy = "coordinator", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@Builder.Default
+	private List<Review> reviews = new ArrayList<>();
+
+	public void addReview(Review review) {
+		this.reviews.add(review);
+		review.setCoordinator(this);
 	}
 
 	public MemberResponseDto toDto() {

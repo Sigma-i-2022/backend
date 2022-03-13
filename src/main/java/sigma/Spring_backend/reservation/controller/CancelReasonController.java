@@ -14,7 +14,7 @@ import sigma.Spring_backend.baseUtil.service.ResponseService;
 import sigma.Spring_backend.reservation.dto.CancelReasonDto;
 import sigma.Spring_backend.reservation.service.CancelReasonService;
 
-@Api(tags = "8. 취소")
+@Api(tags = "8. 예약 관련 취소")
 @RestController
 @RequestMapping("/v1/api/cancel")
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ public class CancelReasonController {
 	private final ResponseService responseService;
 
 	@GetMapping("/all")
-	@ApiOperation(value = "취소 내역 조회", notes = "조건에 맞는 취소내역을 모두 가져옵니다.")
+	@ApiOperation(value = "예약 취소 내역 조회", notes = "조건에 맞는 예약 취소내역을 모두 가져옵니다.")
 	public ListResult<CancelReasonDto> getAllCancelReasons(
 			@ApiParam(value = "조회 조건", required = true)
 			@RequestParam(value = "ALL / CRDI / CLIENT") String condition

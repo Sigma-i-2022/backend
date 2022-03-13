@@ -41,6 +41,9 @@ public enum ExMessage {
 	, RESERVATION_ERROR_NOT_FOUND_CRDI("코디네이터에게서 해당 예약을 찾지 못했습니다.")
 	, RESERVATION_ERROR_CANCEL_CASE_CLIENT("고객의 예약 취소에 실패했습니다.")
 	, RESERVATION_ERROR_CANCEL_CASE_CRDI("고객의 예약 취소에 실패했습니다.")
+	, REVIEW_ERROR_FORMAT("리뷰 요청 폼이 잘못되었습니다.")
+	, REVIEW_ERROR_ALREADY_REVIEWED("이미 리뷰를 작성하였습니다.")
+	, REVIEW_ERROR_NOT_FOUND("리뷰가 존재하지 않습니다.")
 	;
 
 	private final String message;

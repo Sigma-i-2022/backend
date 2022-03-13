@@ -60,14 +60,6 @@ public class MemberLookPage {
 	@JoinColumn(name = "MEMBER_SEQ")
 	private Member member;
 
-	public Member getMember() {
-		return this.member;
-	}
-
-	public void setMember(Member member) {
-		this.member = member;
-	}
-
 	public MemberLookPageRes toDto() {
 		return MemberLookPageRes.builder()
 				.lookPageSeq(seq)
