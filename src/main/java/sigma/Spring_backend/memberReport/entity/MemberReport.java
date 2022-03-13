@@ -20,9 +20,6 @@ public class MemberReport {
 	private Long seq;
 
 	@Column
-	private Long memberSeq;
-
-	@Column
 	private String memberId;
 
 	@Column
@@ -41,7 +38,7 @@ public class MemberReport {
 
 	public MemberReportRes toDto() {
 		return MemberReportRes.builder()
-				.memberSeq(memberSeq)
+				.memberSeq(member.getSeq())
 				.memberId(memberId)
 				.reportTitle(reportTitle)
 				.reportContent(reportContent)

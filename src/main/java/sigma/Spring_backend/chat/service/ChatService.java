@@ -176,6 +176,7 @@ public class ChatService {
 				.collect(Collectors.toList());
 	}
 
+	@Transactional(readOnly = true)
 	public Page<ChatMessageRes> findAllChats(Long chatRoomSeq, Pageable pageRequest) {
 		return chatMessageRepository.findAllByChatRoomSeq(chatRoomSeq, pageRequest)
 				.map(ChatMessage::toDto);

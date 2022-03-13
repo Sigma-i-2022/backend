@@ -25,7 +25,7 @@ public class MemberReportService {
 	@Transactional
 	public void reportMember(MemberReportReq memberReportReq) {
 		try {
-			memberRepository.findById(memberReportReq.getMemberSeq())
+			memberRepository.findBySeqFJ(memberReportReq.getMemberSeq())
 					.ifPresentOrElse(
 							M -> M.addReport(memberReportReq.toEntity())
 							, () -> {
@@ -39,7 +39,7 @@ public class MemberReportService {
 
 	@Transactional
 	public List<MemberReportRes> getAllReportedHistoryByMember(Long memberSeq) {
-		Member member = memberRepository.findById(memberSeq)
+		Member member = memberRepository.findBySeqFJ(memberSeq)
 				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 
 		return member.getReports()

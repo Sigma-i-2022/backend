@@ -109,7 +109,7 @@ public class ChatController {
 	@ApiOperation(value = "채팅방 메세지 조회", notes = "페이징 방식으로 채팅방의 메시지를 최근 순서로 조회합니다.")
 	public ListResult<ChatMessageRes> getAllChats(
 			@ApiParam(value = "채팅방 SEQ") @RequestParam Long chatRoomSeq,
-			@ApiParam(value = "PAGE 번호 (0부터)") @RequestParam int page,
+			@ApiParam(value = "PAGE 번호 (0부터)") @RequestParam(defaultValue = "0") int page,
 			@ApiParam(value = "PAGE 크기") @RequestParam(defaultValue = "20") int size
 	) {
 		try {
