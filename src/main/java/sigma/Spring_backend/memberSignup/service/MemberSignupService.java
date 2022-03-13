@@ -40,7 +40,6 @@ public class MemberSignupService {
 	private final CrdiJoinRepository crdiJoinRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final HttpSession session;
-	private final DateConfig dateConfig;
 
 	@Value("${email.id}")
 	private String sigmaEmail;
@@ -48,13 +47,12 @@ public class MemberSignupService {
 	public void sendAuthorizeCodeMail(String to) {
 		verifyUserEmail(to);
 		memberEmailDuplicateValidation(to);
-		MimeMessage mail = createMessage(to,"USER");
+		MimeMessage mail = createMessage(to, "USER");
 		emailSender.send(mail);
 	}
 
 	@Transactional
-	public void verifyAuthorizeCodeAndEmail(String email, String userInputCode)
-	{
+	public void verifyAuthorizeCodeAndEmail(String email, String userInputCode) {
 		Optional<AuthorizeMember> dbCode = authorizeCodeRepository.findByEmail(email);
 		if (dbCode.isPresent() && dbCode.get().getCode().equals(userInputCode) && !dbCode.get().isExpired()) {
 			dbCode.get().useCode();
@@ -91,8 +89,8 @@ public class MemberSignupService {
 					.build();
 			try {
 				Member member = memberRepository.findByEmail(email).get();
-				member.registAuthorizeUser(authorizeMember);
-				member.registMypage(mypage);
+				member.setAuthorizeUser(authorizeMember);
+				member.setMypage(mypage);
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new BussinessException("회원가입에 실패하였습니다.");
@@ -109,9 +107,11 @@ public class MemberSignupService {
 					.userId(userId)
 					.password(password)
 					.signupType("E")
-					.registDate(dateConfig.getNowDate())
-					.updateDate(dateConfig.getNowDate())
+					.registDate(new DateConfig().getNowDate())
+					.updateDate(new DateConfig().getNowDate())
 					.activateYn("Y")
+					.reportedYn("N")
+					.crdiYn("N")
 					.build());
 		} catch (Exception e) {
 			throw new BussinessException(ExMessage.MEMBER_ERROR_DB_SAVE);
@@ -127,10 +127,10 @@ public class MemberSignupService {
 			throw new BussinessException("이메일 및 패스워드를 입력해주세요.");
 		}
 
-		Member member = memberRepository.findByEmailFJ(email).orElseThrow(()->
+		Member member = memberRepository.findByEmailFJ(email).orElseThrow(() ->
 				new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 
-		if(!passwordEncoder.matches(password, member.getPassword())) {
+		if (!passwordEncoder.matches(password, member.getPassword())) {
 			System.out.println("비밀번호가 일치하지 않습니다.");
 			throw new BussinessException(ExMessage.MEMBER_ERROR_PASSWORD);
 		}
@@ -175,7 +175,7 @@ public class MemberSignupService {
 					.regDt(regDt)
 					.joinYN(joinYN)
 					.build()).toDto();
-			MimeMessage mail = createMessage(email,"CRDI");
+			MimeMessage mail = createMessage(email, "CRDI");
 			emailSender.send(mail);
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -250,11 +250,11 @@ public class MemberSignupService {
 		MimeMessage mail = emailSender.createMimeMessage();
 		try {
 			String messageBody = "";
-			if(member.equals("USER")) {
+			if (member.equals("USER")) {
 				messageBody = createMailMessage(toEmail);
 				mail.setSubject("Sigma 회원가입 이메일 인증");
 				mail.addRecipients(javax.mail.Message.RecipientType.TO, toEmail);
-			}else if(member.equals("CRDI")) {
+			} else if (member.equals("CRDI")) {
 				messageBody = createCrdiMailMessage(toEmail);
 				mail.setSubject("Sigma 코디네이터 가입신청");
 				mail.addRecipients(javax.mail.Message.RecipientType.TO, sigmaEmail);
@@ -294,7 +294,7 @@ public class MemberSignupService {
 		msg.append("<h1> 코디네이터신청 </h1>");
 		msg.append("<br>");
 		msg.append("<p>");
-		msg.append(toEmail+"님이 코디네이터신청을 하였습니다.");
+		msg.append(toEmail + "님이 코디네이터신청을 하였습니다.");
 		msg.append("<p>");
 		msg.append("<br>");
 		msg.append("<div align='center' style='border:3px solid black; font-family:verdana';>");

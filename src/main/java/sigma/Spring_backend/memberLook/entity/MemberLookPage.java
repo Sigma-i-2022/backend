@@ -19,7 +19,7 @@ public class MemberLookPage {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long seq;
 
-	@Column
+	@Column(length = 300)
 	@Builder.Default
 	private String explanation = "";
 
@@ -39,12 +39,6 @@ public class MemberLookPage {
 	private Keyword keyword3;
 
 	@Column
-	private String modelHeight;
-
-	@Column
-	private String modelWeight;
-
-	@Column
 	private String topInfo;
 
 	@Column
@@ -60,19 +54,17 @@ public class MemberLookPage {
 	private String updateDate;
 
 	@Column
+	private String reportedYn;
+
+	@Column
+	private String reportContent;
+
+	@Column
 	private String activateYn;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "MEMBER_SEQ")
 	private Member member;
-
-	public Member getMember() {
-		return this.member;
-	}
-
-	public void setMember(Member member) {
-		this.member = member;
-	}
 
 	public MemberLookPageRes toDto() {
 		return MemberLookPageRes.builder()
@@ -82,12 +74,12 @@ public class MemberLookPage {
 				.keyword1(keyword1)
 				.keyword2(keyword2)
 				.keyword3(keyword3)
-				.modelHeight(modelHeight)
-				.modelWeight(modelWeight)
 				.topInfo(topInfo)
 				.bottomInfo(bottomInfo)
 				.shoeInfo(shoeInfo)
 				.updateDate(updateDate)
+				.reportedYn(reportedYn)
+				.reportContent(reportContent)
 				.registDate(registDate)
 				.build();
 	}

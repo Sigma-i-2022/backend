@@ -34,7 +34,7 @@ class MemberRepositoryTest {
 	private AuthorizeCodeRepository authorizeCodeRepository;
 	@Autowired
 	private CrdiJoinRepository crdiJoinRepository;
-	private DateConfig dateConfig;
+	private final DateConfig dateConfig = new DateConfig();
 
 	private Member member;
 
@@ -93,7 +93,7 @@ class MemberRepositoryTest {
 				.userId(member.getUserId())
 				.email(member.getEmail())
 				.build();
-		curMem.registMypage(mypage);
+		curMem.setMypage(mypage);
 
 		AuthorizeMember authorizeMember = AuthorizeMember.builder()
 				.seq(1L)
@@ -101,7 +101,7 @@ class MemberRepositoryTest {
 				.code("TeStCoDe")
 				.expired(true)
 				.build();
-		curMem.registAuthorizeUser(authorizeMember);
+		curMem.setAuthorizeUser(authorizeMember);
 
 		System.out.println("START-QUERY========================================================================");
 		memberRepository.save(curMem);

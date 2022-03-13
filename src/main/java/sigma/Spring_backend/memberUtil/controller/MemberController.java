@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.memberUtil.dto.MemberRequestDto;
 import sigma.Spring_backend.memberUtil.dto.MemberResponseDto;
 import sigma.Spring_backend.baseUtil.dto.ListResult;
@@ -17,14 +18,15 @@ import java.util.List;
 @Api(tags = "1. 회원")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/api")
+@RequestMapping("/v1/api/member")
 public class MemberController {
 
     private final ResponseService responseService;
     private final MemberService memberService;
+    private final int FAIL = -1;
 
     @ApiOperation(value = "회원 저장", notes = "이름, 이메일, 주소, 나이, 성별을 받아서 저장합니다.")
-    @PostMapping("/member")
+    @PostMapping
     public SingleResult<MemberResponseDto> saveMember(
             @ApiParam(value = "회원 객체", required = true)
             @ModelAttribute MemberRequestDto member
@@ -33,7 +35,7 @@ public class MemberController {
     }
 
     @ApiOperation(value = "이메일로 회원 조회", notes = "이메일로 회원을 조회합니다.")
-    @GetMapping("/member/email")
+    @GetMapping("/email")
     public SingleResult<MemberResponseDto> findMemberByEmail(
             @ApiParam(value = "회원 이메일", required = true) @RequestParam(name = "email") String email
     ) {
@@ -42,10 +44,24 @@ public class MemberController {
     }
 
     @ApiOperation(value = "모든 회원 조회", notes = "모든 회원을 조회합니다.")
-    @GetMapping("/members")
+    @GetMapping("/all")
     public ListResult<MemberResponseDto> findAllMember() {
         List<MemberResponseDto> allByName = memberService.findAll();
         return responseService.getListResult(allByName);
     }
 
+    @PostMapping("/crdi")
+    @ApiOperation(value = "코디네이터로 변경", notes = "회원을 코디네이터로 변경합니다.")
+    public CommonResult updateToCrdi(
+            @ApiParam(value = "회원 이메일", required = true) @RequestParam(name = "email") String email
+    ) {
+        boolean success = memberService.changeToCrdi(email);
+
+        if (success) {
+            return responseService.getSuccessResult();
+        } else return responseService.getFailResult(
+                FAIL,
+                "코디네이터로 변경하는데 실패했습니다."
+        );
+    }
 }
