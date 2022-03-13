@@ -66,7 +66,7 @@ public class ReviewService {
 	@Transactional
 	public void reportReview(Long reviewSeq, String reason, String content) {
 		Review review = reviewRepo.findById(reviewSeq)
-				.orElseThrow(() -> new BussinessException(ExMessage.UNDEFINED_ERROR));
+				.orElseThrow(() -> new BussinessException(ExMessage.REVIEW_ERROR_NOT_FOUND));
 		review.setReportReason(reason);
 		review.setReportContent(content);
 		/*
