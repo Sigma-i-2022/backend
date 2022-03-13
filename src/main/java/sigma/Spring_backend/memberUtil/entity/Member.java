@@ -73,6 +73,8 @@ public class Member {
     @JoinColumn(name = "CRDIMYPAGE_SEQ")
     private CrdiMypage crdiMypage;
 
+    public void registCrdiMypage(CrdiMypage crdiMypage) {this.crdiMypage=crdiMypage;}
+    
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "AUTHORIZE_USER_SEQ")
     private AuthorizeMember authorizeUser;
@@ -116,10 +118,6 @@ public class Member {
         MemberChatRoomConnections.add(memberChatRoomConnection);
         memberChatRoomConnection.setMember(this);
     }
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "seq", referencedColumnName = "JOIN_SEQ")
-    private JoinCrdi joinCrdi;
 
     public MemberResponseDto toDto() {
         return MemberResponseDto.builder()
