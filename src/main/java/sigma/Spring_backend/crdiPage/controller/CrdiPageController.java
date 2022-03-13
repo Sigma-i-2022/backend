@@ -8,10 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
+import sigma.Spring_backend.baseUtil.dto.ListResult;
+import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
 import sigma.Spring_backend.crdiPage.dto.CrdiProfileReq;
 import sigma.Spring_backend.crdiPage.dto.CrdiWorkReq;
+import sigma.Spring_backend.crdiPage.dto.CrdiWorkRes;
 import sigma.Spring_backend.crdiPage.service.CrdiPageService;
+import sigma.Spring_backend.memberLook.dto.MemberLookPageRes;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,11 +74,37 @@ public class CrdiPageController {
             crdiPageService.registCrdiWork(crdiWorkReq);
             return  responseService.getSuccessResult();
         }catch (Exception e){
-            e.printStackTrace();;
+            e.printStackTrace();
             return responseService.getFailResult(
                     FAIL,
                     e.getMessage()
             );
+        }
+    }
+
+    @GetMapping("/work")
+    @ApiOperation(value = "코디네이터 작품 조회", notes = "코디네이터의 작품을 조회합니다.")
+    public CommonResult getCrdiWork(
+            @ApiParam(value = "코데네이터 작품 PK") @RequestParam Long workSeq
+    ){
+        try{
+            return responseService.getSingleResult(crdiPageService.getWork(workSeq));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BussinessException(e.getMessage());
+        }
+    }
+
+    @GetMapping("/works")
+    @ApiOperation(value = "코디네이터 작품 전체 조회", notes = "코디네이터 작품을 전체 조회합니다.")
+    public ListResult<CrdiWorkRes> getCrdiWorks(
+            @ApiParam(value = "코디 이메일") @RequestParam String crdiEmail
+    ) {
+        try {
+            return responseService.getListResult(crdiPageService.getWorks(crdiEmail));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BussinessException(e.getMessage());
         }
     }
 }

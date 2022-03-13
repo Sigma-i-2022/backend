@@ -3,6 +3,7 @@ package sigma.Spring_backend.memberUtil.entity;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import sigma.Spring_backend.chat.entity.MemberChatRoomConnection;
+import sigma.Spring_backend.crdiPage.entity.CrdiMypage;
 import sigma.Spring_backend.crdiPage.entity.CrdiWork;
 import sigma.Spring_backend.memberLook.entity.MemberLookPage;
 import sigma.Spring_backend.memberMypage.entity.MemberMypage;
@@ -73,6 +74,10 @@ public class Member {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "AUTHORIZE_USER_SEQ")
 	private AuthorizeMember authorizeUser;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "CRDIMYPAGE_SEQ")
+    private CrdiMypage crdiMypage;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "seq", referencedColumnName = "JOIN_SEQ")
