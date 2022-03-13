@@ -82,18 +82,18 @@ public class CrdiPageController {
         }
     }
 
-//    @GetMapping("/work")
-//    @ApiOperation(value = "코디네이터 작품 조회", notes = "코디네이터의 작품을 조회합니다.")
-//    public CommonResult getCrdiWork(
-//            @ApiParam(value = "코데네이터 작품 PK") @RequestParam Long workSeq
-//    ){
-//        try{
-//            return responseService.getSingleResult(crdiPageService.getWork(workSeq));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new BussinessException(e.getMessage());
-//        }
-//    }
+    @GetMapping("/work")
+    @ApiOperation(value = "코디네이터 작품 조회", notes = "코디네이터의 작품을 조회합니다.")
+    public CommonResult getCrdiWork(
+            @ApiParam(value = "코데네이터 작품 PK") @RequestParam Long workSeq
+    ){
+        try{
+            return responseService.getSingleResult(crdiPageService.getWork(workSeq));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BussinessException(e.getMessage());
+        }
+    }
 
     @GetMapping("/works")
     @ApiOperation(value = "코디네이터 작품 전체 조회", notes = "코디네이터 작품을 전체 조회합니다.")
