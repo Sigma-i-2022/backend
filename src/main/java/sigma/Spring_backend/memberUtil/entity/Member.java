@@ -3,13 +3,11 @@ package sigma.Spring_backend.memberUtil.entity;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import sigma.Spring_backend.chat.entity.MemberChatRoomConnection;
-import sigma.Spring_backend.crdiPage.entity.CrdiMypage;
 import sigma.Spring_backend.crdiPage.entity.CrdiWork;
 import sigma.Spring_backend.memberLook.entity.MemberLookPage;
-import sigma.Spring_backend.memberMypage.entity.MemberMypage;
+import sigma.Spring_backend.memberMypage.entity.CommonMypage;
 import sigma.Spring_backend.memberReport.entity.MemberReport;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
-import sigma.Spring_backend.memberSignup.entity.JoinCrdi;
 import sigma.Spring_backend.memberUtil.dto.MemberResponseDto;
 import sigma.Spring_backend.reservation.entity.MemberReservation;
 import sigma.Spring_backend.review.entity.Review;
@@ -63,25 +61,12 @@ public class Member {
 	@Setter
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "MYPAGE_SEQ")
-	private MemberMypage mypage;
-
-	public void removeMyPage() {
-		this.mypage.setEmail("");
-		this.mypage = null;
-	}
+	private CommonMypage mypage;
 
 	@Setter
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "AUTHORIZE_USER_SEQ")
 	private AuthorizeMember authorizeUser;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "CRDIMYPAGE_SEQ")
-	private CrdiMypage crdiMypage;
-
-	public void registCrdiMypage(CrdiMypage crdiMypage) {
-		this.crdiMypage = crdiMypage;
-	}
 
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Builder.Default

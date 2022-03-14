@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
-import sigma.Spring_backend.memberMypage.entity.MemberMypage;
+import sigma.Spring_backend.memberMypage.entity.CommonMypage;
 import sigma.Spring_backend.memberSignup.dto.CrdiResponseDto;
 import sigma.Spring_backend.memberSignup.dto.MemberSessionDto;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
@@ -81,9 +81,9 @@ public class MemberSignupService {
 			throw new BussinessException(ExMessage.MEMBER_ERROR_NON_VERIFIED_EMAIL);
 		} else {
 			saveMember(password, email, userId);
-			MemberMypage mypage = MemberMypage.builder()
+			CommonMypage mypage = CommonMypage.builder()
 					.email(email)
-					.introduction("")
+					.intro("")
 					.profileImgUrl("")
 					.userId(userId)
 					.build();
@@ -91,7 +91,7 @@ public class MemberSignupService {
 				Member member = memberRepository.findByEmail(email).get();
 
 				member.setAuthorizeUser(authorizeMember);
-				//member.registMypage(mypage);
+				member.setMypage(mypage);
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new BussinessException("회원가입에 실패하였습니다.");

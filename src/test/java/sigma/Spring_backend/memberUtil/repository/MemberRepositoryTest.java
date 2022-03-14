@@ -8,12 +8,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
-import sigma.Spring_backend.memberMypage.entity.MemberMypage;
-import sigma.Spring_backend.memberMypage.repository.MemberMypageRepository;
+import sigma.Spring_backend.memberMypage.entity.CommonMypage;
+import sigma.Spring_backend.memberMypage.repository.CommonMypageRepository;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
 import sigma.Spring_backend.memberSignup.repository.AuthorizeCodeRepository;
 import sigma.Spring_backend.memberSignup.repository.CrdiJoinRepository;
@@ -23,13 +24,13 @@ import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.AUTO_CONFIGURED)
 class MemberRepositoryTest {
 
 	@Autowired
 	private MemberRepository memberRepository;
 	@Autowired
-	private MemberMypageRepository mypageRepository;
+	private CommonMypageRepository mypageRepository;
 	@Autowired
 	private AuthorizeCodeRepository authorizeCodeRepository;
 	@Autowired
@@ -86,10 +87,10 @@ class MemberRepositoryTest {
 		Member curMem = memberRepository.findByEmail(this.member.getEmail()).get();
 		System.out.println("END-QUERY========================================================================");
 
-		MemberMypage mypage = MemberMypage.builder()
+		CommonMypage mypage = CommonMypage.builder()
 				.seq(1L)
 				.profileImgUrl("test url")
-				.introduction("hi")
+				.intro("hi")
 				.userId(member.getUserId())
 				.email(member.getEmail())
 				.build();
