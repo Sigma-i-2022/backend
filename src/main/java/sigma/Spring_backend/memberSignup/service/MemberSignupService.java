@@ -90,7 +90,7 @@ public class MemberSignupService {
 			try {
 				Member member = memberRepository.findByEmail(email).get();
 
-				member.registAuthorizeUser(authorizeMember);
+				member.setAuthorizeUser(authorizeMember);
 				//member.registMypage(mypage);
 			} catch (Exception e) {
 				e.printStackTrace();
