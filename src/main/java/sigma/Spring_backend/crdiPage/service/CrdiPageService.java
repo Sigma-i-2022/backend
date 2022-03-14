@@ -15,8 +15,6 @@ import sigma.Spring_backend.crdiPage.entity.CrdiMypage;
 import sigma.Spring_backend.crdiPage.entity.CrdiWork;
 import sigma.Spring_backend.crdiPage.repository.CrdiPageRepository;
 import sigma.Spring_backend.crdiPage.repository.CrdiWorkRepository;
-import sigma.Spring_backend.memberLook.dto.MemberLookPageRes;
-import sigma.Spring_backend.memberLook.entity.MemberLookPage;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 

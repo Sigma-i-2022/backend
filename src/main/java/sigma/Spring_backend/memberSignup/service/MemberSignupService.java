@@ -89,8 +89,9 @@ public class MemberSignupService {
 					.build();
 			try {
 				Member member = memberRepository.findByEmail(email).get();
-				member.setAuthorizeUser(authorizeMember);
-				member.setMypage(mypage);
+
+				member.registAuthorizeUser(authorizeMember);
+				//member.registMypage(mypage);
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new BussinessException("회원가입에 실패하였습니다.");

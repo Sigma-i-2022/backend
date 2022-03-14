@@ -16,9 +16,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Boolean existsByEmail(String email);
 
-    @Query("select m from Member m join fetch m.mypage join fetch m.authorizeUser join fetch m.joinCrdi where m.email=?1")
-    Optional<Member> findByEmailFjWithJoinCrdi(String email);
-
     @Query("select m from Member m join fetch m.mypage join fetch m.authorizeUser where m.email=?1")
     Optional<Member> findByEmailFJ(String email);
 

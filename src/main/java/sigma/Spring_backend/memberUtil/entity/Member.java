@@ -75,13 +75,11 @@ public class Member {
 	@JoinColumn(name = "AUTHORIZE_USER_SEQ")
 	private AuthorizeMember authorizeUser;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "CRDIMYPAGE_SEQ")
-    private CrdiMypage crdiMypage;
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "CRDIMYPAGE_SEQ")
+  private CrdiMypage crdiMypage;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "seq", referencedColumnName = "JOIN_SEQ")
-	private JoinCrdi joinCrdi;
+  public void registCrdiMypage(CrdiMypage crdiMypage) {this.crdiMypage=crdiMypage;}
 
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Builder.Default
