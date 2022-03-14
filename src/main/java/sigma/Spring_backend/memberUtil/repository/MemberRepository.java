@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select m from Member m join fetch m.mypage join fetch m.authorizeUser where m.seq=?1")
-    Optional<Member> findBySeq(Long seq);
+    Optional<Member> findBySeqFJ(Long seq);
 
     Optional<Member> findByEmail(String email);
 

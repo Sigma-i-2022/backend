@@ -134,7 +134,7 @@ public class CrdiPageService {
         if(crdiWorkReq.getCrdiEmail() == null || crdiWorkReq.getCrdiEmail().equals("")){
             return false;
         }
-        if(crdiWorkReq.getImageFile() == null || crdiWorkReq.getImageFile().equals("")){
+        if(crdiWorkReq.getImageFile() == null || crdiWorkReq.getImageFile().isEmpty()){
             return false;
         }
 

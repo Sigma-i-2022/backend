@@ -1,6 +1,7 @@
 package sigma.Spring_backend.memberUtil.dto;
 
 import lombok.*;
+import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.memberUtil.entity.Member;
 
 @Data
@@ -15,10 +16,14 @@ public class MemberRequestDto {
 
     public Member toEntity() {
         return Member.builder()
-                .userId(userId)
                 .email(email)
+                .userId(userId)
                 .password(password)
-                .signupType(signupType)
+                .signupType("E")
+                .registDate(new DateConfig().getNowDate())
+                .updateDate(new DateConfig().getNowDate())
+                .activateYn("Y")
+                .crdiYn("N")
                 .build();
     }
 }

@@ -18,5 +18,6 @@ public class MemberResponseDto {
     private String activateYn;
     private String crdiYn;
     private String registDate;
+    private String reportedYn;
     private String updateDate;
 }

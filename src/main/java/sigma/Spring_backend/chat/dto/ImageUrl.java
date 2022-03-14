@@ -7,7 +7,6 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,10 +19,8 @@ public class ImageUrl {
 	@Column
 	private String url;
 
+	@Setter
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "CHAT_ROOM_SEQ")
 	private ChatRoom chatRoom;
-
-	public void setChatRoom(ChatRoom chatRoom) {
-		this.chatRoom = chatRoom;
-	}
 }

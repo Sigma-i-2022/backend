@@ -29,7 +29,6 @@ public class MemberLookService {
 	private final MemberLookPageRepository memberLookPageRepo;
 	private final MemberRepository memberRepository;
 	private final AwsService awsService;
-	private DateConfig dateConfig;
 
 	/*
 		룩 페이지 등록
@@ -94,9 +93,7 @@ public class MemberLookService {
 		originLook.setKeyword1(requestLook.getKeyword1());
 		originLook.setKeyword2(requestLook.getKeyword2());
 		originLook.setKeyword3(requestLook.getKeyword3());
-		originLook.setModelHeight(requestLook.getModelHeight());
-		originLook.setModelWeight(requestLook.getModelWeight());
-		originLook.setUpdateDate(dateConfig.getNowDate());
+		originLook.setUpdateDate(new DateConfig().getNowDate());
 	}
 
 	@Transactional
@@ -106,7 +103,7 @@ public class MemberLookService {
 				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 		String imagePathUrl = awsService.imageUploadToS3("/memberLookImage", requestImage);
 		lookPage.setImagePathUrl(imagePathUrl);
-		lookPage.setUpdateDate(dateConfig.getNowDate());
+		lookPage.setUpdateDate(new DateConfig().getNowDate());
 		memberLookPageRepo.save(lookPage);
 	}
 
@@ -115,5 +112,27 @@ public class MemberLookService {
 		MemberLookPage lookPage = memberLookPageRepo.findById(lookSeq)
 				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND));
 		lookPage.getMember().removeLookPage(lookPage);
+	}
+
+	@Transactional
+	public void reportLookPage(Long lookSeq, String reason) {
+		memberLookPageRepo.findById(lookSeq)
+				.ifPresentOrElse(
+						L -> {
+							L.setReportedYn("Y");
+							L.setReportContent(reason);
+						}, () -> {
+							throw new BussinessException(ExMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND);
+						}
+				);
+	}
+
+	@Transactional(readOnly = true)
+	public List<MemberLookPageRes> getAllReportedPage() {
+		return memberLookPageRepo.findAll()
+				.stream()
+				.filter(L -> L.getReportedYn().equals("Y"))
+				.map(MemberLookPage::toDto)
+				.collect(Collectors.toList());
 	}
 }

@@ -9,6 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.chat.entity.ChatMessage;
 import sigma.Spring_backend.chat.entity.MessageType;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,6 +21,8 @@ public class ChatMessageReq {
 	private MultipartFile imageFile;
 	private String senderProfileImgUrl;
 	private String senderId;
+	@NotBlank
+	@Size(min = 1, max = 1000)
 	private String message;
 	private String regDate;
 	private Long chatRoomId;
