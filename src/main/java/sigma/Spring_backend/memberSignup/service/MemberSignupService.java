@@ -12,6 +12,7 @@ import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberMypage.entity.CommonMypage;
+import sigma.Spring_backend.memberMypage.repository.CommonMypageRepository;
 import sigma.Spring_backend.memberSignup.dto.CrdiResponseDto;
 import sigma.Spring_backend.memberSignup.dto.MemberSessionDto;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
@@ -40,6 +41,7 @@ public class MemberSignupService {
 	private final CrdiJoinRepository crdiJoinRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final HttpSession session;
+	private final CommonMypageRepository commonMypageRepository;
 
 	@Value("${email.id}")
 	private String sigmaEmail;
@@ -84,10 +86,11 @@ public class MemberSignupService {
 			CommonMypage mypage = CommonMypage.builder()
 					.email(email)
 					.intro("")
-					.profileImgUrl("")
 					.userId(userId)
+					.profileImgUrl("")
 					.build();
 			try {
+				commonMypageRepository.save(mypage);
 				Member member = memberRepository.findByEmail(email).get();
 
 				member.setAuthorizeUser(authorizeMember);
