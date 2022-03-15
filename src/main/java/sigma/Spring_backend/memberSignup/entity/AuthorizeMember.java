@@ -1,6 +1,7 @@
 package sigma.Spring_backend.memberSignup.entity;
 
 import lombok.*;
+import sigma.Spring_backend.memberUtil.entity.Member;
 
 import javax.persistence.*;
 
@@ -29,4 +30,7 @@ public class AuthorizeMember {
 	public void useCode() {
 		if (!expired) expired = true;
 	}
+
+	@OneToOne(mappedBy = "authorizeUser", orphanRemoval = true)
+	private Member member;
 }

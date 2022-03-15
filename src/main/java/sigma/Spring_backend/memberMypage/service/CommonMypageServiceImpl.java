@@ -3,6 +3,7 @@ package sigma.Spring_backend.memberMypage.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.awsUtil.service.AwsService;
@@ -22,6 +23,21 @@ public class CommonMypageServiceImpl implements CommonMypageServiceInterface {
 	private final CommonMypageRepository commonMypageRepository;
 	private final MemberRepository memberRepository;
 	private final AwsService awsService;
+
+	@Transactional
+	public void createInitialMypage(String email, String userId) {
+		CommonMypage initMypage = CommonMypage.builder()
+				.email(email)
+				.userId(userId)
+				.intro("")
+				.profileImgUrl("")
+				.build();
+		try {
+			commonMypageRepository.save(initMypage);
+		} catch (Exception e) {
+			throw new BussinessException("마이페이지 저장 실패");
+		}
+	}
 
 	@Override
 	@Transactional(readOnly = true)

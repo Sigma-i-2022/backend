@@ -58,15 +58,23 @@ public class Member {
 	@Column
 	private String crdiYn;
 
-	@Setter
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "MYPAGE_SEQ")
+	@OneToOne
+	@JoinColumn(name = "MYPAGE_SEQ", nullable = false)
 	private CommonMypage mypage;
 
-	@Setter
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "AUTHORIZE_USER_SEQ")
+	public void setMypage(CommonMypage mypage) {
+		this.mypage = mypage;
+		mypage.setMember(this);
+	}
+
+	@OneToOne
+	@JoinColumn(name = "AUTHORIZE_USER_SEQ", nullable = false)
 	private AuthorizeMember authorizeUser;
+
+	public void setAuthorizeUser(AuthorizeMember authorizeUser) {
+		this.authorizeUser = authorizeUser;
+		authorizeUser.setMember(this);
+	}
 
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Builder.Default
