@@ -48,8 +48,13 @@ dependencies {
     web socket
      */
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
-    implementation 'org.webjars:stomp-websocket'
-    implementation 'org.webjars:sockjs-client'
+    implementation 'org.webjars:stomp-websocket:2.3.4'
+    implementation 'org.webjars:sockjs-client:1.5.1'
+
+    /*
+    enum error
+     */
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 
