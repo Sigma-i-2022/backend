@@ -1,7 +1,7 @@
 spring:
   profiles:
-#    include: real,real-private,oauth
-    include: dev,dev-private,oauth
+    include: real,real-private,oauth
+#    include: dev,dev-private,oauth
   # 이미지 파일 크기 제한
   servlet:
     multipart:
