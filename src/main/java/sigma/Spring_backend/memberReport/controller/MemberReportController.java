@@ -13,7 +13,7 @@ import sigma.Spring_backend.memberReport.dto.MemberReportReq;
 import sigma.Spring_backend.memberReport.dto.MemberReportRes;
 import sigma.Spring_backend.memberReport.service.MemberReportService;
 
-@Api(tags = "10. 회원 신고")
+@Api(tags = "B. 회원 신고")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/api/report")
