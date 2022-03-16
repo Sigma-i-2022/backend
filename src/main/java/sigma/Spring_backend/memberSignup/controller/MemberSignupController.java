@@ -95,11 +95,13 @@ public class MemberSignupController {
 	@ApiOperation(value = "로그인", notes = "이메일, 비밀번호를 이용하여 로그인")
 	public CommonResult memberSignIn(
 			@ApiParam(value = "회원 이메일", required = true) @RequestParam(name = "email") String email,
-			@ApiParam(value = "회원 패스워드", required = true) @RequestParam(name = "password") String password
+			@ApiParam(value = "회원 패스워드", required = true) @RequestParam(name = "password") String password,
+			@ApiParam(value = "디바이스토큰", required = true) @RequestParam(name = "deviceToken") String deviceToken
 	) {
 		Map<String, String> userInfoMap = new HashMap<>();
 		userInfoMap.put("email", email);
 		userInfoMap.put("password", password);
+		userInfoMap.put("deviceToken",deviceToken);
 
 		try {
 			log.info(email+password);

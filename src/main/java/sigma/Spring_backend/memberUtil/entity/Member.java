@@ -46,6 +46,7 @@ public class Member {
 	@Column
 	private String updateDate;
 
+	@Setter
 	@Column
 	private String deviceToken;
 

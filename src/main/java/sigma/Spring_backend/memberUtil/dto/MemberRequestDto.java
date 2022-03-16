@@ -13,7 +13,6 @@ public class MemberRequestDto {
     private String email;
     private String password;
     private String signupType;
-    private String deviceToken;
 
     public Member toEntity() {
         return Member.builder()
@@ -21,7 +20,6 @@ public class MemberRequestDto {
                 .userId(userId)
                 .password(password)
                 .signupType("E")
-                .deviceToken(deviceToken)
                 .registDate(new DateConfig().getNowDate())
                 .updateDate(new DateConfig().getNowDate())
                 .activateYn("Y")
