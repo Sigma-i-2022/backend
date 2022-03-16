@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.baseUtil.dto.ListResult;
@@ -126,10 +128,11 @@ public class ChatController {
 	@PostMapping("/message")
 	@ApiOperation(value = "채팅 전송", notes = "채팅방에 메시지를 전송합니다.")
 	public CommonResult sendChatMessage(
-			@ApiParam(value = "채팅 메시지") @ModelAttribute ChatMessageReq chatMessageReq
+			@ApiParam(value = "채팅 메시지") @ModelAttribute ChatMessageReq chatMessageReq,
+			@ApiParam(value = "이미지 파일") @RequestParam(required = false) @Nullable MultipartFile imageFile
 	) {
 		try {
-			chatService.sendChat(chatMessageReq);
+			chatService.sendChat(chatMessageReq, imageFile);
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
 			e.printStackTrace();

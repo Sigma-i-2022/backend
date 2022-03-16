@@ -24,21 +24,6 @@ public class CommonMypageServiceImpl implements CommonMypageServiceInterface {
 	private final MemberRepository memberRepository;
 	private final AwsService awsService;
 
-	@Transactional
-	public void createInitialMypage(String email, String userId) {
-		CommonMypage initMypage = CommonMypage.builder()
-				.email(email)
-				.userId(userId)
-				.intro("")
-				.profileImgUrl("")
-				.build();
-		try {
-			commonMypageRepository.save(initMypage);
-		} catch (Exception e) {
-			throw new BussinessException("마이페이지 저장 실패");
-		}
-	}
-
 	@Override
 	@Transactional(readOnly = true)
 	public ClientMypageRes getClientMypage(String email) {
@@ -72,12 +57,12 @@ public class CommonMypageServiceImpl implements CommonMypageServiceInterface {
 
 	@Override
 	@Transactional
-	public void registCrdiMypage(CrdiMypageReq crdiProfileReq) {
-		boolean verify = verifyCrdiRequest(crdiProfileReq);
+	public void registCrdiMypage(CrdiMypageReq crdiProfileReq, MultipartFile profileImg) {
+		boolean verify = verifyCrdiRequest(profileImg);
 		if (!verify) throw new BussinessException(ExMessage.MEMBER_MYPAGE_IMG_FORMAT);
 
 		try {
-			String url = awsService.imageUploadToS3("/profileImage", crdiProfileReq.getProfileImg());
+			String url = awsService.imageUploadToS3("/profileImage", profileImg);
 			CommonMypage mypage = memberRepository.findByEmailFJ(crdiProfileReq.getEmail())
 					.filter(c -> c.getCrdiYn().equals("Y"))
 					.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND))
@@ -110,14 +95,14 @@ public class CommonMypageServiceImpl implements CommonMypageServiceInterface {
 
 	@Override
 	@Transactional
-	public void updateProfileImg(CommonProfileImgReq commonProfileImgReq) {
-		boolean verify = verifyClientRequest(commonProfileImgReq);
+	public void updateProfileImg(String email, MultipartFile imageFile) {
+		boolean verify = verifyClientRequest(email, imageFile);
 		if (!verify) throw new BussinessException(ExMessage.MEMBER_MYPAGE_IMG_FORMAT);
 
 		try {
-			String url = awsService.imageUploadToS3("/profileImage", commonProfileImgReq.getMemberImageFile());
+			String url = awsService.imageUploadToS3("/profileImage", imageFile);
 			commonMypageRepository
-					.findByEmail(commonProfileImgReq.getMemberEmail())
+					.findByEmail(email)
 					.ifPresentOrElse(
 							mypage -> mypage.setProfileImgUrl(url)
 							, () -> {
@@ -130,8 +115,7 @@ public class CommonMypageServiceImpl implements CommonMypageServiceInterface {
 	}
 
 
-	private boolean verifyCrdiRequest(CrdiMypageReq request) {
-		MultipartFile imageFile = request.getProfileImg();
+	private boolean verifyCrdiRequest(MultipartFile imageFile) {
 		if (imageFile.isEmpty() || imageFile.getSize() == 0) {
 			return false;
 		} else {
@@ -139,10 +123,7 @@ public class CommonMypageServiceImpl implements CommonMypageServiceInterface {
 		}
 	}
 
-	private boolean verifyClientRequest(CommonProfileImgReq request) {
-		String email = request.getMemberEmail();
-		MultipartFile imageFile = request.getMemberImageFile();
-
+	private boolean verifyClientRequest(String email, MultipartFile imageFile) {
 		if (email == null || !memberRepository.existsByEmail(email)) {
 			return false;
 		}

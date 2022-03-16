@@ -62,7 +62,6 @@ class MemberLookServiceTest {
 
 		memberLookPageReq = MemberLookPageReq.builder()
 				.memberEmail(member.getEmail())
-				.imageFile(multipartFile)
 				.explanation("test explanation")
 				.shoeInfo("test shoe")
 				.bottomInfo("test bottom")
@@ -98,7 +97,7 @@ class MemberLookServiceTest {
 				.willReturn(Optional.of(member));
 
 		// when
-		memberLookService.registLookPage(memberLookPageReq);
+		memberLookService.registLookPage(memberLookPageReq, multipartFile);
 
 		//then
 		Assertions.assertThat(

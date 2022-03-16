@@ -41,15 +41,37 @@ class MemberRepositoryTest {
 
 	@BeforeEach
 	void setUp() {
+		String email = "test@test.com";
+		String id = "testtest";
+
+		CommonMypage mypage = CommonMypage.builder()
+				.email(email)
+				.userId("")
+				.intro("test intro")
+				.profileImgUrl("test image url")
+				.build();
+		AuthorizeMember authorize = AuthorizeMember.builder()
+				.email(email)
+				.expired(true)
+				.code("PdXsj1ane")
+				.build();
+		mypageRepository.save(mypage);
+		authorizeCodeRepository.save(authorize);
+
 		member = Member.builder()
 				.seq(1L)
-				.email("test@test.com")
+				.email(email)
+				.userId(id)
 				.signupType("E")
 				.password("test1234!")
-				.userId("testtest")
 				.updateDate(dateConfig.getNowDate())
 				.registDate(dateConfig.getNowDate())
+				.activateYn("Y")
+				.reportedYn("N")
+				.crdiYn("N")
 				.build();
+		member.setMypage(mypage);
+		member.setAuthorizeUser(authorize);
 		System.out.println("START-SAVE========================================================================");
 		memberRepository.save(member);
 		System.out.println("END-SAVE========================================================================");

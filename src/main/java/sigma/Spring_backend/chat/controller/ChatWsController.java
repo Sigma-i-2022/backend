@@ -4,10 +4,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.Nullable;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.chat.dto.ChatMessageReq;
 import sigma.Spring_backend.chat.entity.ChatMessage;
 import sigma.Spring_backend.chat.service.ChatService;
@@ -27,9 +29,10 @@ public class ChatWsController {
 	@ApiOperation(value = "채팅 메세지 전송", notes = "채팅방 인원들에게 메시지를 전파합니다.")
 	public ChatMessage message(
 			@DestinationVariable String roomSeq,
-			ChatMessageReq message
+			ChatMessageReq message,
+			@Nullable MultipartFile imageFile
 	) {
-		return chatService.sendChat(message);
+		return chatService.sendChat(message, imageFile);
 	}
 
 	@MessageMapping("/chat/notify/{roomSeq}")

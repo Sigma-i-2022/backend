@@ -34,13 +34,13 @@ public class MemberLookService {
 		룩 페이지 등록
 	 */
 	@Transactional
-	public void registLookPage(MemberLookPageReq memberLookPageReq) {
+	public void registLookPage(MemberLookPageReq memberLookPageReq, MultipartFile imageFile) {
 		// 1. 입력 폼 데이터 검증
-		boolean verify = verifyLookPage(memberLookPageReq);
+		boolean verify = verifyLookPage(memberLookPageReq, imageFile);
 		if (!verify) throw new BussinessException("룩 페이지에 필요한 정보가 없습니다.");
 
 		// 2. AWS 이미지 업로드 후 이미지 경로 받기
-		String imagePathUrl = awsService.imageUploadToS3("/memberLookImage", memberLookPageReq.getImageFile());
+		String imagePathUrl = awsService.imageUploadToS3("/memberLookImage", imageFile);
 
 		// 3. 엔티티 생성 후 DB 저장
 		try {
@@ -52,11 +52,11 @@ public class MemberLookService {
 		}
 	}
 
-	private boolean verifyLookPage(MemberLookPageReq memberLookPageReq) {
+	private boolean verifyLookPage(MemberLookPageReq memberLookPageReq, MultipartFile imageFile) {
 		if (memberLookPageReq.getMemberEmail() == null || memberLookPageReq.getMemberEmail().equals("")) {
 			return false;
 		}
-		if (memberLookPageReq.getImageFile() == null || memberLookPageReq.getImageFile().isEmpty()) {
+		if (imageFile == null || imageFile.isEmpty()) {
 			return false;
 		}
 		return true;

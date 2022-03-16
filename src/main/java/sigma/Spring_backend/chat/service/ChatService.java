@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.awsUtil.service.AwsService;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.config.DateConfig;
@@ -113,7 +114,7 @@ public class ChatService {
 	채팅입력 : MessageType 별로 나눠서 진행
 	 */
 	@Transactional
-	public ChatMessage sendChat(ChatMessageReq message) {
+	public ChatMessage sendChat(ChatMessageReq message, MultipartFile imageFile) {
 		Long chatRoomId = message.getChatRoomId();
 		String memberId = message.getSenderId();
 
@@ -138,7 +139,7 @@ public class ChatService {
 			chatRoom.setInitYn("N");
 			return chatMessage;
 		} else if (message.getChatType().equals(MessageType.IMAGE)) {
-			String awsImgUrl = awsService.imageUploadToS3("/chatRoom", message.getImageFile());
+			String awsImgUrl = awsService.imageUploadToS3("/chatRoom", imageFile);
 			chatRoom.addImage(
 					ImageUrl.builder()
 					.url(awsImgUrl)

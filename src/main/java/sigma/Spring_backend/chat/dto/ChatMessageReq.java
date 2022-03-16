@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
-import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.chat.entity.ChatMessage;
 import sigma.Spring_backend.chat.entity.MessageType;
 
@@ -18,7 +17,6 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 public class ChatMessageReq {
 	private MessageType chatType;
-	private MultipartFile imageFile;
 	private String senderProfileImgUrl;
 	private String senderId;
 	@NotBlank

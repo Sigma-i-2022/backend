@@ -5,13 +5,17 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.baseUtil.dto.SingleResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberMypage.dto.*;
 import sigma.Spring_backend.memberMypage.service.CommonMypageServiceImpl;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
+
+import java.awt.*;
 
 @Slf4j
 @Api(tags = "3. 마이페이지 공통")
@@ -70,10 +74,11 @@ public class CommonMypageController {
 	@PostMapping("/crdi")
 	@ApiOperation(value = "코디네이터 마이페이지 등록", notes = "코디네이터의 마이페이지를 등록합니다.")
 	public CommonResult crdiMypageRegist(
-			@ApiParam(name = "코디마이페이지등록") @ModelAttribute CrdiMypageReq crdiMypageReq
+			@ApiParam(name = "코디마이페이지등록") @ModelAttribute CrdiMypageReq crdiMypageReq,
+			@ApiParam(name = "코디네이터 이미지 파일") @RequestParam MultipartFile profileImg
 	) {
 		try {
-			commonMypageServiceImpl.registCrdiMypage(crdiMypageReq);
+			commonMypageServiceImpl.registCrdiMypage(crdiMypageReq, profileImg);
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -101,13 +106,14 @@ public class CommonMypageController {
 		}
 	}
 
-	@PostMapping("/image")
+	@PostMapping(value = "/image")
 	@ApiOperation(value = "프로필 이미지 등록/수정", notes = "회원의 이미지를 S3에 업로드하고 해당 URL을 등록/수정합니다.")
 	public CommonResult registMemberProfileImage(
-			@ApiParam(value = "이미지 파일") @ModelAttribute CommonProfileImgReq commonProfileImgReq
+			@ApiParam(value = "회원 이메일") @RequestParam String memberEmail,
+			@ApiParam(value = "회원 이미지") @RequestParam MultipartFile memberImageFile
 	) {
 		try {
-			commonMypageServiceImpl.updateProfileImg(commonProfileImgReq);
+			commonMypageServiceImpl.updateProfileImg(memberEmail, memberImageFile);
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
 			e.printStackTrace();

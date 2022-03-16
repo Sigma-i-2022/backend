@@ -13,7 +13,6 @@ import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberMypage.entity.CommonMypage;
 import sigma.Spring_backend.memberMypage.repository.CommonMypageRepository;
-import sigma.Spring_backend.memberMypage.service.CommonMypageServiceImpl;
 import sigma.Spring_backend.memberSignup.dto.CrdiResponseDto;
 import sigma.Spring_backend.memberSignup.dto.MemberSessionDto;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
@@ -42,7 +41,6 @@ public class MemberSignupService {
 	private final CrdiJoinRepository crdiJoinRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final HttpSession session;
-	private final CommonMypageServiceImpl mypageService;
 	private final CommonMypageRepository commonMypageRepository;
 
 	@Value("${email.id}")
@@ -107,6 +105,7 @@ public class MemberSignupService {
 						.reportedYn("N")
 						.crdiYn("N")
 						.build();
+				initMypage.setUserId(userId);
 				member.setMypage(initMypage);
 				member.setAuthorizeUser(authorizeMember);
 				memberRepository.save(member);
