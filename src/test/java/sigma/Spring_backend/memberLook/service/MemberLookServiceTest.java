@@ -44,7 +44,6 @@ class MemberLookServiceTest {
 	private static MemberLookPage memberLookPage;
 	private static MemberLookPageReq memberLookPageReq;
 	private static Member member;
-	private DateConfig dateConfig;
 
 	@BeforeEach
 	void setUp() throws IOException {
@@ -57,19 +56,16 @@ class MemberLookServiceTest {
 				.signupType("E")
 				.password("test1234!")
 				.userId("testtest")
-				.updateDate(dateConfig.getNowDate())
-				.registDate(dateConfig.getNowDate())
+				.updateDate(new DateConfig().getNowDate())
+				.registDate(new DateConfig().getNowDate())
 				.build();
 
 		memberLookPageReq = MemberLookPageReq.builder()
 				.memberEmail(member.getEmail())
-				.imageFile(multipartFile)
 				.explanation("test explanation")
 				.shoeInfo("test shoe")
 				.bottomInfo("test bottom")
 				.topInfo("test top")
-				.modelWeight("test weight")
-				.modelHeight("test height")
 				.keyword1(Keyword.CASUAL)
 				.keyword2(Keyword.THIN)
 				.keyword3(Keyword.WARM)
@@ -83,13 +79,11 @@ class MemberLookServiceTest {
 				.shoeInfo("test shoe")
 				.bottomInfo("test bottom")
 				.topInfo("test top")
-				.modelWeight("test weight")
-				.modelHeight("test height")
 				.keyword1(Keyword.CASUAL)
 				.keyword2(Keyword.THIN)
 				.keyword3(Keyword.WARM)
-				.registDate(dateConfig.getNowDate())
-				.updateDate(dateConfig.getNowDate())
+				.registDate(new DateConfig().getNowDate())
+				.updateDate(new DateConfig().getNowDate())
 				.activateYn("Y")
 				.build();
 	}
@@ -103,7 +97,7 @@ class MemberLookServiceTest {
 				.willReturn(Optional.of(member));
 
 		// when
-		memberLookService.registLookPage(memberLookPageReq);
+		memberLookService.registLookPage(memberLookPageReq, multipartFile);
 
 		//then
 		Assertions.assertThat(

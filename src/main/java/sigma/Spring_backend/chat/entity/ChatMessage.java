@@ -1,9 +1,6 @@
 package sigma.Spring_backend.chat.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import sigma.Spring_backend.chat.dto.ChatMessageRes;
 
 import javax.persistence.*;
@@ -24,38 +21,32 @@ public class ChatMessage {
 	@Enumerated(EnumType.STRING)
 	private MessageType chatType;
 
+	@Setter
 	@Column
 	private String imagePathUrl;
 
+	@Setter
 	@Column
 	private String senderProfileImgUrl;
 
+	@Setter
 	@Column
 	private String senderId;
 
+	@Setter
 	@Column(length = 1000)
 	private String message;
 
 	@Column
 	private Long chatRoomId;
 
+	@Column
 	private String regDate;
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	public void setSenderId(String senderId) {
-		this.senderId = senderId;
-	}
-
+	@Setter
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CHAT_ROOM_SEQ")
 	private ChatRoom chatRoom;
-
-	public void setChatRoom(ChatRoom chatRoom) {
-		this.chatRoom = chatRoom;
-	}
 
 	public ChatMessageRes toDto() {
 		return ChatMessageRes.builder()

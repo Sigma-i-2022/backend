@@ -2,6 +2,7 @@ package sigma.Spring_backend.memberSignup.entity;
 
 import lombok.*;
 import sigma.Spring_backend.memberSignup.dto.CrdiResponseDto;
+import sigma.Spring_backend.memberUtil.entity.Member;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -52,6 +53,10 @@ public class JoinCrdi {
 
     @Column
     String confirmYN;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MEMBER_SEQ")
+    private Member member;
 
     public CrdiResponseDto toDto() {
         CrdiResponseDto dto = new CrdiResponseDto();

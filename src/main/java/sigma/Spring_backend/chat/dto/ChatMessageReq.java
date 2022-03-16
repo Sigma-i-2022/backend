@@ -5,41 +5,34 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
-import org.springframework.web.multipart.MultipartFile;
+import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.chat.entity.ChatMessage;
 import sigma.Spring_backend.chat.entity.MessageType;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatMessageReq {
-	private MessageType chatType;
-	private MultipartFile imageFile;
-	private String senderProfileImgUrl;
-	private String senderId;
-	private String message;
-	private String regDate;
+	@NotBlank
 	private Long chatRoomId;
+	@NotBlank
+	private MessageType chatType;
+	@NotBlank
+	private String senderId;
+	@NotBlank
+	@Size(min = 1, max = 1000)
+	private String message;
 
-	public ChatMessage toEntity(@Nullable String imagePath) {
-		if (chatType.equals(MessageType.IMAGE)) {
-			return ChatMessage.builder()
-					.chatType(chatType)
-					.imagePathUrl(imagePath)
-					.senderProfileImgUrl(senderProfileImgUrl)
-					.senderId(senderId)
-					.message(message)
-					.regDate(regDate)
-					.chatRoomId(chatRoomId)
-					.build();
-		}
+	public ChatMessage toEntity() {
 		return ChatMessage.builder()
 				.chatType(chatType)
-				.senderProfileImgUrl(senderProfileImgUrl)
 				.senderId(senderId)
 				.message(message)
-				.regDate(regDate)
+				.regDate(new DateConfig().getNowDate())
 				.chatRoomId(chatRoomId)
 				.build();
 	}

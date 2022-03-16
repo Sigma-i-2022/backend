@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.baseUtil.dto.ListResult;
@@ -109,7 +111,7 @@ public class ChatController {
 	@ApiOperation(value = "채팅방 메세지 조회", notes = "페이징 방식으로 채팅방의 메시지를 최근 순서로 조회합니다.")
 	public ListResult<ChatMessageRes> getAllChats(
 			@ApiParam(value = "채팅방 SEQ") @RequestParam Long chatRoomSeq,
-			@ApiParam(value = "PAGE 번호 (0부터)") @RequestParam int page,
+			@ApiParam(value = "PAGE 번호 (0부터)") @RequestParam(defaultValue = "0") int page,
 			@ApiParam(value = "PAGE 크기") @RequestParam(defaultValue = "20") int size
 	) {
 		try {
@@ -126,10 +128,11 @@ public class ChatController {
 	@PostMapping("/message")
 	@ApiOperation(value = "채팅 전송", notes = "채팅방에 메시지를 전송합니다.")
 	public CommonResult sendChatMessage(
-			@ApiParam(value = "채팅 메시지") @ModelAttribute ChatMessageReq chatMessageReq
+			@ApiParam(value = "채팅 메시지") @ModelAttribute ChatMessageReq chatMessageReq,
+			@ApiParam(value = "이미지 파일") @RequestParam(required = false) @Nullable MultipartFile imageFile
 	) {
 		try {
-			chatService.sendChat(chatMessageReq);
+			chatService.sendChat(chatMessageReq, imageFile);
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -8,12 +8,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
-import sigma.Spring_backend.memberMypage.entity.MemberMypage;
-import sigma.Spring_backend.memberMypage.repository.MemberMypageRepository;
+import sigma.Spring_backend.memberMypage.entity.CommonMypage;
+import sigma.Spring_backend.memberMypage.repository.CommonMypageRepository;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
 import sigma.Spring_backend.memberSignup.repository.AuthorizeCodeRepository;
 import sigma.Spring_backend.memberSignup.repository.CrdiJoinRepository;
@@ -29,26 +30,48 @@ class MemberRepositoryTest {
 	@Autowired
 	private MemberRepository memberRepository;
 	@Autowired
-	private MemberMypageRepository mypageRepository;
+	private CommonMypageRepository mypageRepository;
 	@Autowired
 	private AuthorizeCodeRepository authorizeCodeRepository;
 	@Autowired
 	private CrdiJoinRepository crdiJoinRepository;
-	private DateConfig dateConfig;
+	private final DateConfig dateConfig = new DateConfig();
 
 	private Member member;
 
 	@BeforeEach
 	void setUp() {
+		String email = "test@test.com2";
+		String id = "testtest2";
+
+		CommonMypage mypage = CommonMypage.builder()
+				.email(email)
+				.userId("")
+				.intro("test intro")
+				.profileImgUrl("test image url")
+				.build();
+		AuthorizeMember authorize = AuthorizeMember.builder()
+				.email(email)
+				.expired(true)
+				.code("PdXsj1ane")
+				.build();
+		mypageRepository.save(mypage);
+		authorizeCodeRepository.save(authorize);
+
 		member = Member.builder()
 				.seq(1L)
-				.email("test@test.com")
+				.email(email)
+				.userId(id)
 				.signupType("E")
 				.password("test1234!")
-				.userId("testtest")
 				.updateDate(dateConfig.getNowDate())
 				.registDate(dateConfig.getNowDate())
+				.activateYn("Y")
+				.reportedYn("N")
+				.crdiYn("N")
 				.build();
+		member.setMypage(mypage);
+		member.setAuthorizeUser(authorize);
 		System.out.println("START-SAVE========================================================================");
 		memberRepository.save(member);
 		System.out.println("END-SAVE========================================================================");
@@ -70,12 +93,14 @@ class MemberRepositoryTest {
 	}
 
 	@Test
-	@DisplayName("회원 이메일 페치 조인 조회 시 실패")
+	@DisplayName("회원 이메일 페치 조인 조회")
 	void findByEmailByFetch() {
 		// then
 		System.out.println("START-QUERY========================================================================");
-		org.assertj.core.api.Assertions.assertThat(memberRepository.findByEmailFJ(member.getEmail()))
-				.isEqualTo(Optional.empty());
+		org.assertj.core.api.Assertions.assertThat(memberRepository.findByEmailFJ(member.getEmail()).get().getUserId())
+				.isEqualTo(member.getUserId());
+		Assertions.assertEquals(memberRepository.findByEmailFJ(member.getEmail()).get().getMypage().getEmail()
+		, member.getEmail());
 		System.out.println("END-QUERY========================================================================");
 	}
 
@@ -86,14 +111,14 @@ class MemberRepositoryTest {
 		Member curMem = memberRepository.findByEmail(this.member.getEmail()).get();
 		System.out.println("END-QUERY========================================================================");
 
-		MemberMypage mypage = MemberMypage.builder()
+		CommonMypage mypage = CommonMypage.builder()
 				.seq(1L)
 				.profileImgUrl("test url")
-				.introduction("hi")
+				.intro("hi")
 				.userId(member.getUserId())
 				.email(member.getEmail())
 				.build();
-		curMem.registMypage(mypage);
+		curMem.setMypage(mypage);
 
 		AuthorizeMember authorizeMember = AuthorizeMember.builder()
 				.seq(1L)
@@ -101,7 +126,7 @@ class MemberRepositoryTest {
 				.code("TeStCoDe")
 				.expired(true)
 				.build();
-		curMem.registAuthorizeUser(authorizeMember);
+		curMem.setAuthorizeUser(authorizeMember);
 
 		System.out.println("START-QUERY========================================================================");
 		memberRepository.save(curMem);

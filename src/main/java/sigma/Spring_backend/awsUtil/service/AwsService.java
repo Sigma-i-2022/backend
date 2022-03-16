@@ -54,7 +54,7 @@ public class AwsService {
 		amazonS3 = createAwsCredentials();
 
 		String fileName = createFileName(multipartFile);
-		String path = "/upload" + (uploadPath.charAt(0) == '/' ? uploadPath.substring(1) : ("/" + uploadPath));
+		String path = "/upload" + (uploadPath.charAt(0) == '/' ? uploadPath : ("/" + uploadPath));
 
 		imagePathUrl.append(bucketUrl)
 				.append(path)

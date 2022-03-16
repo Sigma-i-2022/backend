@@ -2,7 +2,6 @@ package sigma.Spring_backend.memberLook.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.memberLook.entity.MemberLookPage;
 
@@ -23,9 +22,6 @@ public class MemberLookPageReq {
 	@Builder.Default
 	private String explanation = "";
 
-	@ApiModelProperty("이미지")
-	private MultipartFile imageFile;
-
 	@ApiModelProperty("키워드 1")
 	@Enumerated(EnumType.STRING)
 	private Keyword keyword1;
@@ -37,12 +33,6 @@ public class MemberLookPageReq {
 	@ApiModelProperty("키워드 3")
 	@Enumerated(EnumType.STRING)
 	private Keyword keyword3;
-
-	@ApiModelProperty("모델 키")
-	private String modelHeight;
-
-	@ApiModelProperty("모델 몸무게")
-	private String modelWeight;
 
 	@ApiModelProperty("상의 설명")
 	private String topInfo;
@@ -59,8 +49,6 @@ public class MemberLookPageReq {
 				.keyword1(this.keyword1)
 				.keyword2(this.keyword2)
 				.keyword3(this.keyword3)
-				.modelHeight(this.modelHeight)
-				.modelWeight(this.modelWeight)
 				.topInfo(this.topInfo)
 				.bottomInfo(this.bottomInfo)
 				.shoeInfo(this.shoeInfo)
@@ -68,6 +56,7 @@ public class MemberLookPageReq {
 				.updateDate(new DateConfig().getNowDate())
 				.registDate(new DateConfig().getNowDate())
 				.activateYn("Y")
+				.reportedYn("N")
 				.build();
 	}
 
