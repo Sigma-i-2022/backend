@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-@Api(tags = "5.알람")
+@Api(tags = "A. 알람")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/api")

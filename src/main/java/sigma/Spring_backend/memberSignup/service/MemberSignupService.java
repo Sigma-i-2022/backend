@@ -11,7 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
-import sigma.Spring_backend.memberMypage.entity.MemberMypage;
+import sigma.Spring_backend.memberMypage.entity.CommonMypage;
+import sigma.Spring_backend.memberMypage.repository.CommonMypageRepository;
 import sigma.Spring_backend.memberSignup.dto.CrdiResponseDto;
 import sigma.Spring_backend.memberSignup.dto.MemberSessionDto;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
@@ -40,7 +41,7 @@ public class MemberSignupService {
 	private final CrdiJoinRepository crdiJoinRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final HttpSession session;
-	private final DateConfig dateConfig;
+	private final CommonMypageRepository commonMypageRepository;
 
 	@Value("${email.id}")
 	private String sigmaEmail;
@@ -48,18 +49,27 @@ public class MemberSignupService {
 	public void sendAuthorizeCodeMail(String to) {
 		verifyUserEmail(to);
 		memberEmailDuplicateValidation(to);
-		MimeMessage mail = createMessage(to,"USER");
+		MimeMessage mail = createMessage(to, "USER");
 		emailSender.send(mail);
 	}
 
 	@Transactional
-	public void verifyAuthorizeCodeAndEmail(String email, String userInputCode)
-	{
+	public void verifyAuthorizeCodeAndEmail(String email, String userInputCode) {
 		Optional<AuthorizeMember> dbCode = authorizeCodeRepository.findByEmail(email);
 		if (dbCode.isPresent() && dbCode.get().getCode().equals(userInputCode) && !dbCode.get().isExpired()) {
 			dbCode.get().useCode();
-		} else {
+		}else {
 			throw new BussinessException(ExMessage.EMAIL_ERROR_FORMAT);
+		}
+		try {
+			commonMypageRepository.save(CommonMypage.builder()
+					.email(email)
+					.intro("")
+					.userId("")
+					.profileImgUrl("")
+					.build());
+		} catch (Exception e) {
+			throw new BussinessException(ExMessage.DB_ERROR_SAVE);
 		}
 	}
 
@@ -77,44 +87,32 @@ public class MemberSignupService {
 		verifyUserInfo(userInfoMap);
 
 		AuthorizeMember authorizeMember = authorizeCodeRepository.findByEmail(email).get();
+		CommonMypage initMypage = commonMypageRepository.findByEmail(email).get();
 		if (memberRepository.findByEmailFJ(email).isPresent()) {
 			throw new BussinessException(ExMessage.MEMBER_ERROR_DUPLICATE);
 		} else if (!authorizeMember.isExpired()) {
 			throw new BussinessException(ExMessage.MEMBER_ERROR_NON_VERIFIED_EMAIL);
 		} else {
-			saveMember(password, email, userId);
-			MemberMypage mypage = MemberMypage.builder()
-					.email(email)
-					.introduction("")
-					.profileImgUrl("")
-					.userId(userId)
-					.build();
 			try {
-				Member member = memberRepository.findByEmail(email).get();
-				member.registAuthorizeUser(authorizeMember);
-				member.registMypage(mypage);
+				Member member = Member.builder()
+						.email(email)
+						.userId(userId)
+						.password(password)
+						.signupType("E")
+						.registDate(new DateConfig().getNowDate())
+						.updateDate(new DateConfig().getNowDate())
+						.activateYn("Y")
+						.reportedYn("N")
+						.crdiYn("N")
+						.build();
+				initMypage.setUserId(userId);
+				member.setMypage(initMypage);
+				member.setAuthorizeUser(authorizeMember);
+				memberRepository.save(member);
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new BussinessException("회원가입에 실패하였습니다.");
 			}
-		}
-	}
-
-	@Transactional
-	public void saveMember(String password, String email, String userId) {
-		password = passwordEncoder.encode(password);
-		try {
-			memberRepository.save(Member.builder()
-					.email(email)
-					.userId(userId)
-					.password(password)
-					.signupType("E")
-					.registDate(dateConfig.getNowDate())
-					.updateDate(dateConfig.getNowDate())
-					.activateYn("Y")
-					.build());
-		} catch (Exception e) {
-			throw new BussinessException(ExMessage.MEMBER_ERROR_DB_SAVE);
 		}
 	}
 
@@ -127,10 +125,10 @@ public class MemberSignupService {
 			throw new BussinessException("이메일 및 패스워드를 입력해주세요.");
 		}
 
-		Member member = memberRepository.findByEmailFJ(email).orElseThrow(()->
+		Member member = memberRepository.findByEmailFJ(email).orElseThrow(() ->
 				new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 
-		if(!passwordEncoder.matches(password, member.getPassword())) {
+		if (!passwordEncoder.matches(password, member.getPassword())) {
 			System.out.println("비밀번호가 일치하지 않습니다.");
 			throw new BussinessException(ExMessage.MEMBER_ERROR_PASSWORD);
 		}
@@ -177,7 +175,7 @@ public class MemberSignupService {
 					.joinYN(joinYN)
 					.confirmYN(confirmYN)
 					.build()).toDto();
-			MimeMessage mail = createMessage(email,"CRDI");
+			MimeMessage mail = createMessage(email, "CRDI");
 			emailSender.send(mail);
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -252,11 +250,11 @@ public class MemberSignupService {
 		MimeMessage mail = emailSender.createMimeMessage();
 		try {
 			String messageBody = "";
-			if(member.equals("USER")) {
+			if (member.equals("USER")) {
 				messageBody = createMailMessage(toEmail);
 				mail.setSubject("Sigma 회원가입 이메일 인증");
 				mail.addRecipients(javax.mail.Message.RecipientType.TO, toEmail);
-			}else if(member.equals("CRDI")) {
+			} else if (member.equals("CRDI")) {
 				messageBody = createCrdiMailMessage(toEmail);
 				mail.setSubject("Sigma 코디네이터 가입신청");
 				mail.addRecipients(javax.mail.Message.RecipientType.TO, sigmaEmail);
@@ -296,7 +294,7 @@ public class MemberSignupService {
 		msg.append("<h1> 코디네이터신청 </h1>");
 		msg.append("<br>");
 		msg.append("<p>");
-		msg.append(toEmail+"님이 코디네이터신청을 하였습니다.");
+		msg.append(toEmail + "님이 코디네이터신청을 하였습니다.");
 		msg.append("<p>");
 		msg.append("<br>");
 		msg.append("<div align='center' style='border:3px solid black; font-family:verdana';>");

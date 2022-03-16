@@ -60,4 +60,10 @@ public class MemberService {
                 .orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
         member.setActivateYn("N");
     }
+
+    @Transactional
+    public boolean changeToCrdi(String email) {
+        memberRepository.findByEmailFJ(email).ifPresent(M -> M.setCrdiYn("Y"));
+        return true;
+    }
 }
