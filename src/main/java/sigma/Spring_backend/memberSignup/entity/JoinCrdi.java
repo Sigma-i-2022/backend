@@ -50,6 +50,9 @@ public class JoinCrdi {
     @Column(nullable = false)
     String joinYN;
 
+    @Column
+    String confirmYN;
+
     public CrdiResponseDto toDto() {
         CrdiResponseDto dto = new CrdiResponseDto();
         dto.setEmail(email);
@@ -62,6 +65,8 @@ public class JoinCrdi {
         dto.setUrl5(url5);
         dto.setRegDt(regDt);
         dto.setJoinYN(joinYN);
+        dto.setConfirmYN(confirmYN);
+
 
         return dto;
     }
