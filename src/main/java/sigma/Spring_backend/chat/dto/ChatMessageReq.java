@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
 import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.chat.entity.ChatMessage;
 import sigma.Spring_backend.chat.entity.MessageType;
@@ -22,6 +21,8 @@ public class ChatMessageReq {
 	@NotBlank
 	private MessageType chatType;
 	@NotBlank
+	private String senderEmail;
+	@NotBlank
 	private String senderId;
 	@NotBlank
 	@Size(min = 1, max = 1000)
@@ -30,7 +31,8 @@ public class ChatMessageReq {
 	public ChatMessage toEntity() {
 		return ChatMessage.builder()
 				.chatType(chatType)
-				.senderId(senderId)
+				.senderEmail(senderEmail)
+				.senderId(senderEmail)
 				.message(message)
 				.regDate(new DateConfig().getNowDate())
 				.chatRoomId(chatRoomId)

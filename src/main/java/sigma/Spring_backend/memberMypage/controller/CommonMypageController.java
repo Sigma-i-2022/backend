@@ -18,7 +18,7 @@ import sigma.Spring_backend.memberMypage.dto.CrdiMypageRes;
 import sigma.Spring_backend.memberMypage.service.CommonMypageServiceImpl;
 
 @Slf4j
-@Api(tags = "3. 마이페이지 공통")
+@Api(tags = "06. 마이페이지")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/api/mypage")

@@ -16,6 +16,14 @@ import java.util.Comparator;
 @AllArgsConstructor
 public class ReserveReq {
 	@NotBlank
+	@ApiModelProperty(value = "코디네이터 이메일", example = "코디네이터 이메일")
+	private String crdiEmail;
+
+	@NotBlank
+	@ApiModelProperty(value = "고객 이메일", example = "코디네이터 이메일")
+	private String clientEmail;
+
+	@NotBlank
 	@ApiModelProperty(value = "코디네이터 아이디", example = "코디네이터 아이디")
 	private String crdiId;
 

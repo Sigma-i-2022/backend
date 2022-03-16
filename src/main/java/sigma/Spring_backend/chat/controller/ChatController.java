@@ -22,7 +22,7 @@ import sigma.Spring_backend.chat.dto.ChatRoomDto;
 import sigma.Spring_backend.chat.service.ChatService;
 
 @Slf4j
-@Api(tags = "6. 채팅")
+@Api(tags = "11. 채팅")
 @RestController
 @RequestMapping("/v1/api/chat")
 @RequiredArgsConstructor

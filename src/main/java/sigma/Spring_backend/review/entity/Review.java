@@ -1,5 +1,6 @@
 package sigma.Spring_backend.review.entity;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.review.dto.ReviewRes;
@@ -22,6 +23,12 @@ public class Review {
 
 	@Column(nullable = false)
 	private Long reservationSeq;
+
+	@Column(nullable = false)
+	private String reviewerEmail;
+
+	@Column(nullable = false)
+	private String coordinatorEmail;
 
 	@Column(nullable = false)
 	private String reviewerId;

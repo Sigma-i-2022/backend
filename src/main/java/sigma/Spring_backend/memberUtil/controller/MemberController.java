@@ -15,7 +15,7 @@ import sigma.Spring_backend.memberUtil.service.MemberService;
 
 import java.util.List;
 
-@Api(tags = "1. 회원")
+@Api(tags = "01. 회원")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/api/member")

@@ -15,7 +15,7 @@ import sigma.Spring_backend.crdiPage.dto.CrdiWorkRes;
 import sigma.Spring_backend.crdiPage.service.CrdiPageService;
 
 @Slf4j
-@Api(tags = "5. 코디네이터 작품")
+@Api(tags = "05. 코디네이터 작품")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/api/crdi/work")

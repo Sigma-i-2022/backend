@@ -1,4 +1,4 @@
-package sigma.Spring_backend.memberLook.dto;
+package sigma.Spring_backend.clientLook.dto;
 
 import lombok.AllArgsConstructor;
 

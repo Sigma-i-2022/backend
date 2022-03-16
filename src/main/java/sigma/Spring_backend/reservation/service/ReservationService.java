@@ -49,9 +49,9 @@ public class ReservationService {
 
 		try {
 			Reservation reservation = reserveReq.toEntity();
-			Member client = memberRepository.findByIdFJ(reserveReq.getClientId())
+			Member client = memberRepository.findByEmailFJ(reserveReq.getClientEmail())
 					.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
-			Member crdi = memberRepository.findByIdFJ(reserveReq.getCrdiId())
+			Member crdi = memberRepository.findByEmailFJ(reserveReq.getCrdiEmail())
 					.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 
 			MemberReservation clientReservation = MemberReservation.builder()
@@ -80,11 +80,11 @@ public class ReservationService {
 	}
 
 	private boolean verifyReserveReq(ReserveReq reserveReq) {
-		String clientId = reserveReq.getClientId();
-		String crdiId = reserveReq.getCrdiId();
-		Member client = memberRepository.findByIdFJ(clientId)
+		String clientEmail = reserveReq.getClientEmail();
+		String crdiEmail = reserveReq.getCrdiEmail();
+		Member client = memberRepository.findByEmailFJ(clientEmail)
 				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
-		Member crdi = memberRepository.findByIdFJ(crdiId)
+		Member crdi = memberRepository.findByEmailFJ(crdiEmail)
 				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 
 		if (client.getCrdiYn().equals("Y")) {
@@ -121,28 +121,33 @@ public class ReservationService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<ReserveRes> getAllReservationOfMember(String memberId) {
-		Member member = memberRepository.findByIdFJ(memberId)
+	public List<ReserveRes> getAllReservationOfMember(String email) {
+		Member member = memberRepository.findByEmailFJ(email)
 				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
+
 		if (member.getCrdiYn().equals("Y" )) {
-			return reservationRepo.findAllByCrdiId(memberId)
-					.stream().map(Reservation::toDto)
+			return reservationRepo.findAllByCrdiEmail(email)
+					.stream()
+					.filter(R -> R.getActivateYnOfCrdi().equals("Y"))
+					.map(Reservation::toDto)
 					.collect(Collectors.toList());
 		} else {
-			return reservationRepo.findAllByClientId(memberId)
-					.stream().map(Reservation::toDto)
+			return reservationRepo.findAllByClientEmail(email)
+					.stream()
+					.filter(R -> R.getActivateYnOfClient().equals("Y"))
+					.map(Reservation::toDto)
 					.collect(Collectors.toList());
 		}
 
 	}
 
 	@Transactional
-	public boolean hideReservation(String memberId, Long reservationSeq) {
+	public boolean hideReservation(String memberEmail, Long reservationSeq) {
 		Reservation reservation = reservationRepo.findById(reservationSeq)
 				.orElseThrow(() -> new BussinessException(ExMessage.RESERVATION_ERROR_NOT_FOUND));
 
 		memberRepository
-				.findByIdFJ(memberId)
+				.findByEmailFJ(memberEmail)
 				.ifPresentOrElse(
 						M -> {
 							if (M.getCrdiYn().equals("Y"))

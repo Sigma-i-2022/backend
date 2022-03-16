@@ -23,6 +23,12 @@ public class Reservation {
 	private Long seq;
 
 	@Column(nullable = false)
+	private String clientEmail;
+
+	@Column(nullable = false)
+	private String crdiEmail;
+
+	@Column(nullable = false)
 	private String crdiId;
 
 	@Column(nullable = false)

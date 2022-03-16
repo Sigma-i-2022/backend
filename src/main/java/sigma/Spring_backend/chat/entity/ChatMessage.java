@@ -34,6 +34,10 @@ public class ChatMessage {
 	private String senderId;
 
 	@Setter
+	@Column
+	private String senderEmail;
+
+	@Setter
 	@Column(length = 1000)
 	private String message;
 

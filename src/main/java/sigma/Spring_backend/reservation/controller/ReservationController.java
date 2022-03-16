@@ -17,7 +17,7 @@ import sigma.Spring_backend.reservation.dto.ReserveReq;
 import sigma.Spring_backend.reservation.dto.ReserveRes;
 import sigma.Spring_backend.reservation.service.ReservationService;
 
-@Api(tags = "7. 예약")
+@Api(tags = "07. 예약")
 @RestController
 @RequestMapping("/v1/api/reservation")
 @RequiredArgsConstructor
@@ -39,12 +39,12 @@ public class ReservationController {
 	}
 
 	@GetMapping("/common/list")
-	@ApiOperation(value = "회원 예약 목록 조회", notes = "코디/고객 별 예약 목록을 조회합니다.")
+	@ApiOperation(value = "공통 예약 목록 조회", notes = "코디/고객 별 예약 목록을 조회합니다.")
 	public ListResult<ReserveRes> getAllReserveOfCrdi(
-			@ApiParam(value = "회원 아이디") @RequestParam String memberId
+			@ApiParam(value = "회원 이메일") @RequestParam String email
 	) {
 		try {
-			return responseService.getListResult(reservationService.getAllReservationOfMember(memberId));
+			return responseService.getListResult(reservationService.getAllReservationOfMember(email));
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BussinessException(e.getMessage());
@@ -74,13 +74,13 @@ public class ReservationController {
 	}
 
 	@PostMapping("/common/hide")
-	@ApiOperation(value = "예약 내역 지움", notes = "고객/코디 별 예약 목록에서 단건 씩 예약을 지웁니다.")
+	@ApiOperation(value = "예약 내역 삭제", notes = "고객/코디 별 예약 목록에서 예약을 삭제합니다.")
 	public CommonResult removeReserveOfClient(
-			@ApiParam(value = "회원 아이디", required = true) @RequestParam String memberId,
+			@ApiParam(value = "회원 이메일", required = true) @RequestParam String memberEmail,
 			@ApiParam(value = "예약 번호", required = true) @RequestParam Long reservationSeq
 	) {
 		try {
-			boolean success = reservationService.hideReservation(memberId, reservationSeq);
+			boolean success = reservationService.hideReservation(memberEmail, reservationSeq);
 
 			if (success) {
 				return responseService.getSuccessResult();

@@ -1,9 +1,9 @@
-package sigma.Spring_backend.memberLook.dto;
+package sigma.Spring_backend.clientLook.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import sigma.Spring_backend.baseUtil.config.DateConfig;
-import sigma.Spring_backend.memberLook.entity.MemberLookPage;
+import sigma.Spring_backend.clientLook.entity.ClientLookPage;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -13,7 +13,7 @@ import javax.persistence.Enumerated;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberLookPageReq {
+public class ClientLookPageReq {
 
 	@ApiModelProperty("회원 이메일")
 	private String memberEmail;
@@ -43,8 +43,8 @@ public class MemberLookPageReq {
 	@ApiModelProperty("신발 설명")
 	private String shoeInfo;
 
-	public MemberLookPage toEntity(String imagePathUrl) {
-		return MemberLookPage.builder()
+	public ClientLookPage toEntity(String imagePathUrl) {
+		return ClientLookPage.builder()
 				.explanation(this.explanation)
 				.keyword1(this.keyword1)
 				.keyword2(this.keyword2)
