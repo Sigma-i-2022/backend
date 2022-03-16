@@ -47,7 +47,7 @@ public class CrdiPageController {
 	@GetMapping
 	@ApiOperation(value = "코디네이터 작품 조회", notes = "코디네이터의 작품을 조회합니다.")
 	public CommonResult getCrdiWork(
-			@ApiParam(value = "코데네이터 작품 PK") @RequestParam Long workSeq
+			@ApiParam(value = "코데네이터 작품 번호") @RequestParam Long workSeq
 	) {
 		try {
 			return responseService.getSingleResult(crdiPageService.getWork(workSeq));

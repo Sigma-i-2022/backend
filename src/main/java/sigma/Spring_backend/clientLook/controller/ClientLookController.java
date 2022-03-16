@@ -48,7 +48,7 @@ public class ClientLookController {
 	@GetMapping
 	@ApiOperation(value = "고객 단일 룩 페이지 조회", notes = "고객의 단일 룩 페이지를 조회합니다")
 	public SingleResult<ClientLookPageRes> getClientLookPage(
-			@ApiParam(value = "룩 페이지 PK") @RequestParam Long lookSeq
+			@ApiParam(value = "룩 페이지 번호") @RequestParam Long lookSeq
 	) {
 		try {
 			return responseService.getSingleResult(clientLookService.getLookPage(lookSeq));
@@ -74,7 +74,7 @@ public class ClientLookController {
 	@PutMapping("/info")
 	@ApiOperation(value = "고객 룩 페이지 정보 수정", notes = "고객의 단일 룩 페이지 정보를 수정합니다.")
 	public CommonResult updateClientLookPage(
-			@ApiParam(value = "룩 페이지 PK") @RequestParam Long lookSeq,
+			@ApiParam(value = "룩 페이지 번호") @RequestParam Long lookSeq,
 			@ApiParam(value = "룩 페이지 요청 객체") @ModelAttribute ClientLookPageReq clientLookPageReq
 	) {
 		try {
@@ -92,7 +92,7 @@ public class ClientLookController {
 	@PutMapping("/image")
 	@ApiOperation(value = "고객 룩 페이지 이미지 수정", notes = "고객의 단일 룩 페이지 이미지를 수정합니다.")
 	public CommonResult updateLookPageImage(
-			@ApiParam(value = "룩 페이지 PK") @RequestParam Long lookSeq,
+			@ApiParam(value = "룩 페이지 번호") @RequestParam Long lookSeq,
 			@ApiParam(value = "룩 페이지 요청 객체") @RequestBody MultipartFile requestImage
 	) {
 		try {
@@ -110,7 +110,7 @@ public class ClientLookController {
 	@PostMapping("/image")
 	@ApiOperation(value = "고객 룩 페이지 삭제", notes = "고객의 단일 룩 페이지를 삭제합니다.")
 	public CommonResult deleteLookPage(
-			@ApiParam(value = "룩 페이지 PK") @RequestParam Long lookSeq
+			@ApiParam(value = "룩 페이지 번호") @RequestParam Long lookSeq
 	) {
 		try {
 			clientLookService.deleteLookPage(lookSeq);
@@ -130,7 +130,7 @@ public class ClientLookController {
 			notes = "룩 페이지를 신고합니다."
 	)
 	public CommonResult reportLookPage(
-			@ApiParam(value = "룩 페이지 PK", required = true) @RequestParam Long lookSeq,
+			@ApiParam(value = "룩 페이지 번호", required = true) @RequestParam Long lookSeq,
 			@ApiParam(value = "신고 이유") @RequestParam String reason
 	) {
 		try {
