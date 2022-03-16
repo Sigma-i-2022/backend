@@ -46,6 +46,9 @@ public class Member {
 	@Column
 	private String updateDate;
 
+	@Column
+	private String deviceToken;
+
 	@Setter
 	@Column
 	private String activateYn;
