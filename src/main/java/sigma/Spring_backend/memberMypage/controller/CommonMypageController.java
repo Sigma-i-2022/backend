@@ -5,17 +5,17 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.baseUtil.dto.SingleResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
-import sigma.Spring_backend.memberMypage.dto.*;
-import sigma.Spring_backend.memberMypage.service.CommonMypageServiceImpl;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
-
-import java.awt.*;
+import sigma.Spring_backend.memberMypage.dto.ClientMypageRes;
+import sigma.Spring_backend.memberMypage.dto.CommonUpdateInfoReq;
+import sigma.Spring_backend.memberMypage.dto.CrdiMypageReq;
+import sigma.Spring_backend.memberMypage.dto.CrdiMypageRes;
+import sigma.Spring_backend.memberMypage.service.CommonMypageServiceImpl;
 
 @Slf4j
 @Api(tags = "3. 마이페이지 공통")

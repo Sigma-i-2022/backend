@@ -12,6 +12,7 @@ import sigma.Spring_backend.baseUtil.dto.ListResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
 import sigma.Spring_backend.reservation.dto.CancelReasonDto;
+import sigma.Spring_backend.reservation.dto.TYPE;
 import sigma.Spring_backend.reservation.service.CancelReasonService;
 
 @Api(tags = "8. 예약 관련 취소")
@@ -27,7 +28,7 @@ public class CancelReasonController {
 	@ApiOperation(value = "예약 취소 내역 조회", notes = "조건에 맞는 예약 취소내역을 모두 가져옵니다.")
 	public ListResult<CancelReasonDto> getAllCancelReasons(
 			@ApiParam(value = "조회 조건", required = true)
-			@RequestParam(value = "ALL / CRDI / CLIENT") String condition
+			@RequestParam(value = "ALL/CRDI/CLIENT") TYPE condition
 	) {
 		try {
 			return responseService.getListResult(cancelReasonService.getAllReason(condition));

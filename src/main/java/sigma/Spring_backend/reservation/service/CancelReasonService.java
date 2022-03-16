@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.reservation.dto.CancelReasonDto;
+import sigma.Spring_backend.reservation.dto.TYPE;
 import sigma.Spring_backend.reservation.entity.CancelReason;
 import sigma.Spring_backend.reservation.repository.CancelReasonRepo;
 
@@ -18,12 +19,12 @@ public class CancelReasonService {
 	private final CancelReasonRepo cancelReasonRepo;
 
 	@Transactional(readOnly = true)
-	public List<CancelReasonDto> getAllReason(String condition) {
-		if (condition.equals("ALL")) {
+	public List<CancelReasonDto> getAllReason(TYPE condition) {
+		if (condition.equals(TYPE.ALL)) {
 			return cancelReasonRepo.findAll()
 					.stream().map(CancelReason::toDto)
 					.collect(Collectors.toList());
-		} else if (condition.equals("CLIENT") || condition.equals("CRDI")){
+		} else if (condition.equals(TYPE.CLIENT) || condition.equals(TYPE.CRDI)){
 			return cancelReasonRepo.findAll()
 					.stream()
 					.filter(R -> R.getByWho().equals(condition))

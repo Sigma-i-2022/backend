@@ -120,23 +120,29 @@ public class ChatService {
 
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
 				.orElseThrow(() -> new BussinessException(ExMessage.CHAT_ERROR_NOT_FOUND));
-		Member member = memberRepository.findByIdFJ(memberId)
+		Member sender = memberRepository.findByIdFJ(memberId)
 				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
-
-		message.setRegDate(new DateConfig().getNowDate());
-		message.setSenderProfileImgUrl(member.getMypage().getProfileImgUrl());
+		String senderImg = sender.getMypage().getProfileImgUrl();
 
 		if (message.getChatType().equals(MessageType.ENTER)) {
-			ChatMessage chatMessage = message.toEntity(null);
+			ChatMessage chatMessage = message.toEntity();
+
 			chatMessage.setSenderId("[알림]");
-			chatMessage.setMessage(member.getUserId() +"님이 들어왔습니다.");
+			chatMessage.setMessage(sender.getUserId() +"님이 들어왔습니다.");
+			chatMessage.setSenderProfileImgUrl(senderImg);
+			chatRoom.addChatMessage(chatMessage);
 			chatRoom.setInitYn("Y");
+
 			return chatMessage;
 		} else if (message.getChatType().equals(MessageType.OUT)) {
-			ChatMessage chatMessage = message.toEntity(null);
+			ChatMessage chatMessage = message.toEntity();
+
 			chatMessage.setSenderId("[알림]");
-			chatMessage.setMessage(member.getUserId() +"님이 나갔습니다.");
+			chatMessage.setMessage(sender.getUserId() +"님이 나갔습니다.");
+			chatMessage.setSenderProfileImgUrl(senderImg);
+			chatRoom.addChatMessage(chatMessage);
 			chatRoom.setInitYn("N");
+
 			return chatMessage;
 		} else if (message.getChatType().equals(MessageType.IMAGE)) {
 			String awsImgUrl = awsService.imageUploadToS3("/chatRoom", imageFile);
@@ -145,14 +151,21 @@ public class ChatService {
 					.url(awsImgUrl)
 					.build()
 			);
-			ChatMessage chatMessage = message.toEntity(awsImgUrl);
-			chatMessage.setSenderId(member.getUserId());
+			ChatMessage chatMessage = message.toEntity();
+
+			chatMessage.setSenderId(sender.getUserId());
+			chatMessage.setSenderProfileImgUrl(senderImg);
+			chatMessage.setImagePathUrl(awsImgUrl);
 			chatRoom.addChatMessage(chatMessage);
+
 			return chatMessage;
 		} else if (message.getChatType().equals(MessageType.CHAT)) {
-			ChatMessage chatMessage = message.toEntity(null);
-			chatMessage.setSenderId(member.getUserId());
+			ChatMessage chatMessage = message.toEntity();
+
+			chatMessage.setSenderId(sender.getUserId());
+			chatMessage.setSenderProfileImgUrl(senderImg);
 			chatRoom.addChatMessage(chatMessage);
+
 			return chatMessage;
 		}
 		throw new BussinessException(ExMessage.CHAT_ERROR_SEND_CHAT);

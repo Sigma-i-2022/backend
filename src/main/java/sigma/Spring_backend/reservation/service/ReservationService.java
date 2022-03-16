@@ -12,6 +12,7 @@ import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 import sigma.Spring_backend.reservation.dto.ReservePartTimeReq;
 import sigma.Spring_backend.reservation.dto.ReserveReq;
 import sigma.Spring_backend.reservation.dto.ReserveRes;
+import sigma.Spring_backend.reservation.dto.TYPE;
 import sigma.Spring_backend.reservation.entity.CancelReason;
 import sigma.Spring_backend.reservation.entity.MemberReservation;
 import sigma.Spring_backend.reservation.entity.Reservation;
@@ -33,8 +34,6 @@ public class ReservationService {
 	private final ReservationRepo reservationRepo;
 	private final MemberReservationRepo memberReservationRepo;
 	private final CancelReasonRepo cancelReasonRepo;
-	private final String CLIENT = "CLIENT";
-	private final String CRDI = "CRDI";
 
 	@Transactional(readOnly = true)
 	public List<ReserveRes> getAllReservations() {
@@ -197,7 +196,7 @@ public class ReservationService {
 							cancelReasonRepo.save(CancelReason.builder()
 									.reservationSeq(reservationSeq)
 									.reason(reason)
-									.byWho(CRDI)
+									.byWho(TYPE.CRDI)
 									.build());
 						}, () -> {
 							throw new BussinessException(ExMessage.RESERVATION_ERROR_NOT_FOUND);
@@ -222,7 +221,7 @@ public class ReservationService {
 		CancelReason cancelReason = CancelReason.builder()
 				.reservationSeq(reservationSeq)
 				.reason(reason)
-				.byWho(CLIENT)
+				.byWho(TYPE.CLIENT)
 				.build();
 
 		// 6시간 이내에 예약시간 존재하면 취소 불가 or 예약을 안했으면 가능
