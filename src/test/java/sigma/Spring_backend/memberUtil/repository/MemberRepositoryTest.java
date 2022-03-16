@@ -24,7 +24,7 @@ import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.AUTO_CONFIGURED)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class MemberRepositoryTest {
 
 	@Autowired
@@ -41,8 +41,8 @@ class MemberRepositoryTest {
 
 	@BeforeEach
 	void setUp() {
-		String email = "test@test.com";
-		String id = "testtest";
+		String email = "test@test.com2";
+		String id = "testtest2";
 
 		CommonMypage mypage = CommonMypage.builder()
 				.email(email)
@@ -93,12 +93,14 @@ class MemberRepositoryTest {
 	}
 
 	@Test
-	@DisplayName("회원 이메일 페치 조인 조회 시 실패")
+	@DisplayName("회원 이메일 페치 조인 조회")
 	void findByEmailByFetch() {
 		// then
 		System.out.println("START-QUERY========================================================================");
-		org.assertj.core.api.Assertions.assertThat(memberRepository.findByEmailFJ(member.getEmail()))
-				.isEqualTo(Optional.empty());
+		org.assertj.core.api.Assertions.assertThat(memberRepository.findByEmailFJ(member.getEmail()).get().getUserId())
+				.isEqualTo(member.getUserId());
+		Assertions.assertEquals(memberRepository.findByEmailFJ(member.getEmail()).get().getMypage().getEmail()
+		, member.getEmail());
 		System.out.println("END-QUERY========================================================================");
 	}
 
