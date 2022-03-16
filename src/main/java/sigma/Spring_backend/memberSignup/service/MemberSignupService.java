@@ -121,6 +121,7 @@ public class MemberSignupService {
 
 		String email = userInfoMap.get("email");
 		String password = userInfoMap.get("password");
+		String deviceToken = userInfoMap.get("deviceToken");
 		if (email == null || password == null) {
 			throw new BussinessException("이메일 및 패스워드를 입력해주세요.");
 		}
@@ -132,8 +133,7 @@ public class MemberSignupService {
 			System.out.println("비밀번호가 일치하지 않습니다.");
 			throw new BussinessException(ExMessage.MEMBER_ERROR_PASSWORD);
 		}
-
-
+		member.setDeviceToken(deviceToken);
 		session.setAttribute("member", new MemberSessionDto(member));
 		log.info("로그인성공");
 
@@ -161,7 +161,7 @@ public class MemberSignupService {
 		}
 
 		try {
-			log.info("dflsdkjfasdlkfjadlksfasl");
+
 			crdiJoinRepository.save(JoinCrdi.builder()
 					.email(email)
 					.userId(userId)
