@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.awsUtil.service.AwsService;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
@@ -30,11 +31,11 @@ public class CrdiPageService {
 	private final AwsService awsService;
 
 	@Transactional
-	public void registCrdiWork(CrdiWorkReq crdiWorkReq) {
+	public void registCrdiWork(CrdiWorkReq crdiWorkReq, MultipartFile imageFile) {
 
-		if (!verifyWork(crdiWorkReq)) throw new BussinessException("작품에 필요한 정보가 없습니다.");
+		if (!verifyWork(crdiWorkReq,imageFile)) throw new BussinessException("작품에 필요한 정보가 없습니다.");
 
-		String imagePathUrl = awsService.imageUploadToS3("/crdiWorkImage", crdiWorkReq.getImageFile());
+		String imagePathUrl = awsService.imageUploadToS3("/crdiWorkImage", imageFile);
 
 		try {
 			Member member = memberRepository.findByEmail(crdiWorkReq.getCrdiEmail())
@@ -64,11 +65,11 @@ public class CrdiPageService {
 				.orElseGet(ArrayList::new);
 	}
 
-	private boolean verifyWork(CrdiWorkReq crdiWorkReq) {
+	private boolean verifyWork(CrdiWorkReq crdiWorkReq,MultipartFile imageFile) {
 		if (crdiWorkReq.getCrdiEmail() == null || crdiWorkReq.getCrdiEmail().equals("")) {
 			return false;
 		}
-		if (crdiWorkReq.getImageFile() == null || crdiWorkReq.getImageFile().isEmpty()) {
+		if (imageFile == null || imageFile.isEmpty()) {
 			return false;
 		}
 

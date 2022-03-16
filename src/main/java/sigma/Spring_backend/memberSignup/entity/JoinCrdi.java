@@ -51,6 +51,9 @@ public class JoinCrdi {
     @Column(nullable = false)
     String joinYN;
 
+    @Column
+    String confirmYN;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_SEQ")
     private Member member;
@@ -67,6 +70,8 @@ public class JoinCrdi {
         dto.setUrl5(url5);
         dto.setRegDt(regDt);
         dto.setJoinYN(joinYN);
+        dto.setConfirmYN(confirmYN);
+
 
         return dto;
     }

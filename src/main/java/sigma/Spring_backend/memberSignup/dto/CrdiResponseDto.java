@@ -16,4 +16,5 @@ public class CrdiResponseDto {
     private String url5;
     private LocalDateTime regDt;
     private String joinYN;
+    private String confirmYN;
 }

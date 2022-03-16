@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.baseUtil.dto.ListResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
@@ -28,10 +29,11 @@ public class CrdiPageController {
 	@PostMapping
 	@ApiOperation(value = "코디네이터 작품 등록", notes = "코디네이터의 작품을 등록합니다.")
 	public CommonResult registCrdiWork(
-			@ApiParam(value = "코데네이터 작품 요청 객체") @ModelAttribute CrdiWorkReq crdiWorkReq
+			@ApiParam(value = "코데네이터 작품 요청 객체") @ModelAttribute CrdiWorkReq crdiWorkReq,
+			@ApiParam(value = "이미지 파일") @RequestParam MultipartFile imageFile
 	) {
 		try {
-			crdiPageService.registCrdiWork(crdiWorkReq);
+			crdiPageService.registCrdiWork(crdiWorkReq, imageFile);
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
 			e.printStackTrace();
