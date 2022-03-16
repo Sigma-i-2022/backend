@@ -8,7 +8,6 @@ import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
-import sigma.Spring_backend.reservation.entity.Reservation;
 import sigma.Spring_backend.reservation.repository.ReservationRepo;
 import sigma.Spring_backend.review.dto.ReviewReq;
 import sigma.Spring_backend.review.dto.ReviewRes;
@@ -32,7 +31,7 @@ public class ReviewService {
 		boolean verify = verifyReq(reviewReq);
 		if (!verify) throw new BussinessException(ExMessage.REVIEW_ERROR_FORMAT);
 
-		Member coordinator = memberRepository.findByIdFJ(reviewReq.getCoordinatorId())
+		Member coordinator = memberRepository.findByEmailFJ(reviewReq.getCoordinatorEmail())
 				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 
 		try {
@@ -43,9 +42,9 @@ public class ReviewService {
 	}
 
 	private boolean verifyReq(ReviewReq reviewReq) {
-		if (memberRepository.findByIdFJ(reviewReq.getCoordinatorId()).isEmpty())
+		if (memberRepository.findByEmailFJ(reviewReq.getCoordinatorEmail()).isEmpty())
 			return false;
-		if (memberRepository.findByIdFJ(reviewReq.getReviewerId()).isEmpty())
+		if (memberRepository.findByEmailFJ(reviewReq.getReviewerEmail()).isEmpty())
 			return false;
 		reservationRepo.findById(reviewReq.getReservationSeq())
 				.ifPresentOrElse(
@@ -79,8 +78,8 @@ public class ReviewService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<ReviewRes> getAllReviewsOfCrdi(String crdiId) {
-		Member crdi = memberRepository.findByIdFJ(crdiId)
+	public List<ReviewRes> getAllReviewsOfCrdi(String email) {
+		Member crdi = memberRepository.findByEmailFJ(email)
 				.filter(M -> M.getCrdiYn().equals("Y"))
 				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 

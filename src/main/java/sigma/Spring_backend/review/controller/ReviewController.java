@@ -13,7 +13,7 @@ import sigma.Spring_backend.review.dto.ReviewReq;
 import sigma.Spring_backend.review.dto.ReviewRes;
 import sigma.Spring_backend.review.service.ReviewService;
 
-@Api(tags = "9. 리뷰")
+@Api(tags = "09. 리뷰")
 @RestController
 @RequestMapping("/v1/api/review")
 @RequiredArgsConstructor
@@ -25,10 +25,10 @@ public class ReviewController {
 	@GetMapping
 	@ApiOperation(value = "코디네이터 별 리뷰 조회", notes = "코디네이터에게 달린 모든 리뷰를 가져옵니다.")
 	public ListResult<ReviewRes> getAllReviews(
-			@ApiParam(value = "코디네이터 아이디", required = true) @RequestParam String crdiId
+			@ApiParam(value = "코디네이터 이메일", required = true) @RequestParam String email
 	) {
 		try {
-			return responseService.getListResult(reviewService.getAllReviewsOfCrdi(crdiId));
+			return responseService.getListResult(reviewService.getAllReviewsOfCrdi(email));
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BussinessException(e.getMessage());

@@ -21,7 +21,7 @@ public class MemberReport {
 	private Long seq;
 
 	@Column
-	private String memberId;
+	private String memberEmail;
 
 	@Column
 	private String reportTitle;
@@ -41,7 +41,7 @@ public class MemberReport {
 		return MemberReportRes.builder()
 				.seq(seq)
 				.memberSeq(member.getSeq())
-				.memberId(memberId)
+				.memberEmail(memberEmail)
 				.reportTitle(reportTitle)
 				.reportContent(reportContent)
 				.createDate(new DateConfig().getNowDate())

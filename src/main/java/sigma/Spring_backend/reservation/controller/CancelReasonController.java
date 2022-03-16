@@ -15,7 +15,7 @@ import sigma.Spring_backend.reservation.dto.CancelReasonDto;
 import sigma.Spring_backend.reservation.dto.TYPE;
 import sigma.Spring_backend.reservation.service.CancelReasonService;
 
-@Api(tags = "8. 예약 관련 취소")
+@Api(tags = "08. 예약 취소")
 @RestController
 @RequestMapping("/v1/api/cancel")
 @RequiredArgsConstructor

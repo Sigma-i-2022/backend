@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class MemberReportRes {
 	private Long seq;
 	private Long memberSeq;
-	private String memberId;
+	private String memberEmail;
 	private String reportTitle;
 	private String reportContent;
 	private String createDate;

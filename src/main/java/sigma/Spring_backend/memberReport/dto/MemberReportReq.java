@@ -20,8 +20,8 @@ public class MemberReportReq {
 	@ApiModelProperty(value = "회원 번호")
 	private Long memberSeq;
 	@NotBlank
-	@ApiModelProperty(value = "회원 아이디")
-	private String memberId;
+	@ApiModelProperty(value = "회원 이메일")
+	private String memberEmail;
 	@NotBlank
 	@ApiModelProperty(value = "리폿 제목")
 	@Size(min = 8, max = 25, message = "8자 이상 25자 이내로 제목을 작성하세요.")
@@ -33,7 +33,7 @@ public class MemberReportReq {
 
 	public MemberReport toEntity() {
 		return MemberReport.builder()
-				.memberId(memberId)
+				.memberEmail(memberEmail)
 				.reportTitle(reportTitle)
 				.reportContent(reportContent)
 				.createDate(new DateConfig().getNowDate())

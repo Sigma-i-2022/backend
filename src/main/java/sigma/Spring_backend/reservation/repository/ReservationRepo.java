@@ -10,9 +10,9 @@ import java.util.List;
 @Repository
 public interface ReservationRepo extends JpaRepository<Reservation, Long> {
 
-	@Query("select r from Reservation r where r.clientId = ?1")
-	List<Reservation> findAllByClientId(String clientId);
+	@Query("select r from Reservation r where r.clientEmail = ?1")
+	List<Reservation> findAllByClientEmail(String clientEmail);
 
-	@Query("select r from Reservation r where r.crdiId = ?1")
-	List<Reservation> findAllByCrdiId(String crdiId);
+	@Query("select r from Reservation r where r.crdiEmail = ?1")
+	List<Reservation> findAllByCrdiEmail(String crdiEmail);
 }

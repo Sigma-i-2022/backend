@@ -116,11 +116,11 @@ public class ChatService {
 	@Transactional
 	public ChatMessage sendChat(ChatMessageReq message, MultipartFile imageFile) {
 		Long chatRoomId = message.getChatRoomId();
-		String memberId = message.getSenderId();
+		String memberEmail = message.getSenderEmail();
 
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
 				.orElseThrow(() -> new BussinessException(ExMessage.CHAT_ERROR_NOT_FOUND));
-		Member sender = memberRepository.findByIdFJ(memberId)
+		Member sender = memberRepository.findByEmailFJ(memberEmail)
 				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 		String senderImg = sender.getMypage().getProfileImgUrl();
 

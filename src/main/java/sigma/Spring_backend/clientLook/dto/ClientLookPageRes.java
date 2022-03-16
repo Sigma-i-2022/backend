@@ -1,4 +1,4 @@
-package sigma.Spring_backend.memberLook.dto;
+package sigma.Spring_backend.clientLook.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import javax.persistence.Enumerated;
 @Data
 @Builder
 @AllArgsConstructor
-public class MemberLookPageRes {
+public class ClientLookPageRes {
 	@ApiModelProperty("룩 페이지 SEQ")
 	private Long lookPageSeq;
 

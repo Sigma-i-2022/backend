@@ -22,7 +22,7 @@ import sigma.Spring_backend.chat.dto.ChatRoomDto;
 import sigma.Spring_backend.chat.service.ChatService;
 
 @Slf4j
-@Api(tags = "6. 채팅")
+@Api(tags = "11. 채팅")
 @RestController
 @RequestMapping("/v1/api/chat")
 @RequiredArgsConstructor
@@ -49,7 +49,7 @@ public class ChatController {
 	}
 
 	@GetMapping("/room")
-	@ApiOperation(value = "채팅방 조회", notes = "채팅방을 SEQ로 조회합니다.")
+	@ApiOperation(value = "채팅방 조회", notes = "채팅방을 번호로 조회합니다.")
 	public SingleResult<ChatRoomDto> getChatRoom(
 			@ApiParam @RequestParam Long chatRoomId
 	) {
@@ -63,14 +63,14 @@ public class ChatController {
 		}
 	}
 
-	@PostMapping("/members/{chatRoomId}")
+	@PostMapping("/members/{chatRoomSeq}")
 	@ApiOperation(value = "채팅방 인원 추가", notes = "채팅방에 참여자를 추가합니다.")
 	public CommonResult addMRoomMembers(
-			@ApiParam(value = "채팅방 ID (SEQ_PK)") @PathVariable Long chatRoomId,
+			@ApiParam(value = "채팅방 번호") @PathVariable Long chatRoomSeq,
 			@ApiParam(value = "고객 이메일") @RequestParam String memberEmail,
 			@ApiParam(value = "코디네이터 이메일") @RequestParam String cordiEmail
 	) {
-		boolean result = chatService.joinMembersToRoom(chatRoomId, memberEmail, cordiEmail);
+		boolean result = chatService.joinMembersToRoom(chatRoomSeq, memberEmail, cordiEmail);
 		if (result) {
 			return responseService.getSuccessResult();
 		} else {
@@ -110,7 +110,7 @@ public class ChatController {
 	@GetMapping("/all")
 	@ApiOperation(value = "채팅방 메세지 조회", notes = "페이징 방식으로 채팅방의 메시지를 최근 순서로 조회합니다.")
 	public ListResult<ChatMessageRes> getAllChats(
-			@ApiParam(value = "채팅방 SEQ") @RequestParam Long chatRoomSeq,
+			@ApiParam(value = "채팅방 번호") @RequestParam Long chatRoomSeq,
 			@ApiParam(value = "PAGE 번호 (0부터)") @RequestParam(defaultValue = "0") int page,
 			@ApiParam(value = "PAGE 크기") @RequestParam(defaultValue = "20") int size
 	) {

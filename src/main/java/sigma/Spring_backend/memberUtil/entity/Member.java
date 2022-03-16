@@ -4,7 +4,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import sigma.Spring_backend.chat.entity.MemberChatRoomConnection;
 import sigma.Spring_backend.crdiPage.entity.CrdiWork;
-import sigma.Spring_backend.memberLook.entity.MemberLookPage;
+import sigma.Spring_backend.clientLook.entity.ClientLookPage;
 import sigma.Spring_backend.memberMypage.entity.CommonMypage;
 import sigma.Spring_backend.memberReport.entity.MemberReport;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
@@ -81,15 +81,15 @@ public class Member {
 
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Builder.Default
-	private List<MemberLookPage> pages = new ArrayList<>();
+	private List<ClientLookPage> pages = new ArrayList<>();
 
-	public void addLookPage(MemberLookPage memberLookPage) {
-		pages.add(memberLookPage);
-		memberLookPage.setMember(this);
+	public void addLookPage(ClientLookPage clientLookPage) {
+		pages.add(clientLookPage);
+		clientLookPage.setMember(this);
 	}
 
-	public void removeLookPage(MemberLookPage memberLookPage) {
-		memberLookPage.setActivateYn("N");
+	public void removeLookPage(ClientLookPage clientLookPage) {
+		clientLookPage.setActivateYn("N");
 	}
 
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

@@ -1,8 +1,8 @@
-package sigma.Spring_backend.memberLook.entity;
+package sigma.Spring_backend.clientLook.entity;
 
 import lombok.*;
-import sigma.Spring_backend.memberLook.dto.Keyword;
-import sigma.Spring_backend.memberLook.dto.MemberLookPageRes;
+import sigma.Spring_backend.clientLook.dto.Keyword;
+import sigma.Spring_backend.clientLook.dto.ClientLookPageRes;
 import sigma.Spring_backend.memberUtil.entity.Member;
 
 import javax.persistence.*;
@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class MemberLookPage {
+public class ClientLookPage {
 	@Id
 	@Column(unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,8 +66,8 @@ public class MemberLookPage {
 	@JoinColumn(name = "MEMBER_SEQ")
 	private Member member;
 
-	public MemberLookPageRes toDto() {
-		return MemberLookPageRes.builder()
+	public ClientLookPageRes toDto() {
+		return ClientLookPageRes.builder()
 				.lookPageSeq(seq)
 				.explanation(explanation)
 				.imagePathUrl(imagePathUrl)
