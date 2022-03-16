@@ -17,7 +17,6 @@ public class CrdiWorkReq {
     @Builder.Default
     private String explanation  = "";
 
-    private MultipartFile imageFile;
     private String weight;
     private String height;
     private String topInfo;
