@@ -12,6 +12,7 @@ import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberMypage.entity.CommonMypage;
+import sigma.Spring_backend.memberMypage.repository.CommonMypageRepository;
 import sigma.Spring_backend.memberSignup.dto.CrdiResponseDto;
 import sigma.Spring_backend.memberSignup.dto.MemberSessionDto;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
@@ -40,6 +41,7 @@ public class MemberSignupService {
 	private final CrdiJoinRepository crdiJoinRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final HttpSession session;
+	private final CommonMypageRepository commonMypageRepository;
 
 	@Value("${email.id}")
 	private String sigmaEmail;
@@ -56,8 +58,18 @@ public class MemberSignupService {
 		Optional<AuthorizeMember> dbCode = authorizeCodeRepository.findByEmail(email);
 		if (dbCode.isPresent() && dbCode.get().getCode().equals(userInputCode) && !dbCode.get().isExpired()) {
 			dbCode.get().useCode();
-		} else {
+		}else {
 			throw new BussinessException(ExMessage.EMAIL_ERROR_FORMAT);
+		}
+		try {
+			commonMypageRepository.save(CommonMypage.builder()
+					.email(email)
+					.intro("")
+					.userId("")
+					.profileImgUrl("")
+					.build());
+		} catch (Exception e) {
+			throw new BussinessException(ExMessage.DB_ERROR_SAVE);
 		}
 	}
 
@@ -75,47 +87,32 @@ public class MemberSignupService {
 		verifyUserInfo(userInfoMap);
 
 		AuthorizeMember authorizeMember = authorizeCodeRepository.findByEmail(email).get();
+		CommonMypage initMypage = commonMypageRepository.findByEmail(email).get();
 		if (memberRepository.findByEmailFJ(email).isPresent()) {
 			throw new BussinessException(ExMessage.MEMBER_ERROR_DUPLICATE);
 		} else if (!authorizeMember.isExpired()) {
 			throw new BussinessException(ExMessage.MEMBER_ERROR_NON_VERIFIED_EMAIL);
 		} else {
-			saveMember(password, email, userId);
-			CommonMypage mypage = CommonMypage.builder()
-					.email(email)
-					.intro("")
-					.profileImgUrl("")
-					.userId(userId)
-					.build();
 			try {
-				Member member = memberRepository.findByEmail(email).get();
-
+				Member member = Member.builder()
+						.email(email)
+						.userId(userId)
+						.password(password)
+						.signupType("E")
+						.registDate(new DateConfig().getNowDate())
+						.updateDate(new DateConfig().getNowDate())
+						.activateYn("Y")
+						.reportedYn("N")
+						.crdiYn("N")
+						.build();
+				initMypage.setUserId(userId);
+				member.setMypage(initMypage);
 				member.setAuthorizeUser(authorizeMember);
-				member.setMypage(mypage);
+				memberRepository.save(member);
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new BussinessException("회원가입에 실패하였습니다.");
 			}
-		}
-	}
-
-	@Transactional
-	public void saveMember(String password, String email, String userId) {
-		password = passwordEncoder.encode(password);
-		try {
-			memberRepository.save(Member.builder()
-					.email(email)
-					.userId(userId)
-					.password(password)
-					.signupType("E")
-					.registDate(new DateConfig().getNowDate())
-					.updateDate(new DateConfig().getNowDate())
-					.activateYn("Y")
-					.reportedYn("N")
-					.crdiYn("N")
-					.build());
-		} catch (Exception e) {
-			throw new BussinessException(ExMessage.MEMBER_ERROR_DB_SAVE);
 		}
 	}
 

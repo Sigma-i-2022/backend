@@ -12,7 +12,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.awsUtil.service.AwsService;
 import sigma.Spring_backend.baseUtil.config.DateConfig;
-import sigma.Spring_backend.memberMypage.dto.CommonProfileImgReq;
 import sigma.Spring_backend.memberMypage.dto.CommonUpdateInfoReq;
 import sigma.Spring_backend.memberMypage.entity.CommonMypage;
 import sigma.Spring_backend.memberMypage.repository.CommonMypageRepository;
@@ -23,11 +22,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willReturn;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class CommonMypageServiceImplTest {
@@ -44,7 +41,6 @@ class CommonMypageServiceImplTest {
 	private CommonMypage originMypage;
 
 	private MultipartFile multipartFile;
-	private CommonProfileImgReq profileImgReq;
 	private CommonUpdateInfoReq updateInfoReq;
 	private Member member;
 
@@ -67,10 +63,6 @@ class CommonMypageServiceImplTest {
 
 		InputStream is = new ClassPathResource("mock/image/icecream.png").getInputStream();
 		multipartFile = new MockMultipartFile("아이스크림 사진", "icecream.png", "image/png", is);
-
-		profileImgReq = new CommonProfileImgReq();
-		profileImgReq.setMemberEmail(member.getEmail());
-		profileImgReq.setMemberImageFile(multipartFile);
 
 		originMypage = CommonMypage.builder()
 				.email(member.getEmail())
@@ -126,20 +118,20 @@ class CommonMypageServiceImplTest {
 	@DisplayName("마이페이지 프로필 업로드 성공")
 	void registMemberProfileImage() {
 		// given
-		given(memberRepository.existsByEmail(profileImgReq.getMemberEmail()))
+		given(memberRepository.existsByEmail(member.getEmail()))
 				.willReturn(Boolean.TRUE);
-		given(commonMypageRepository.findByEmail(profileImgReq.getMemberEmail()))
+		given(commonMypageRepository.findByEmail(member.getEmail()))
 				.willReturn(Optional.of(originMypage));
-		given(awsService.imageUploadToS3("/profileImage", profileImgReq.getMemberImageFile()))
+		given(awsService.imageUploadToS3("/profileImage", multipartFile))
 				.willReturn("test_url");
 
 		// when
-		commonMypageServiceImpl.updateProfileImg(profileImgReq);
+		commonMypageServiceImpl.updateProfileImg(member.getEmail(), multipartFile);
 
 		// then
 		assertEquals(
 				commonMypageRepository
-						.findByEmail(profileImgReq.getMemberEmail())
+						.findByEmail(member.getEmail())
 						.get()
 						.getProfileImgUrl()
 				, "test_url"

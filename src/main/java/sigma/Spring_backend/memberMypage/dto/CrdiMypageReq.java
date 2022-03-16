@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.memberMypage.entity.CommonMypage;
 
 import javax.validation.constraints.NotBlank;
@@ -27,7 +26,6 @@ public class CrdiMypageReq {
 	private String sTag1;
 	private String sTag2;
 	private String sTag3;
-	private MultipartFile profileImg;
 
 	public CommonMypage toEntity(String profileImgUrl) {
 		return CommonMypage.builder()

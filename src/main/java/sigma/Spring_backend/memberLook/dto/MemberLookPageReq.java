@@ -2,7 +2,6 @@ package sigma.Spring_backend.memberLook.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.memberLook.entity.MemberLookPage;
 
@@ -22,9 +21,6 @@ public class MemberLookPageReq {
 	@ApiModelProperty("룩 페이지 설명")
 	@Builder.Default
 	private String explanation = "";
-
-	@ApiModelProperty("이미지")
-	private MultipartFile imageFile;
 
 	@ApiModelProperty("키워드 1")
 	@Enumerated(EnumType.STRING)

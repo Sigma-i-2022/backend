@@ -22,7 +22,7 @@ public class CommonMypage {
 	@Column(unique = true, nullable = false)
 	private String email;
 
-	@Column(unique = true, nullable = false)
+	@Column
 	private String userId;
 
 	@Column(length = 500)
@@ -44,6 +44,9 @@ public class CommonMypage {
 
 	@Column
 	private String sTag3;
+
+	@OneToOne(mappedBy = "mypage", orphanRemoval = true)
+	private Member member;
 
 	public ClientMypageRes toClientDto() {
 		return ClientMypageRes.builder()

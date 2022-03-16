@@ -2,6 +2,7 @@ package sigma.Spring_backend.reservation.entity;
 
 import lombok.*;
 import sigma.Spring_backend.reservation.dto.CancelReasonDto;
+import sigma.Spring_backend.reservation.dto.TYPE;
 
 import javax.persistence.*;
 
@@ -23,7 +24,7 @@ public class CancelReason {
 	private String reason;
 
 	@Column(nullable = false)
-	private String byWho;
+	private TYPE byWho;
 
 	public CancelReasonDto toDto() {
 		return CancelReasonDto.builder()

@@ -3,6 +3,7 @@ package sigma.Spring_backend.memberMypage.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.awsUtil.service.AwsService;
@@ -56,12 +57,12 @@ public class CommonMypageServiceImpl implements CommonMypageServiceInterface {
 
 	@Override
 	@Transactional
-	public void registCrdiMypage(CrdiMypageReq crdiProfileReq) {
-		boolean verify = verifyCrdiRequest(crdiProfileReq);
+	public void registCrdiMypage(CrdiMypageReq crdiProfileReq, MultipartFile profileImg) {
+		boolean verify = verifyCrdiRequest(profileImg);
 		if (!verify) throw new BussinessException(ExMessage.MEMBER_MYPAGE_IMG_FORMAT);
 
 		try {
-			String url = awsService.imageUploadToS3("/profileImage", crdiProfileReq.getProfileImg());
+			String url = awsService.imageUploadToS3("/profileImage", profileImg);
 			CommonMypage mypage = memberRepository.findByEmailFJ(crdiProfileReq.getEmail())
 					.filter(c -> c.getCrdiYn().equals("Y"))
 					.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND))
@@ -94,14 +95,14 @@ public class CommonMypageServiceImpl implements CommonMypageServiceInterface {
 
 	@Override
 	@Transactional
-	public void updateProfileImg(CommonProfileImgReq commonProfileImgReq) {
-		boolean verify = verifyClientRequest(commonProfileImgReq);
+	public void updateProfileImg(String email, MultipartFile imageFile) {
+		boolean verify = verifyClientRequest(email, imageFile);
 		if (!verify) throw new BussinessException(ExMessage.MEMBER_MYPAGE_IMG_FORMAT);
 
 		try {
-			String url = awsService.imageUploadToS3("/profileImage", commonProfileImgReq.getMemberImageFile());
+			String url = awsService.imageUploadToS3("/profileImage", imageFile);
 			commonMypageRepository
-					.findByEmail(commonProfileImgReq.getMemberEmail())
+					.findByEmail(email)
 					.ifPresentOrElse(
 							mypage -> mypage.setProfileImgUrl(url)
 							, () -> {
@@ -114,8 +115,7 @@ public class CommonMypageServiceImpl implements CommonMypageServiceInterface {
 	}
 
 
-	private boolean verifyCrdiRequest(CrdiMypageReq request) {
-		MultipartFile imageFile = request.getProfileImg();
+	private boolean verifyCrdiRequest(MultipartFile imageFile) {
 		if (imageFile.isEmpty() || imageFile.getSize() == 0) {
 			return false;
 		} else {
@@ -123,10 +123,7 @@ public class CommonMypageServiceImpl implements CommonMypageServiceInterface {
 		}
 	}
 
-	private boolean verifyClientRequest(CommonProfileImgReq request) {
-		String email = request.getMemberEmail();
-		MultipartFile imageFile = request.getMemberImageFile();
-
+	private boolean verifyClientRequest(String email, MultipartFile imageFile) {
 		if (email == null || !memberRepository.existsByEmail(email)) {
 			return false;
 		}

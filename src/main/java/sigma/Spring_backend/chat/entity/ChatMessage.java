@@ -21,30 +21,27 @@ public class ChatMessage {
 	@Enumerated(EnumType.STRING)
 	private MessageType chatType;
 
+	@Setter
 	@Column
 	private String imagePathUrl;
 
+	@Setter
 	@Column
 	private String senderProfileImgUrl;
 
+	@Setter
 	@Column
 	private String senderId;
 
+	@Setter
 	@Column(length = 1000)
 	private String message;
 
 	@Column
 	private Long chatRoomId;
 
+	@Column
 	private String regDate;
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	public void setSenderId(String senderId) {
-		this.senderId = senderId;
-	}
 
 	@Setter
 	@ManyToOne(fetch = FetchType.LAZY)

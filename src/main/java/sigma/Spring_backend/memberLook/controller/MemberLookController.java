@@ -30,10 +30,11 @@ public class MemberLookController {
 	@PostMapping
 	@ApiOperation(value = "회원 단일 룩 페이지 생성", notes = "회원의 단일 룩 페이지를 생성합니다")
 	public CommonResult registMemberLookPage(
-			@ApiParam(value = "룩북 페이지 요청 객체") @ModelAttribute MemberLookPageReq lookPageReq
+			@ApiParam(value = "룩북 페이지 요청 객체") @ModelAttribute MemberLookPageReq lookPageReq,
+			@ApiParam(value = "이미지 파일") @RequestParam MultipartFile imageFile
 	) {
 		try {
-			memberLookService.registLookPage(lookPageReq);
+			memberLookService.registLookPage(lookPageReq, imageFile);
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -5,12 +5,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.validation.constraints.NotBlank;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class CancelReasonDto {
+	@NotBlank
 	private Long reservationSeq;
+	@NotBlank
 	private String reason;
-	private String byWho;
+	@NotBlank
+	@Enumerated(EnumType.STRING)
+	private TYPE byWho;
 }
