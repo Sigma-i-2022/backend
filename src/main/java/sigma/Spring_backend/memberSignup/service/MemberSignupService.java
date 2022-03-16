@@ -150,6 +150,7 @@ public class MemberSignupService {
 		String url3 = crdiInfoMap.get("url3");
 		String url4 = crdiInfoMap.get("url4");
 		String url5 = crdiInfoMap.get("url5");
+		String confirmYN = "N";
 
 
 		String joinYN = "N"; // 신청(N) 성공(S) 거절(R)
@@ -172,6 +173,7 @@ public class MemberSignupService {
 					.url5(url5)
 					.regDt(regDt)
 					.joinYN(joinYN)
+					.confirmYN(confirmYN)
 					.build()).toDto();
 			MimeMessage mail = createMessage(email, "CRDI");
 			emailSender.send(mail);
