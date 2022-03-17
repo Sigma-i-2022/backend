@@ -76,6 +76,15 @@ public class Review {
 	@JoinColumn(name = "COORDINATOR_SEQ")
 	private Member coordinator;
 
+	@OneToOne
+	@JoinColumn(name="reply_id")
+	private Reply reply;
+
+	public void addReply(Reply reply){
+		this.reply = reply;
+		reply.setReview(this);
+	}
+
 	public ReviewRes toDto() {
 		return ReviewRes.builder()
 				.seq(seq)
