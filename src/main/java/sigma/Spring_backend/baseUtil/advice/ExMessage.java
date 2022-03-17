@@ -44,6 +44,7 @@ public enum ExMessage {
 	, REVIEW_ERROR_FORMAT("리뷰 요청 폼이 잘못되었습니다.")
 	, REVIEW_ERROR_ALREADY_REVIEWED("이미 리뷰를 작성하였습니다.")
 	, REVIEW_ERROR_NOT_FOUND("리뷰가 존재하지 않습니다.")
+	, MULTIPART_ERROR_SIZE("사진의 크기가 10MB를 초과합니다.")
 	;
 
 	private final String message;
