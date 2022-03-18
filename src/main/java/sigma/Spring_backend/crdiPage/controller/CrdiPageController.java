@@ -11,6 +11,7 @@ import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.baseUtil.dto.ListResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
+import sigma.Spring_backend.crdiPage.dto.CrdiRes;
 import sigma.Spring_backend.crdiPage.dto.CrdiWorkReq;
 import sigma.Spring_backend.crdiPage.dto.CrdiWorkRes;
 import sigma.Spring_backend.crdiPage.service.CrdiPageService;
@@ -65,6 +66,17 @@ public class CrdiPageController {
 		try {
 			return responseService.getListResult(crdiPageService.getWorks(crdiEmail));
 		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BussinessException(e.getMessage());
+		}
+	}
+
+	@GetMapping("/list")
+	@ApiOperation(value="코디 리스트 조회", notes ="코디 리스트를 조회합니다.")
+	public ListResult<CrdiRes> getCrdiList(@ApiParam(value = "고객 이메일") @RequestParam String email){
+		try{
+			return responseService.getListResult(crdiPageService.getCrdiList(email));
+		}catch (Exception e){
 			e.printStackTrace();
 			throw new BussinessException(e.getMessage());
 		}
