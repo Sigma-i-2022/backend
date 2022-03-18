@@ -3,6 +3,7 @@ package sigma.Spring_backend.memberUtil.entity;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import sigma.Spring_backend.chat.entity.MemberChatRoomConnection;
+import sigma.Spring_backend.crdiBlock.entity.CrdiBlock;
 import sigma.Spring_backend.crdiPage.entity.CrdiWork;
 import sigma.Spring_backend.clientLook.entity.ClientLookPage;
 import sigma.Spring_backend.memberMypage.entity.CommonMypage;
@@ -142,6 +143,15 @@ public class Member {
 		this.reports.add(report);
 		this.setReportedYn("Y");
 		report.setMember(this);
+	}
+
+	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@Builder.Default
+	private List<CrdiBlock> blockList = new ArrayList<>();
+
+	public void addBlock(CrdiBlock crdiBlock){
+		this.blockList.add(crdiBlock);
+		crdiBlock.setMember(this);
 	}
 
 	public MemberResponseDto toDto() {
