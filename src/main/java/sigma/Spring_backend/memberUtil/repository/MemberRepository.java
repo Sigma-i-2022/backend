@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import sigma.Spring_backend.memberUtil.entity.Member;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -18,4 +19,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("select m from Member m join fetch m.mypage join fetch m.authorizeUser where m.email=?1")
     Optional<Member> findByEmailFJ(String email);
+
+    List<Member> findByCrdiYnAndEmailNotIn(String crdiYn,List<String> crdiEmail);
 }
