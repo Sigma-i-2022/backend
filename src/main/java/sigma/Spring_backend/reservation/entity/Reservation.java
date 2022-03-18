@@ -35,14 +35,14 @@ public class Reservation {
 	private String clientId;
 
 	@Column(nullable = false)
-	private String reserveDay; // yyyy-MM-dd
+	private String reserveDay; // yyyy년 MM월 dd일
 
 	@Column(nullable = false)
 	private String reserveTimes;
 
 	@Setter
 	@Column(nullable = false)
-	private String confirmedReserveTime; // yyyy-MM-dd HH:mm
+	private String confirmedReserveTime; // HH:mm - HH:mm
 
 	@Enumerated(EnumType.STRING)
 	private CrdiServiceType serviceType;

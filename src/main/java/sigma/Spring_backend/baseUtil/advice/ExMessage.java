@@ -44,6 +44,11 @@ public enum ExMessage {
 	, REVIEW_ERROR_FORMAT("리뷰 요청 폼이 잘못되었습니다.")
 	, REVIEW_ERROR_ALREADY_REVIEWED("이미 리뷰를 작성하였습니다.")
 	, REVIEW_ERROR_NOT_FOUND("리뷰가 존재하지 않습니다.")
+	, PAYMENT_ERROR_ORDER_NAME("주문하신 상품 이름이 잘못되었습니다.")
+	, PAYMENT_ERROR_ORDER_PRICE("주문하신 상품 금액이 잘못되었습니다.")
+	, PAYMENT_ERROR_ORDER_PAY_TYPE("결제수단 선택이 잘못되었습니다.")
+	, PAYMENT_ERROR_ORDER_AMOUNT("결제 금액이 잘못되었습니다.")
+	, PAYMENT_ERROR_ORDER("결제 관련 오류가 발생했습니다.")
 	;
 
 	private final String message;

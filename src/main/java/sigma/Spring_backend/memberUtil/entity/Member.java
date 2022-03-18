@@ -9,6 +9,7 @@ import sigma.Spring_backend.memberMypage.entity.CommonMypage;
 import sigma.Spring_backend.memberReport.entity.MemberReport;
 import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
 import sigma.Spring_backend.memberUtil.dto.MemberResponseDto;
+import sigma.Spring_backend.payment.entity.Payment;
 import sigma.Spring_backend.reservation.entity.MemberReservation;
 import sigma.Spring_backend.review.entity.Review;
 
@@ -141,6 +142,15 @@ public class Member {
 		this.reports.add(report);
 		this.setReportedYn("Y");
 		report.setMember(this);
+	}
+
+	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@Builder.Default
+	private List<Payment> payments = new ArrayList<>();
+
+	public void addPayment(Payment payment) {
+		this.payments.add(payment);
+		payment.setCustomer(this);
 	}
 
 	public MemberResponseDto toDto() {
