@@ -44,8 +44,13 @@ public class Payment {
 	@Column
 	private String paymentKey;
 
+	@Setter
 	@Column(nullable = false)
 	private String paySuccessYn;
+
+	@Setter
+	@Column
+	private String payFailReason;
 
 	@Column(nullable = false)
 	private String createDate;

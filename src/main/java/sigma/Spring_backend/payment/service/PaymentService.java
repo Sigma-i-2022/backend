@@ -11,12 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
+import sigma.Spring_backend.baseUtil.dto.SingleResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
-import sigma.Spring_backend.payment.dto.OrderNameType;
-import sigma.Spring_backend.payment.dto.PaymentReq;
-import sigma.Spring_backend.payment.dto.PaymentRes;
-import sigma.Spring_backend.payment.dto.PaymentResHandleDto;
+import sigma.Spring_backend.payment.dto.*;
 import sigma.Spring_backend.payment.entity.Payment;
 import sigma.Spring_backend.payment.repository.PaymentRepository;
 
@@ -129,5 +127,20 @@ public class PaymentService {
 				new HttpEntity<>(param, headers),
 				PaymentResHandleDto.class
 		).getBody();
+	}
+
+	@Transactional
+	public PaymentResHandleFailDto requestFail(String errorCode, String errorMsg, String orderId) {
+		Payment payment = paymentRepository.findByOrderId(orderId)
+				.orElseThrow(() -> new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND));
+		payment.setPaySuccessYn("N");
+		payment.setPayFailReason(errorMsg);
+
+		return PaymentResHandleFailDto
+				.builder()
+				.orderId(orderId)
+				.errorCode(errorCode)
+				.errorMsg(errorMsg)
+				.build();
 	}
 }

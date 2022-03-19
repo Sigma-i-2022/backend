@@ -11,6 +11,7 @@ import sigma.Spring_backend.baseUtil.service.ResponseService;
 import sigma.Spring_backend.payment.dto.PaymentReq;
 import sigma.Spring_backend.payment.dto.PaymentRes;
 import sigma.Spring_backend.payment.dto.PaymentResHandleDto;
+import sigma.Spring_backend.payment.dto.PaymentResHandleFailDto;
 import sigma.Spring_backend.payment.service.PaymentService;
 
 @Api(tags = "12. 결제")
@@ -50,6 +51,23 @@ public class PayController {
 			PaymentResHandleDto result = paymentService.requestFinalPayment(paymentKey, orderId, amount);
 
 			return responseService.getSingleResult(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BussinessException(e.getMessage());
+		}
+	}
+
+	@GetMapping("/fail")
+	@ApiOperation(value = "결제 실패 리다이렉트", notes = "결제 실패 시 에러코드 및 에러메시지를 반환합니다.")
+	public SingleResult<PaymentResHandleFailDto> requestFail(
+			@ApiParam(value = "에러 코드", required = true) @RequestParam(name = "code") String errorCode,
+			@ApiParam(value = "에러 메시지", required = true) @RequestParam(name = "message") String errorMsg,
+			@ApiParam(value = "우리측 주문 고유 번호", required = true) @RequestParam(name = "orderId") String orderId
+	) {
+		try {
+			return responseService.getSingleResult(
+					paymentService.requestFail(errorCode, errorMsg, orderId)
+			);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BussinessException(e.getMessage());
