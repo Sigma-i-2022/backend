@@ -28,7 +28,7 @@ public class ChatWsController {
 	@SendTo("/sub/chat/message/{roomSeq}")
 	@ApiOperation(value = "채팅 메세지 전송", notes = "채팅방 인원들에게 메시지를 전파합니다.")
 	public ChatMessage message(
-			@DestinationVariable String roomSeq,
+			@DestinationVariable Long roomSeq,
 			ChatMessageReq message,
 			@Nullable MultipartFile imageFile
 	) {
@@ -39,7 +39,7 @@ public class ChatWsController {
 	@SendTo("/sub/chat/notify/{roomSeq}")
 	@ApiOperation(value = "알림 메시지 전송", notes = "채팅방 인원들에게 알림을 전파합니다.")
 	public ChatMessage notify(
-			@DestinationVariable String roomSeq,
+			@DestinationVariable Long roomSeq,
 			ChatMessage notify
 	) {
 		return notify;

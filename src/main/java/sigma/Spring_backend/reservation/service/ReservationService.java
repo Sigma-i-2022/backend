@@ -12,16 +12,11 @@ import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 import sigma.Spring_backend.reservation.dto.ReservePartTimeReq;
 import sigma.Spring_backend.reservation.dto.ReserveReq;
 import sigma.Spring_backend.reservation.dto.ReserveRes;
-import sigma.Spring_backend.reservation.dto.TYPE;
-import sigma.Spring_backend.reservation.entity.CancelReason;
 import sigma.Spring_backend.reservation.entity.MemberReservation;
 import sigma.Spring_backend.reservation.entity.Reservation;
-import sigma.Spring_backend.reservation.repository.CancelReasonRepo;
 import sigma.Spring_backend.reservation.repository.MemberReservationRepo;
 import sigma.Spring_backend.reservation.repository.ReservationRepo;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +28,6 @@ public class ReservationService {
 	private final MemberRepository memberRepository;
 	private final ReservationRepo reservationRepo;
 	private final MemberReservationRepo memberReservationRepo;
-	private final CancelReasonRepo cancelReasonRepo;
 
 	@Transactional(readOnly = true)
 	public List<ReserveRes> getAllReservations() {
@@ -187,59 +181,6 @@ public class ReservationService {
 							throw new BussinessException(ExMessage.RESERVATION_ERROR_NOT_FOUND);
 						}
 				);
-		return true;
-	}
-
-	@Transactional
-	public boolean cancelResvByCrdi(String crdiId, Long reservationSeq, String reason) {
-		reservationRepo.findById(reservationSeq)
-				.filter(R -> R.getCrdiId().equals(crdiId))
-				.filter(R -> R.getConfirmResvYn().equals("N"))
-				.ifPresentOrElse(
-						R -> {
-							R.setCancelYn("Y");
-							cancelReasonRepo.save(CancelReason.builder()
-									.reservationSeq(reservationSeq)
-									.reason(reason)
-									.byWho(TYPE.CRDI)
-									.build());
-						}, () -> {
-							throw new BussinessException(ExMessage.RESERVATION_ERROR_NOT_FOUND);
-						}
-				);
-		return true;
-	}
-
-	@Transactional
-	public boolean cancelResvByClient(String clientId, Long reservationSeq, String reason) {
-		String after6HourOfNow = LocalDateTime.now()
-				.plusHours(6)
-				.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm"));
-
-		Reservation reservation = reservationRepo.findById(reservationSeq)
-				.filter(R -> R.getClientId().equals(clientId))
-				.orElseThrow(() -> new BussinessException(ExMessage.RESERVATION_ERROR_NOT_FOUND_CLIENT));
-
-		String reservationTime = (reservation.getReserveDay() + " " + reservation.getConfirmedReserveTime())
-				.substring(0, 19);
-
-		CancelReason cancelReason = CancelReason.builder()
-				.reservationSeq(reservationSeq)
-				.reason(reason)
-				.byWho(TYPE.CLIENT)
-				.build();
-
-		// 6시간 이내에 예약시간 존재하면 취소 불가 or 예약을 안했으면 가능
-		if (reservation.getConfirmPayYn().equals("Y")) {
-			return false;
-		} else if (reservation.getConfirmResvYn().equals("Y") && reservationTime.compareTo(after6HourOfNow) > 0) {
-			reservation.setCancelYn("Y");
-			cancelReasonRepo.save(cancelReason);
-		} else if (reservation.getConfirmResvYn().equals("N")) {
-			reservation.setCancelYn("Y");
-			cancelReasonRepo.save(cancelReason);
-		} else return false;
-
 		return true;
 	}
 }

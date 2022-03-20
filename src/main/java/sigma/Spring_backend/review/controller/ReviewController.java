@@ -13,7 +13,7 @@ import sigma.Spring_backend.review.dto.ReviewReq;
 import sigma.Spring_backend.review.dto.ReviewRes;
 import sigma.Spring_backend.review.service.ReviewService;
 
-@Api(tags = "09. 리뷰")
+@Api(tags = "08. 리뷰")
 @RestController
 @RequestMapping("/v1/api/review")
 @RequiredArgsConstructor

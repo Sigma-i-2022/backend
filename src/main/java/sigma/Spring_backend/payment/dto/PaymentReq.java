@@ -15,6 +15,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaymentReq {
+	@ApiModelProperty("예약번호")
+	private Long reservationSeq;
 	@ApiModelProperty("지불방법")
 	private PayType payType;
 	@ApiModelProperty("지불금액")
@@ -29,6 +31,7 @@ public class PaymentReq {
 	public Payment toEntity() {
 		return Payment.builder()
 				.orderId(UUID.randomUUID().toString())
+				.reservationSeq(reservationSeq)
 				.payType(payType)
 				.amount(amount)
 				.orderName(orderName)

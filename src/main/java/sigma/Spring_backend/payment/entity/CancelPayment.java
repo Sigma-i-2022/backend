@@ -2,6 +2,7 @@ package sigma.Spring_backend.payment.entity;
 
 import lombok.*;
 import sigma.Spring_backend.memberUtil.entity.Member;
+import sigma.Spring_backend.payment.dto.CancelPaymentRes;
 import sigma.Spring_backend.payment.dto.OrderNameType;
 
 import javax.persistence.*;
@@ -53,4 +54,21 @@ public class CancelPayment {
 	@Setter
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	private Member customer;
+
+	public CancelPaymentRes toDto() {
+		return CancelPaymentRes.builder()
+				.seq(seq)
+				.orderId(orderId)
+				.paymentKey(paymentKey)
+				.orderName(orderName)
+				.requestedAt(requestedAt)
+				.approvedAt(approvedAt)
+				.cardCompany(cardCompany)
+				.cardNumber(cardNumber)
+				.receiptUrl(receiptUrl)
+				.cancelReason(cancelReason)
+				.cancelDate(cancelDate)
+				.cancelAmount(cancelAmount)
+				.build();
+	}
 }

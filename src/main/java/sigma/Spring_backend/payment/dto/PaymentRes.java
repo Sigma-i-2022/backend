@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentRes {
+	private Long reservationSeq;	// 예약번호
 	private String payType;			// 지불방법
 	private Long amount;			// 지불금액
 	private String orderId;			// 주문 고유 ID

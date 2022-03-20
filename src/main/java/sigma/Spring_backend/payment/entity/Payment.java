@@ -21,6 +21,9 @@ public class Payment {
 	private Long seq;
 
 	@Column(nullable = false)
+	private Long reservationSeq;
+
+	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private PayType payType;
 
