@@ -76,6 +76,7 @@ public class Review {
 	@JoinColumn(name = "COORDINATOR_SEQ")
 	private Member coordinator;
 
+
 	public ReviewRes toDto() {
 		return ReviewRes.builder()
 				.seq(seq)

@@ -11,7 +11,9 @@ import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 import sigma.Spring_backend.reservation.repository.ReservationRepo;
 import sigma.Spring_backend.review.dto.ReviewReq;
 import sigma.Spring_backend.review.dto.ReviewRes;
+import sigma.Spring_backend.review.entity.Reply;
 import sigma.Spring_backend.review.entity.Review;
+import sigma.Spring_backend.review.repository.ReplyRepository;
 import sigma.Spring_backend.review.repository.ReviewRepo;
 
 import java.util.List;
@@ -25,6 +27,7 @@ public class ReviewService {
 	private final ReservationRepo reservationRepo;
 	private final MemberRepository memberRepository;
 	private final ReviewRepo reviewRepo;
+	private final ReplyRepository replyRepository;
 
 	@Transactional
 	public void registReview(ReviewReq reviewReq) {
@@ -75,6 +78,22 @@ public class ReviewService {
 		 */
 		review.setActivateYn("Y");
 		review.setReportedYn("Y");
+	}
+
+	@Transactional
+	public void writeReply(Long reviewSeq, String crdiEmail, String replyContent) {
+		Review review = reviewRepo.findById(reviewSeq)
+				.orElseThrow(() -> new BussinessException(ExMessage.REVIEW_ERROR_NOT_FOUND));
+		Reply reply = new Reply();
+
+		reply.setReview(review);
+		reply.setCrdiEmail(crdiEmail);
+		reply.setReplyContent(replyContent);
+		try {
+			replyRepository.save(reply);
+		} catch (Exception e) {
+			throw new BussinessException(ExMessage.DB_ERROR_SAVE);
+		}
 	}
 
 	@Transactional(readOnly = true)
