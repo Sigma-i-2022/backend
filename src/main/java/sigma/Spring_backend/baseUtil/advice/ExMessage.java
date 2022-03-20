@@ -50,6 +50,8 @@ public enum ExMessage {
 	, PAYMENT_ERROR_ORDER_AMOUNT("결제 금액이 잘못되었습니다.")
 	, PAYMENT_ERROR_ORDER("결제 관련 오류가 발생했습니다.")
 	, PAYMENT_ERROR_ORDER_NOTFOUND("해당 결제 내역을 조회할 수 없습니다.")
+	, PAYMENT_CANCEL_ERROR_NOT_MATCH_AMOUNT("취소 금액과 결제 금액이 다릅니다.")
+	, PAYMENT_CANCEL_ERROR_FAIL("알 수 없는 이유로 결제 취소에 실패했습니다.")
 	;
 
 	private final String message;

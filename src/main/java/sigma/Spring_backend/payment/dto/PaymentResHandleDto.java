@@ -1,6 +1,7 @@
 package sigma.Spring_backend.payment.dto;
 
 import lombok.Data;
+import sigma.Spring_backend.payment.entity.CancelPayment;
 
 @Data
 public class PaymentResHandleDto {
@@ -21,7 +22,7 @@ public class PaymentResHandleDto {
 	String useEscrow;               // : false,
 	String cultureExpense;          // : false,
 	PaymentResHandleCardDto card;	// : 카드 결제,
-	PaymentResHandleCancelDto cancels;	// : 결제 취소 이력 관련 객체
+	PaymentResHandleCancelDto[] cancels;	// : 결제 취소 이력 관련 객체
 	String type;                    // : "NORMAL",	결제 타입 정보 (NOMAL, BILLING, CONNECTPAY)
 //	String virtualAccount;          // : null,		가상 계좌 결제 시 관련 객체
 //	String transfer;                // : null,		계좌이체 결제 시 관련 객체
@@ -32,4 +33,20 @@ public class PaymentResHandleDto {
 //	String secret;                  // : null,		가상 계좌로 결제 시 입금 콜백 검증 값
 //	String easyPay;                 // : null,		간편결제 결제시 정보
 //	String taxFreeAmount;			// : 0			면세금액
+
+	public CancelPayment toCancelPayment() {
+		return CancelPayment.builder()
+				.orderId(orderId)
+				.orderName(orderName)
+				.paymentKey(paymentKey)
+				.requestedAt(requestedAt)
+				.approvedAt(approvedAt)
+				.cardCompany(card.getCompany())
+				.cardNumber(card.getNumber())
+				.receiptUrl(card.getReceiptUrl())
+				.cancelAmount(cancels[0].getCancelAmount())
+				.cancelDate(cancels[0].getCanceledAt())
+				.cancelReason(cancels[0].getCancelReason())
+				.build();
+	}
 }

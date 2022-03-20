@@ -18,7 +18,7 @@ import sigma.Spring_backend.payment.service.PaymentService;
 @RequestMapping("/v1/api/payment")
 @RestController
 @RequiredArgsConstructor
-public class PayController {
+public class PaymentController {
 
 	private final PaymentService paymentService;
 	private final ResponseService responseService;
@@ -62,7 +62,7 @@ public class PayController {
 	public SingleResult<PaymentResHandleFailDto> requestFail(
 			@ApiParam(value = "에러 코드", required = true) @RequestParam(name = "code") String errorCode,
 			@ApiParam(value = "에러 메시지", required = true) @RequestParam(name = "message") String errorMsg,
-			@ApiParam(value = "우리측 주문 고유 번호", required = true) @RequestParam(name = "orderId") String orderId
+			@ApiParam(value = "우리 측 주문 고유 번호", required = true) @RequestParam(name = "orderId") String orderId
 	) {
 		try {
 			return responseService.getSingleResult(

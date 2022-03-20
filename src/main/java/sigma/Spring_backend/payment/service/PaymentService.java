@@ -9,15 +9,17 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
-import sigma.Spring_backend.baseUtil.dto.SingleResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 import sigma.Spring_backend.payment.dto.*;
 import sigma.Spring_backend.payment.entity.Payment;
 import sigma.Spring_backend.payment.repository.PaymentRepository;
 
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;

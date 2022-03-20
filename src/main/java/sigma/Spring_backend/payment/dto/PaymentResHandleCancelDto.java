@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class PaymentResHandleCancelDto {
-	Integer cancelAmount;           // 결제를 취소한 금액입니다.
+	Long cancelAmount;           // 결제를 취소한 금액입니다.
 	String cancelReason;            // 결제를 취소한 이유입니다.
 	Integer taxFreeAmount;          // 면세 처리된 금액입니다.
 	Integer taxAmount;              // 과세 처리된 금액입니다.
