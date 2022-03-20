@@ -6,8 +6,8 @@ import lombok.Data;
 
 @Data
 @Builder
-@AllArgsConstructor
 public class AlarmResponseDto {
     private String email;
     private String alarmMsg;
+    private String regDt;
 }

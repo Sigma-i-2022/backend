@@ -72,6 +72,8 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testImplementation 'org.mockito:mockito-junit-jupiter:4.3.1'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation 'com.google.firebase:firebase-admin:8.1.0'
 }
 
 test {

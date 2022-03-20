@@ -4,12 +4,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sigma.Spring_backend.alarm.dto.AlarmResponseDto;
 import sigma.Spring_backend.alarm.entity.Alarm;
 import sigma.Spring_backend.alarm.repository.AlarmRepository;
+import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberUtil.entity.Member;
 
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -28,16 +31,26 @@ public class AlarmService {
             throw new BussinessException("알람메세지를 입력해주세요.");
         }else{
             try{
-                Member member = new Member();
                 Alarm alarm = new Alarm();
-                alarm.setMember(member);
                alarmRepository.save(Alarm.builder()
                        .email(email)
                        .alarmMsg(alarmMsg)
+                       .registDate(new DateConfig().getNowDate())
                        .build()).toDto();
             }catch (Exception e){
                 throw new BussinessException("알람저장에 실패하였습니다.");
             }
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<AlarmResponseDto> getAlarmList(String email){
+        List<Alarm> alarmList = alarmRepository.findByEmail(email);
+        List<AlarmResponseDto> reAlarmList = new ArrayList<>();
+
+        for(Alarm alarm : alarmList){
+            reAlarmList.add(alarm.toDto());
+        }
+        return reAlarmList;
     }
 }

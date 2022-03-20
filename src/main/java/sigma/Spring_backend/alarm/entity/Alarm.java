@@ -24,14 +24,14 @@ public class Alarm {
     @Column(nullable = false)
     private String alarmMsg;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @Column
+    private String registDate;
 
     public AlarmResponseDto toDto() {
         return AlarmResponseDto.builder()
                 .email(email)
                 .alarmMsg(alarmMsg)
+                .regDt(registDate)
                 .build();
     }
 
