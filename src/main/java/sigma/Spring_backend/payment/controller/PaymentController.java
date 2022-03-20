@@ -4,14 +4,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
+import sigma.Spring_backend.baseUtil.dto.ListResult;
 import sigma.Spring_backend.baseUtil.dto.SingleResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
-import sigma.Spring_backend.payment.dto.PaymentReq;
-import sigma.Spring_backend.payment.dto.PaymentRes;
-import sigma.Spring_backend.payment.dto.PaymentResHandleDto;
-import sigma.Spring_backend.payment.dto.PaymentResHandleFailDto;
+import sigma.Spring_backend.payment.dto.*;
 import sigma.Spring_backend.payment.service.PaymentService;
 
 @Api(tags = "11. 결제")
@@ -67,6 +67,24 @@ public class PaymentController {
 		try {
 			return responseService.getSingleResult(
 					paymentService.requestFail(errorCode, errorMsg, orderId)
+			);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BussinessException(e.getMessage());
+		}
+	}
+
+	@GetMapping("/all/{seq}")
+	@ApiOperation(value = "고객 별 결제내역 전체 조회", notes = "고객 별 완료된 모든 결제내역을 조회합니다.")
+	public ListResult<PaymentDto> getAllPayments(
+			@ApiParam(value = "고객 번호", required = true) @PathVariable(name = "seq") Long memberSeq,
+			@ApiParam(value = "PAGE 번호 (0부터)", required = true) @RequestParam(defaultValue = "0") int page,
+			@ApiParam(value = "PAGE 크기", required = true) @RequestParam(defaultValue = "20") int size
+	) {
+		PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createDate").descending());
+		try {
+			return responseService.getListResult(
+					paymentService.getAllPayments(memberSeq, pageRequest)
 			);
 		} catch (Exception e) {
 			e.printStackTrace();

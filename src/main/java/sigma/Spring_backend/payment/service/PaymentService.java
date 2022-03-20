@@ -4,13 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
@@ -19,10 +18,11 @@ import sigma.Spring_backend.payment.dto.*;
 import sigma.Spring_backend.payment.entity.Payment;
 import sigma.Spring_backend.payment.repository.PaymentRepository;
 
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -82,7 +82,7 @@ public class PaymentService {
 							, () -> {
 								throw new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND);
 							});
-			paymentRes = payment.toDto();
+			paymentRes = payment.toRes();
 			paymentRes.setSuccessUrl(successCallBackUrl);
 			paymentRes.setFailUrl(failCallBackUrl);
 			return paymentRes;
@@ -124,11 +124,27 @@ public class PaymentService {
 		param.put("orderId", orderId);
 		param.put("amount", amount);
 
-		return rest.postForEntity(
-				tossOriginUrl + paymentKey,
-				new HttpEntity<>(param, headers),
-				PaymentResHandleDto.class
-		).getBody();
+		PaymentResHandleDto payResDto;
+		try {
+			payResDto = rest.postForEntity(
+					tossOriginUrl + paymentKey,
+					new HttpEntity<>(param, headers),
+					PaymentResHandleDto.class
+			).getBody();
+			if (payResDto == null) throw new BussinessException(ExMessage.PAYMENT_ERROR_ORDER);
+		} catch (Exception e) {
+			throw new BussinessException(e.getMessage());
+		}
+
+		PaymentResHandleCardDto card = payResDto.getCard();
+		paymentRepository.findByOrderId(payResDto.getOrderId())
+				.ifPresent(payment -> {
+					payment.setCardCompany(card.getCompany());
+					payment.setCardNumber(card.getNumber());
+					payment.setCardReceiptUrl(card.getReceiptUrl());
+				});
+
+		return payResDto;
 	}
 
 	@Transactional
@@ -144,5 +160,16 @@ public class PaymentService {
 				.errorCode(errorCode)
 				.errorMsg(errorMsg)
 				.build();
+	}
+
+	@Transactional(readOnly = true)
+	public List<PaymentDto> getAllPayments(Long memberSeq, PageRequest pageRequest) {
+		String email = memberRepository.findBySeqFJ(memberSeq)
+				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND))
+				.getEmail();
+
+		return paymentRepository.findAllByCustomerEmail(email, pageRequest)
+				.stream().map(Payment::toDto)
+				.collect(Collectors.toList());
 	}
 }
