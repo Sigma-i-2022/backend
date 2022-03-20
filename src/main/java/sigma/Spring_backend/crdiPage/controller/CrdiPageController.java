@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.baseUtil.dto.ListResult;
+import sigma.Spring_backend.baseUtil.dto.SingleResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
 import sigma.Spring_backend.crdiPage.dto.CrdiRes;
@@ -47,7 +48,7 @@ public class CrdiPageController {
 
 	@GetMapping
 	@ApiOperation(value = "코디네이터 작품 조회", notes = "코디네이터의 작품을 조회합니다.")
-	public CommonResult getCrdiWork(
+	public SingleResult<CrdiWorkRes> getCrdiWork(
 			@ApiParam(value = "코데네이터 작품 번호") @RequestParam Long workSeq
 	) {
 		try {
