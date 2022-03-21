@@ -129,7 +129,7 @@ public class MemberSignupService {
 		Member member = memberRepository.findByEmailFJ(email).orElseThrow(() ->
 				new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 
-		if (!passwordEncoder.matches(password, member.getPassword())) {
+		if (!password.equals(member.getPassword())) {
 			System.out.println("비밀번호가 일치하지 않습니다.");
 			throw new BussinessException(ExMessage.MEMBER_ERROR_PASSWORD);
 		}
