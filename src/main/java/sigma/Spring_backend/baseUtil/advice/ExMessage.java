@@ -53,6 +53,10 @@ public enum ExMessage {
 	, PAYMENT_ERROR_ORDER_NOTFOUND("해당 결제 내역을 조회할 수 없습니다.")
 	, PAYMENT_CANCEL_ERROR_NOT_MATCH_AMOUNT("취소 금액과 결제 금액이 다릅니다.")
 	, PAYMENT_CANCEL_ERROR_FAIL("알 수 없는 이유로 결제 취소에 실패했습니다.")
+	, ACCOUNT_ERROR_WRONG_BANK("요청한 은행과 계설기관이 다릅니다.")
+	, ACCOUNT_ERROR_WRONG_NAME("요청한 성함과 예금주명이 일치하지 않습니다.")
+	, ACCOUNT_ERROR_WRONG_BIRTHDAY("요청하신 생년월일과 예금주의 생년월일이 일치하지 않습니다.")
+	, ACCESS_TOKEN_ERROR_NOT_FOUND("Access Token 을 찾을 수 없습니다.")
 	;
 
 	private final String message;

@@ -169,6 +169,7 @@ build/resources/*
 /src/main/resources/application-dev-private.yml
 /src/main/resources/application-real-private.yml
 /src/main/resources/application-oauth.yml
+/src/main/resources/application-openapi.yml
 
 # 결제관련 private file
 /src/main/resources/application-payment.yml
