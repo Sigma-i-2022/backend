@@ -2,6 +2,7 @@ package sigma.Spring_backend.reservation.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
@@ -20,6 +21,7 @@ import sigma.Spring_backend.reservation.repository.CancelReasonRepo;
 import sigma.Spring_backend.reservation.repository.MemberReservationRepo;
 import sigma.Spring_backend.reservation.repository.ReservationRepo;
 
+import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -121,18 +123,18 @@ public class ReservationService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<ReserveRes> getAllReservationOfMember(String email) {
+	public List<ReserveRes> getAllReservationOfMember(String email, PageRequest pageRequest) {
 		Member member = memberRepository.findByEmailFJ(email)
 				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 
 		if (member.getCrdiYn().equals("Y" )) {
-			return reservationRepo.findAllByCrdiEmail(email)
+			return reservationRepo.findAllByCrdiEmail(email, pageRequest)
 					.stream()
 					.filter(R -> R.getActivateYnOfCrdi().equals("Y"))
 					.map(Reservation::toDto)
 					.collect(Collectors.toList());
 		} else {
-			return reservationRepo.findAllByClientEmail(email)
+			return reservationRepo.findAllByClientEmail(email, pageRequest)
 					.stream()
 					.filter(R -> R.getActivateYnOfClient().equals("Y"))
 					.map(Reservation::toDto)

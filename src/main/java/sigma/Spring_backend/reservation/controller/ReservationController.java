@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
@@ -41,10 +43,13 @@ public class ReservationController {
 	@GetMapping("/common/list")
 	@ApiOperation(value = "공통 예약 목록 조회", notes = "코디/고객 별 예약 목록을 조회합니다.")
 	public ListResult<ReserveRes> getAllReserveOfCrdi(
-			@ApiParam(value = "회원 이메일") @RequestParam String email
+			@ApiParam(value = "회원 이메일") @RequestParam String email,
+			@ApiParam(value = "PAGE 번호 (0부터)") @RequestParam(defaultValue = "0") int page,
+			@ApiParam(value = "PAGE 크기") @RequestParam(defaultValue = "20") int size
 	) {
+		PageRequest pageRequest = PageRequest.of(page, size, Sort.by("seq").descending());
 		try {
-			return responseService.getListResult(reservationService.getAllReservationOfMember(email));
+			return responseService.getListResult(reservationService.getAllReservationOfMember(email, pageRequest));
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BussinessException(e.getMessage());

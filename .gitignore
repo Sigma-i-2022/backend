@@ -169,3 +169,5 @@ build/resources/*
 /src/main/resources/application-dev-private.yml
 /src/main/resources/application-real-private.yml
 /src/main/resources/application-oauth.yml
+/src/main/resources/application-payment.yml
+/src/main/resources/static/index.html
