@@ -11,7 +11,10 @@ import sigma.Spring_backend.baseUtil.dto.ListResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
 import sigma.Spring_backend.payment.dto.CancelPaymentRes;
+import sigma.Spring_backend.payment.dto.TossErrorDto;
 import sigma.Spring_backend.payment.service.CancelPaymentService;
+
+import java.util.Optional;
 
 @Api(tags = "12. 결제 취소")
 @RequestMapping("/v1/api/cancelPayment")
@@ -36,12 +39,12 @@ public class CancelPaymentController {
 			@ApiParam(value = "코디 번호", required = true) @RequestParam Long memberSeq,
 			@ApiParam(value = "예약 번호", required = true) @RequestParam Long reservationSeq
 	) {
-		boolean result = cancelPaymentService.requestPaymentCancel(paymentKey, cancelReason, memberSeq, reservationSeq);
-		if (result) {
+		String resultMessage = cancelPaymentService.requestPaymentCancel(paymentKey, cancelReason, memberSeq, reservationSeq);
+		if (resultMessage.equals("성공")) {
 			return responseService.getSuccessResult();
 		} else return responseService.getFailResult(
-				FAIL,
-				ExMessage.PAYMENT_CANCEL_ERROR_FAIL.getMessage()
+				-1,
+				resultMessage
 		);
 	}
 

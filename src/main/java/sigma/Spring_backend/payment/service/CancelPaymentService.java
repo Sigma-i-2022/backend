@@ -1,5 +1,6 @@
 package sigma.Spring_backend.payment.service;
 
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
@@ -11,11 +12,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
+import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 import sigma.Spring_backend.payment.dto.CancelPaymentRes;
 import sigma.Spring_backend.payment.dto.PaymentResHandleDto;
+import sigma.Spring_backend.payment.dto.TossErrorDto;
 import sigma.Spring_backend.payment.entity.CancelPayment;
 import sigma.Spring_backend.payment.repository.PaymentRepository;
 import sigma.Spring_backend.reservation.entity.Reservation;
@@ -28,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -55,8 +59,7 @@ public class CancelPaymentService {
 	private String tossOriginUrl;
 
 	@Transactional
-	public boolean requestPaymentCancel(String paymentKey, String cancelReason, Long memberSeq, Long reservationSeq) {
-
+	public String requestPaymentCancel(String paymentKey, String cancelReason, Long memberSeq, Long reservationSeq) {
 		// 예약 취소
 		cancelReservation(memberSeq, reservationSeq);
 
@@ -83,10 +86,17 @@ public class CancelPaymentService {
 					PaymentResHandleDto.class
 			);
 		} catch (Exception e) {
-			throw new BussinessException(e.getMessage().split(": ")[1]);
+			String errorResponse = e.getMessage().split(": ")[1];
+			return new Gson()
+					.fromJson(
+							errorResponse.substring(1, errorResponse.length() - 1),
+							TossErrorDto.class
+					).getMessage();
 		}
 
-		if (paymentCancelResDto == null) return false;
+		if (paymentCancelResDto == null) {
+			return "응답값이 비어있습니다.";
+		}
 
 		Long cancelAmount = paymentCancelResDto.getCancels()[0].getCancelAmount();
 		try {
@@ -94,7 +104,8 @@ public class CancelPaymentService {
 		} catch (Exception e) {
 			throw new BussinessException(ExMessage.DB_ERROR_SAVE);
 		}
-		return true;
+
+		return "성공";
 	}
 
 	private void cancelPaymentSave(String paymentKey, PaymentResHandleDto paymentCancelResDto, Long cancelAmount) {

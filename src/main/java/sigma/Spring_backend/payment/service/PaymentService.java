@@ -1,5 +1,6 @@
 package sigma.Spring_backend.payment.service;
 
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
@@ -133,7 +134,13 @@ public class PaymentService {
 			).getBody();
 			if (payResDto == null) throw new BussinessException(ExMessage.PAYMENT_ERROR_ORDER);
 		} catch (Exception e) {
-			throw new BussinessException(e.getMessage());
+			String errorResponse = e.getMessage().split(": ")[1];
+			String errorMessage = new Gson()
+					.fromJson(
+							errorResponse.substring(1, errorResponse.length() - 1),
+							TossErrorDto.class
+					).getMessage();
+			throw new BussinessException(errorMessage);
 		}
 
 		PaymentResHandleCardDto card = payResDto.getCard();
