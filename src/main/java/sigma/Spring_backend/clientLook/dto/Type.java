@@ -1,8 +1,9 @@
 package sigma.Spring_backend.clientLook.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum Type {
 	TOP("상의")
 	, BOT("하의")
