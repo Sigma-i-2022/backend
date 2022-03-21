@@ -28,11 +28,11 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public CommonResult undefinedException(HttpServletRequest request, Exception e) {
 
-        log.error("\n========================================ERROR START========================================");
+        log.error("\n\n========================================ERROR START========================================");
         log.error("요청 URL : " + request.getMethod() + " " + request.getRequestURI());
         log.error("예외 메시지 : " + e.getMessage());
         e.printStackTrace();
-        log.error("========================================ERROR END========================================\n");
+        log.error("\n========================================ERROR END========================================\n");
 
         return responseService.getFailResult(
                 -9999,
@@ -66,11 +66,11 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public CommonResult bussinessException(HttpServletRequest request, Exception e) {
 
-        log.error("\n========================================ERROR START========================================");
+        log.error("\n\n========================================ERROR START========================================");
         log.error("요청 URL : " + request.getMethod() + " " + request.getRequestURI());
         log.error("예외 메시지 : " + e.getMessage());
         e.printStackTrace();
-        log.error("========================================ERROR END========================================\n");
+        log.error("\n========================================ERROR END========================================\n");
 
         return responseService.getFailResult(
                 -1,

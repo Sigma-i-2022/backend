@@ -57,7 +57,9 @@ public class ReserveReq {
 
 		return Reservation.builder()
 				.crdiId(crdiId)
+				.crdiEmail(crdiEmail)
 				.clientId(clientId)
+				.clientEmail(clientEmail)
 				.reserveDay(date[0] + "년 " + date[1] + "월 " + date[2] + "일")
 				.serviceType(serviceType)
 				.serviceSystem(serviceSystem)
