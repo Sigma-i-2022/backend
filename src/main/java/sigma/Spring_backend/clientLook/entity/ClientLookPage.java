@@ -19,6 +19,9 @@ public class ClientLookPage {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long seq;
 
+	@Column(unique = true, nullable = false)
+	private String clientEmail;
+
 	@Column(length = 300)
 	@Builder.Default
 	private String explanation = "";

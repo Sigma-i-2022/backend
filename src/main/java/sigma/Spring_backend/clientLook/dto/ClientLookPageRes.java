@@ -15,6 +15,8 @@ public class ClientLookPageRes {
 	@ApiModelProperty("룩 페이지 SEQ")
 	private Long lookPageSeq;
 
+	private String clientEmail;
+
 	@ApiModelProperty("룩 페이지 설명")
 	@Builder.Default
 	private String explanation = "";

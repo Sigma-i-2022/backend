@@ -16,7 +16,7 @@ import javax.persistence.Enumerated;
 public class ClientLookPageReq {
 
 	@ApiModelProperty("회원 이메일")
-	private String memberEmail;
+	private String clientEmail;
 
 	@ApiModelProperty("룩 페이지 설명")
 	@Builder.Default
@@ -46,6 +46,7 @@ public class ClientLookPageReq {
 	public ClientLookPage toEntity(String imagePathUrl) {
 		return ClientLookPage.builder()
 				.explanation(this.explanation)
+				.clientEmail(clientEmail)
 				.keyword1(this.keyword1)
 				.keyword2(this.keyword2)
 				.keyword3(this.keyword3)

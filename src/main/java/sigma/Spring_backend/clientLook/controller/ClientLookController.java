@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
@@ -61,10 +63,13 @@ public class ClientLookController {
 	@GetMapping("/all")
 	@ApiOperation(value = "고객 룩 페이지 전체 조회", notes = "고객의 전체 룩 페이지를 조회합니다")
 	public ListResult<ClientLookPageRes> getClientLookPages(
-			@ApiParam(value = "고객 이메일") @RequestParam String email
+			@ApiParam(value = "고객 이메일") @RequestParam String email,
+			@ApiParam(value = "PAGE 번호 (0부터)", required = true) @RequestParam(defaultValue = "0") int page,
+			@ApiParam(value = "PAGE 크기", required = true) @RequestParam(defaultValue = "20") int size
 	) {
+		PageRequest pageRequest = PageRequest.of(page, size, Sort.by("updateDate").descending());
 		try {
-			return responseService.getListResult(clientLookService.getLookPages(email));
+			return responseService.getListResult(clientLookService.getLookPages(email, pageRequest));
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BussinessException(e.getMessage());

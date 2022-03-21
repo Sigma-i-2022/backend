@@ -1,7 +1,6 @@
 package sigma.Spring_backend.reservation.entity;
 
 import lombok.*;
-import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.reservation.dto.CrdiServiceSystem;
 import sigma.Spring_backend.reservation.dto.CrdiServiceType;
 import sigma.Spring_backend.reservation.dto.ReserveRes;
