@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -17,6 +18,7 @@ import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 import sigma.Spring_backend.payment.dto.CancelPaymentRes;
 import sigma.Spring_backend.payment.dto.PaymentResHandleDto;
 import sigma.Spring_backend.payment.entity.CancelPayment;
+import sigma.Spring_backend.payment.repository.CancelPaymentRepository;
 import sigma.Spring_backend.payment.repository.PaymentRepository;
 import sigma.Spring_backend.reservation.entity.Reservation;
 import sigma.Spring_backend.reservation.repository.ReservationRepo;
@@ -38,6 +40,7 @@ public class CancelPaymentService {
 	private final PaymentRepository paymentRepository;
 	private final ReservationRepo reservationRepo;
 	private final MemberRepository memberRepository;
+	private final CancelPaymentRepository cancelPaymentRepository;
 
 	@Value("${payments.toss.test_client_api_key}")
 	private String testClientApiKey;
@@ -151,10 +154,9 @@ public class CancelPaymentService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<CancelPaymentRes> getAllCancelPayments(Long memberSeq) {
-		return memberRepository.findBySeqFJ(memberSeq)
-				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND))
-				.getCancelPayments()
+	public List<CancelPaymentRes> getAllCancelPayments(Long memberSeq, PageRequest pageRequest) {
+		return cancelPaymentRepository
+				.findAllByCustomerSeq(memberSeq, pageRequest)
 				.stream().map(CancelPayment::toDto)
 				.collect(Collectors.toList());
 	}

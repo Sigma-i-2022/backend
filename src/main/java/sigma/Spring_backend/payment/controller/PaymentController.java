@@ -14,7 +14,7 @@ import sigma.Spring_backend.baseUtil.service.ResponseService;
 import sigma.Spring_backend.payment.dto.*;
 import sigma.Spring_backend.payment.service.PaymentService;
 
-@Api(tags = "11. 결제")
+@Api(tags = "12. 결제")
 @RequestMapping("/v1/api/payment")
 @RestController
 @RequiredArgsConstructor
