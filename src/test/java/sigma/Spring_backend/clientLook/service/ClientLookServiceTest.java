@@ -9,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.awsUtil.service.AwsService;
@@ -61,7 +63,7 @@ class ClientLookServiceTest {
 				.build();
 
 		clientLookPageReq = ClientLookPageReq.builder()
-				.memberEmail(member.getEmail())
+				.clientEmail(member.getEmail())
 				.explanation("test explanation")
 				.shoeInfo("test shoe")
 				.bottomInfo("test bottom")
@@ -93,7 +95,7 @@ class ClientLookServiceTest {
 	void registLookPage() {
 		//given
 		given(awsService.imageUploadToS3("/memberLookImage", multipartFile)).willReturn("test aws url");
-		given(memberRepository.findByEmailFJ(clientLookPageReq.getMemberEmail()))
+		given(memberRepository.findByEmailFJ(clientLookPageReq.getClientEmail()))
 				.willReturn(Optional.of(member));
 
 		// when
@@ -132,8 +134,9 @@ class ClientLookServiceTest {
 		given(memberRepository.findByEmailFJ(member.getEmail()))
 				.willReturn(Optional.of(member));
 
+		PageRequest pageRequest = PageRequest.of(0, 100, Sort.by("updateDate").descending());
 		//when
-		List<ClientLookPageRes> lookPages = clientLookService.getLookPages(member.getEmail());
+		List<ClientLookPageRes> lookPages = clientLookService.getLookPages(member.getEmail(), pageRequest);
 
 		//then
 		Assertions.assertThat(lookPages.size()).isEqualTo(4);

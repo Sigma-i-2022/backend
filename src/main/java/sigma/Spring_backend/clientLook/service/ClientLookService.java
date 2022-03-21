@@ -2,6 +2,7 @@ package sigma.Spring_backend.clientLook.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,7 +45,7 @@ public class ClientLookService {
 
 		// 3. 엔티티 생성 후 DB 저장
 		try {
-			Member member = memberRepository.findByEmailFJ(clientLookPageReq.getMemberEmail())
+			Member member = memberRepository.findByEmailFJ(clientLookPageReq.getClientEmail())
 					.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 			member.addLookPage(clientLookPageReq.toEntity(imagePathUrl));
 		} catch (Exception e) {
@@ -53,7 +54,7 @@ public class ClientLookService {
 	}
 
 	private boolean verifyLookPage(ClientLookPageReq clientLookPageReq, MultipartFile imageFile) {
-		if (clientLookPageReq.getMemberEmail() == null || clientLookPageReq.getMemberEmail().equals("")) {
+		if (clientLookPageReq.getClientEmail() == null || clientLookPageReq.getClientEmail().equals("")) {
 			return false;
 		}
 		if (imageFile == null || imageFile.isEmpty()) {
@@ -70,15 +71,12 @@ public class ClientLookService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<ClientLookPageRes> getLookPages(String memberEmail) {
-		Optional<Member> memberOpt = memberRepository.findByEmailFJ(memberEmail);
-
-		return memberOpt.map(m -> m.getPages()
-						.stream()
-						.filter(page -> page.getActivateYn().equals("Y"))
-						.map(ClientLookPage::toDto)
-						.collect(Collectors.toList()))
-				.orElseGet(ArrayList::new);
+	public List<ClientLookPageRes> getLookPages(String clientEmail, PageRequest pageRequest) {
+		return memberLookPageRepo.findAllByClientEmail(clientEmail, pageRequest)
+				.stream()
+				.filter(page -> page.getActivateYn().equals("Y"))
+				.map(ClientLookPage::toDto)
+				.collect(Collectors.toList());
 	}
 
 	@Transactional

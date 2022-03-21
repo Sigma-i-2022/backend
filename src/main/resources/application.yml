@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: real,real-private,oauth
+    include: real,real-private,oauth,payment
 #    include: dev,dev-private,oauth
   # 이미지 파일 크기 제한
   servlet:
@@ -8,6 +8,9 @@ spring:
       enabled: true
       max-file-size: 10MB
       max-request-size: 30MB
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 # AWS S3를 연동한 프로젝트에서 발생하는 오류 방지
 # 프로젝트 배포시 기본으로 CloudFormation 구성을 시작하기 때문에

@@ -1,10 +1,8 @@
 package sigma.Spring_backend.reservation.controller;
 
-import com.sun.istack.NotNull;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -44,8 +42,8 @@ public class ReservationController {
 	@ApiOperation(value = "공통 예약 목록 조회", notes = "코디/고객 별 예약 목록을 조회합니다.")
 	public ListResult<ReserveRes> getAllReserveOfCrdi(
 			@ApiParam(value = "회원 이메일") @RequestParam String email,
-			@ApiParam(value = "PAGE 번호 (0부터)") @RequestParam(defaultValue = "0") int page,
-			@ApiParam(value = "PAGE 크기") @RequestParam(defaultValue = "20") int size
+			@ApiParam(value = "PAGE 번호 (0부터)", required = true) @RequestParam(defaultValue = "0") int page,
+			@ApiParam(value = "PAGE 크기", required = true) @RequestParam(defaultValue = "20") int size
 	) {
 		PageRequest pageRequest = PageRequest.of(page, size, Sort.by("seq").descending());
 		try {
@@ -140,58 +138,6 @@ public class ReservationController {
 				return responseService.getFailResult(
 						FAIL,
 						ExMessage.RESERVATION_ERROR_CANCEL_CASE_CRDI.getMessage()
-				);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BussinessException(e.getMessage());
-		}
-	}
-
-	@PostMapping("/crdi/cancel")
-	@ApiOperation(value = "코디네이터 예약 취소", notes = "코디네이터가 예약확정되지 않은 예약에 한해서 취소(반려)합니다.")
-	public CommonResult cancelByCrdi(
-			@ApiParam(value = "코디 아이디", required = true) @RequestParam String crdiId,
-			@ApiParam(value = "예약 번호", required = true) @RequestParam Long reservationSeq,
-			@ApiParam(value = "취소 사유", required = true) @RequestParam String reason
-	) {
-		try {
-			boolean success = reservationService.cancelResvByCrdi(crdiId, reservationSeq, reason);
-
-			if (success) {
-				return responseService.getSuccessResult();
-			} else {
-				return responseService.getFailResult(
-						FAIL,
-						ExMessage.RESERVATION_ERROR_CANCEL_CASE_CRDI.getMessage()
-				);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BussinessException(e.getMessage());
-		}
-	}
-
-	@PostMapping("/client/cancel")
-	@ApiOperation(
-			value = "고객 예약 취소",
-			notes = "고객이 예약확정 된 예약을 시작하기 6시간 전까지 취소합니다.<br>" +
-					"고객이 예약확정 되지 않은 예약을 취소합니다."
-	)
-	public CommonResult cancelByClient(
-			@ApiParam(value = "고객 아이디", required = true) @RequestParam String clientId,
-			@ApiParam(value = "예약 번호", required = true) @RequestParam Long reservationSeq,
-			@ApiParam(value = "예약 번호", required = true) @RequestParam String reason
-
-	) {
-		try {
-			boolean success = reservationService.cancelResvByClient(clientId, reservationSeq, reason);
-			if (success) {
-				return responseService.getSuccessResult();
-			} else {
-				return responseService.getFailResult(
-						FAIL,
-						ExMessage.RESERVATION_ERROR_CANCEL_CASE_CLIENT.getMessage()
 				);
 			}
 		} catch (Exception e) {
