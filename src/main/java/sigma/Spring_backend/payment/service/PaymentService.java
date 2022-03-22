@@ -104,7 +104,7 @@ public class PaymentService {
 								throw new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_AMOUNT);
 							}
 						}, () -> {
-							throw new BussinessException(ExMessage.UNDEFINED_ERROR);
+							throw new BussinessException(ExMessage.PAYMENT_ERROR_ORDER);
 						}
 				);
 	}

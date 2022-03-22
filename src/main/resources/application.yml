@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: real,real-private,oauth,payment
+    include: real,real-private,oauth,payment,openapi
 #    include: dev,dev-private,oauth
   # 이미지 파일 크기 제한
   servlet:
