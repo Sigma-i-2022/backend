@@ -17,7 +17,9 @@ import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 import sigma.Spring_backend.payment.dto.*;
 import sigma.Spring_backend.payment.entity.Payment;
+import sigma.Spring_backend.payment.entity.PaymentWebhook;
 import sigma.Spring_backend.payment.repository.PaymentRepository;
+import sigma.Spring_backend.payment.repository.PaymentWebhookRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -32,6 +34,7 @@ public class PaymentService {
 
 	private final PaymentRepository paymentRepository;
 	private final MemberRepository memberRepository;
+	private final PaymentWebhookRepository webhookRepository;
 
 	@Value("${payments.toss.test_client_api_key}")
 	private String testClientApiKey;
@@ -243,5 +246,16 @@ public class PaymentService {
 						throw new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND);
 					});
 		}
+	}
+
+	@Transactional
+	public void registTossPaymentWebhook(TossWebhookDto webhookDto) {
+		String paymentKey = webhookDto.getData().getPaymentKey();
+		Long seq = paymentRepository.findByPaymentKey(paymentKey)
+				.orElseThrow(() -> new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND))
+				.getSeq();
+		PaymentWebhook paymentWebhook = webhookDto.toEntity();
+		paymentWebhook.setPaymentSeq(seq);
+		webhookRepository.save(paymentWebhook);
 	}
 }

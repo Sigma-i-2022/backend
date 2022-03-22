@@ -122,12 +122,22 @@ public class PaymentController {
 			value = "가상계좌 입금 알림 콜백 처리",
 			notes = "토스페이먼츠에서 가상계좌로 입금을 확인하면 주는 알림을 처리합니다."
 	)
-	public void tossPaymentWebhook(
+	public CommonResult tossPaymentWebhook(
 			@ModelAttribute TossWebhookDto webhookDto
 	) {
-		System.out.println("webhookDto.getEventType() = " + webhookDto.getEventType());
-		System.out.println("webhookDto.getData().getPaymentKey() = " + webhookDto.getData().getPaymentKey());
-		System.out.println("webhookDto.getData().getStatus() = " + webhookDto.getData().getStatus());
-		System.out.println("webhookDto.getData().getOrderId() = " + webhookDto.getData().getOrderId());
+		log.info("webhookDto.getEventType() = " + webhookDto.getEventType());
+		log.info("webhookDto.getData().getPaymentKey() = " + webhookDto.getData().getPaymentKey());
+		log.info("webhookDto.getData().getStatus() = " + webhookDto.getData().getStatus());
+		log.info("webhookDto.getData().getOrderId() = " + webhookDto.getData().getOrderId());
+
+		try {
+			paymentService.registTossPaymentWebhook(webhookDto);
+			return responseService.getSuccessResult();
+		} catch (Exception e) {
+			return responseService.getFailResult(
+					FAIL,
+					e.getMessage()
+			);
+		}
 	}
 }
