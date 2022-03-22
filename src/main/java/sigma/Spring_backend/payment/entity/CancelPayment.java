@@ -3,7 +3,6 @@ package sigma.Spring_backend.payment.entity;
 import lombok.*;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.payment.dto.CancelPaymentRes;
-import sigma.Spring_backend.payment.dto.OrderNameType;
 
 import javax.persistence.*;
 

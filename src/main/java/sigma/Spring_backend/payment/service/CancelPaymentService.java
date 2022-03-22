@@ -115,9 +115,16 @@ public class CancelPaymentService {
 		paymentRepository
 				.findByPaymentKey(paymentKey)
 				.filter(P -> P.getAmount().equals(cancelAmount))
-				.orElseThrow(() -> new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND))
-				.getCustomer()
-				.addCancelPayment(paymentCancelResDto.toCancelPayment());
+				.ifPresentOrElse(P -> {
+							P.getCustomer().addCancelPayment(paymentCancelResDto.toCancelPayment());
+							P.getCustomer().getPayments()
+									.stream().filter(p -> p.getPaymentKey().equals(paymentKey))
+									.findFirst()
+									.orElseThrow(() -> new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND))
+									.setCancelYn("Y");
+						}, () -> {
+							throw new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND);
+						});
 	}
 
 	private void cancelReservation(Long memberSeq, Long reservationSeq) {

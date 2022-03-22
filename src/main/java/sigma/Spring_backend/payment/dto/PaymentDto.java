@@ -25,5 +25,6 @@ public class PaymentDto {
 	private String paymentKey;
 	private String paySuccessYn;
 	private String payFailReason;
+	private String cancelYn;
 	private String createDate;
 }

@@ -57,7 +57,7 @@ public class PaymentService {
 	@Transactional
 	public PaymentRes requestPayments(PaymentReq paymentReq) {
 		Long amount = paymentReq.getAmount();
-		String payType = paymentReq.getPayType().name();
+		String payType = paymentReq.getPayType().getName();
 		String customerEmail = paymentReq.getCustomerEmail();
 		String orderName = paymentReq.getOrderName().name();
 
@@ -65,18 +65,22 @@ public class PaymentService {
 			throw new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_PRICE);
 		}
 
-		if (!payType.equals("CARD") && !payType.equals("카드")) {
+		if (!payType.equals("가상계좌") && !payType.equals("카드")) {
 			throw new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_PAY_TYPE);
 		}
 
-		if (!orderName.equals(OrderNameType.CRDI_OR_PRODUCT_RECMD.name()) &&
-				!orderName.equals(OrderNameType.STYLE_FEEDBACK.name())) {
+		if (!orderName.equals(ORDER_NAME_TYPE.CRDI_OR_PRODUCT_RECMD.name()) &&
+				!orderName.equals(ORDER_NAME_TYPE.STYLE_FEEDBACK.name())) {
 			throw new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NAME);
 		}
 
 		PaymentRes paymentRes;
 		try {
 			Payment payment = paymentReq.toEntity();
+
+			if (payment.getPayType().equals(PAY_TYPE.VIRTUAL_ACCOUNT)) payment.setPaySuccessYn("N");
+			if (payment.getPayType().equals(PAY_TYPE.CARD)) payment.setPaySuccessYn("Y");
+
 			memberRepository.findByEmailFJ(customerEmail)
 					.ifPresentOrElse(
 							M -> M.addPayment(payment)
@@ -86,6 +90,11 @@ public class PaymentService {
 			paymentRes = payment.toRes();
 			paymentRes.setSuccessUrl(successCallBackUrl);
 			paymentRes.setFailUrl(failCallBackUrl);
+			if (payment.getPayType().equals(PAY_TYPE.VIRTUAL_ACCOUNT)) {
+				paymentRes.setValidHours(6);
+				paymentRes.setCashReceiptType("소득공제");
+				paymentRes.setUseEscrow(false);
+			}
 			return paymentRes;
 		} catch (Exception e) {
 			throw new BussinessException(ExMessage.DB_ERROR_SAVE);
@@ -111,12 +120,15 @@ public class PaymentService {
 
 	@Transactional
 	public PaymentResHandleDto requestFinalPayment(String paymentKey, String orderId, Long amount) {
+		PAY_TYPE payType = paymentRepository.findByPaymentKey(paymentKey)
+				.orElseThrow(() -> new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND))
+				.getPayType();
+
 		RestTemplate rest = new RestTemplate();
 
 		HttpHeaders headers = new HttpHeaders();
 
-		testSecretApiKey = testSecretApiKey + ":";
-		String encodedAuth = new String(Base64.getEncoder().encode(testSecretApiKey.getBytes(StandardCharsets.UTF_8)));
+		String encodedAuth = new String(Base64.getEncoder().encode((testSecretApiKey + ":").getBytes(StandardCharsets.UTF_8)));
 		headers.setBasicAuth(encodedAuth);
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -143,13 +155,25 @@ public class PaymentService {
 			throw new BussinessException(errorMessage);
 		}
 
-		PaymentResHandleCardDto card = payResDto.getCard();
-		paymentRepository.findByOrderId(payResDto.getOrderId())
-				.ifPresent(payment -> {
-					payment.setCardCompany(card.getCompany());
-					payment.setCardNumber(card.getNumber());
-					payment.setCardReceiptUrl(card.getReceiptUrl());
-				});
+		if (payType.equals(PAY_TYPE.CARD)) {
+			PaymentResHandleCardDto card = payResDto.getCard();
+			paymentRepository.findByOrderId(payResDto.getOrderId())
+					.ifPresent(payment -> {
+						payment.setCardCompany(card.getCompany());
+						payment.setCardNumber(card.getNumber());
+						payment.setCardReceiptUrl(card.getReceiptUrl());
+					});
+		} else if (payType.equals(PAY_TYPE.VIRTUAL_ACCOUNT)) {
+			PaymentResHandleVirtualDto virtualAccount = payResDto.getVirtualAccount();
+			paymentRepository.findByOrderId(payResDto.getOrderId())
+					.ifPresent(payment -> {
+						payment.setVirtualAccountNumber(virtualAccount.getAccountNumber());
+						payment.setVirtualBank(virtualAccount.getBank());
+						payment.setVirtualDueDate(virtualAccount.getDueDate());
+						payment.setVirtualRefundStatus(virtualAccount.getRefundStatus());
+						payment.setVirtualSecret(payResDto.getSecret());
+					});
+		}
 
 		return payResDto;
 	}
@@ -178,5 +202,46 @@ public class PaymentService {
 		return paymentRepository.findAllByCustomerEmail(email, pageRequest)
 				.stream().map(Payment::toDto)
 				.collect(Collectors.toList());
+	}
+
+	@Transactional
+	public void handleVirtualAccountIncome(TossVirtualDto tossVirtualDto) {
+		String status = tossVirtualDto.getStatus();
+		String orderId = tossVirtualDto.getOrderId();
+		String secret = tossVirtualDto.getSecret();
+
+		Payment payment = paymentRepository.findByOrderId(orderId)
+				.orElseThrow(() -> new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND));
+
+		if (status.equals("DONE")) {
+			log.info("입금 확인");
+			payment.getCustomer().getPayments()
+					.stream()
+					.filter(p -> p.getOrderId().equals(orderId))
+					.filter(p -> p.getVirtualSecret().equals(secret))
+					.findFirst()
+					.ifPresentOrElse(P -> {
+						log.info("결제 성공 체크");
+						P.setPaySuccessYn("Y");
+					}, () -> {
+						throw new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND);
+					});
+		} else if (status.equals("CANCELED")) {
+			log.info("입금 취소");
+			payment.getCustomer().getPayments()
+					.stream()
+					.filter(p -> p.getOrderId().equals(orderId))
+					.findFirst()
+					.ifPresentOrElse(P -> {
+						log.info("결제 취소 체크");
+						if (P.getPaySuccessYn().equals("Y")) {
+							log.info("결제 취소 체크 때 결제 완료라고 되있으면 롤백");
+							P.setPaySuccessYn("N");
+						}
+						P.setCancelYn("Y");
+					}, () -> {
+						throw new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND);
+					});
+		}
 	}
 }

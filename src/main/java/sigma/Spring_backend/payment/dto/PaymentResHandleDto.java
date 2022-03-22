@@ -24,14 +24,14 @@ public class PaymentResHandleDto {
 	PaymentResHandleCardDto card;	// : 카드 결제,
 	PaymentResHandleCancelDto[] cancels;	// : 결제 취소 이력 관련 객체
 	String type;                    // : "NORMAL",	결제 타입 정보 (NOMAL, BILLING, CONNECTPAY)
+	PaymentResHandleVirtualDto virtualAccount;          // : 가상 계좌 결제 시 관련 객체
+	String secret;                  // : null,		가상 계좌로 결제 시 입금 콜백 검증 값
 /*
-	String virtualAccount;          // : null,		가상 계좌 결제 시 관련 객체
 	String transfer;                // : null,		계좌이체 결제 시 관련 객체
 	String mobilePhone;             // : null,		휴대폰 결제 시 관련 객체
 	String giftCertificate;         // : null,		상품권 결제 시 관련 객체
 	String cashReceipt;             // : null,		현금 영수증 관련 객체
 	String discount;                // : null,		카드사 할인 정보
-	String secret;                  // : null,		가상 계좌로 결제 시 입금 콜백 검증 값
 	String easyPay;                 // : null,		간편결제 결제시 정보
 	String taxFreeAmount;			// : 0			면세금액
 */

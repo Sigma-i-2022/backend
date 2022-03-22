@@ -2,8 +2,8 @@ package sigma.Spring_backend.payment.entity;
 
 import lombok.*;
 import sigma.Spring_backend.memberUtil.entity.Member;
-import sigma.Spring_backend.payment.dto.OrderNameType;
-import sigma.Spring_backend.payment.dto.PayType;
+import sigma.Spring_backend.payment.dto.ORDER_NAME_TYPE;
+import sigma.Spring_backend.payment.dto.PAY_TYPE;
 import sigma.Spring_backend.payment.dto.PaymentDto;
 import sigma.Spring_backend.payment.dto.PaymentRes;
 
@@ -25,7 +25,7 @@ public class Payment {
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
-	private PayType payType;
+	private PAY_TYPE payType;
 
 	@Column(nullable = false)
 	private Long amount;
@@ -42,12 +42,32 @@ public class Payment {
 	@Column
 	private String cardReceiptUrl;
 
+	@Setter
+	@Column
+	private String virtualAccountNumber;
+
+	@Setter
+	@Column
+	private String virtualBank;
+
+	@Setter
+	@Column
+	private String virtualDueDate;		// 입금기한: 2021-02-05T21:05:09+09:00
+
+	@Setter
+	@Column
+	private String virtualRefundStatus;
+
+	@Setter
+	@Column
+	private String virtualSecret;
+
 	@Column(nullable = false)
 	private String orderId;
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
-	private OrderNameType orderName;
+	private ORDER_NAME_TYPE orderName;
 
 	@Column(nullable = false)
 	private String customerEmail;
@@ -71,12 +91,17 @@ public class Payment {
 	private String createDate;
 
 	@Setter
+	@Column
+	private String cancelYn;
+
+	@Setter
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	private Member customer;
 
 	public PaymentRes toRes() {
 		return PaymentRes.builder()
 				.payType(payType.getName())
+				.paySuccessYn(paySuccessYn)
 				.amount(amount)
 				.orderId(orderId)
 				.orderName(orderName.getName())
@@ -101,6 +126,7 @@ public class Payment {
 				.customerName(customerName)
 				.paymentKey(paymentKey)
 				.paySuccessYn(paySuccessYn)
+				.cancelYn(cancelYn)
 				.payFailReason(payFailReason)
 				.createDate(createDate)
 				.build();
