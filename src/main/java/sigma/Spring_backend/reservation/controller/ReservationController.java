@@ -27,17 +27,6 @@ public class ReservationController {
 	private final ResponseService responseService;
 	private final int FAIL = -1;
 
-	@GetMapping("/common/all")
-	@ApiOperation(value = "예약 목록 전체 조회", notes = "모든 예약을 조회합니다.")
-	public ListResult<ReserveRes> getAllResv() {
-		try {
-			return responseService.getListResult(reservationService.getAllReservations());
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BussinessException(e.getMessage());
-		}
-	}
-
 	@GetMapping("/common/list")
 	@ApiOperation(value = "공통 예약 목록 조회", notes = "코디/고객 별 예약 목록을 조회합니다.")
 	public ListResult<ReserveRes> getAllReserveOfCrdi(
