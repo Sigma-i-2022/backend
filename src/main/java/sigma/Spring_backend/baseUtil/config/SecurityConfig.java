@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import sigma.Spring_backend.socialSingin.LoginSuccessHandler;
 import sigma.Spring_backend.socialSingin.service.CustomOAuth2UserService;
 
 @Configuration
@@ -38,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest() // 모든 요청에 대해서 허용하라.
                 .permitAll().and().logout().logoutSuccessUrl("/") // 로그아웃에 대해서 성공하면 "/"로 이동
-                .and().oauth2Login().defaultSuccessUrl("/success").userInfoEndpoint().userService(customOAuth2UserService);
+                .and().oauth2Login().successHandler(new LoginSuccessHandler()).userInfoEndpoint().userService(customOAuth2UserService);
         http.csrf().disable()
                 .cors().disable()
                 .headers().frameOptions().disable();
