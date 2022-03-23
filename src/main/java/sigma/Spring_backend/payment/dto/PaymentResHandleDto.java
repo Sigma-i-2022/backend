@@ -36,19 +36,33 @@ public class PaymentResHandleDto {
 	String taxFreeAmount;			// : 0			면세금액
 */
 
-	public CancelPayment toCancelPayment() {
+	public CancelPayment toCancelPaymentByCard() {
 		return CancelPayment.builder()
 				.orderId(orderId)
 				.orderName(orderName)
 				.paymentKey(paymentKey)
 				.requestedAt(requestedAt)
 				.approvedAt(approvedAt)
-				.cardCompany(card.getCompany())
-				.cardNumber(card.getNumber())
-				.receiptUrl(card.getReceiptUrl())
 				.cancelAmount(cancels[0].getCancelAmount())
 				.cancelDate(cancels[0].getCanceledAt())
 				.cancelReason(cancels[0].getCancelReason())
+				.cardCompany(card.getCompany())					// 카드 취소의 경우에만 들어감
+				.cardNumber(card.getNumber())					// 카드 취소의 경우에만 들어감
+				.cardReceiptUrl(card.getReceiptUrl())				// 카드 취소의 경우에만 들어감
+				.build();
+	}
+
+	public CancelPayment toCancelPaymentByVirtual(String refundBank, String refundAccount) {
+		return CancelPayment.builder()
+				.orderId(orderId)
+				.orderName(orderName)
+				.paymentKey(paymentKey)
+				.requestedAt(requestedAt)
+				.cancelAmount(cancels[0].getCancelAmount())
+				.cancelDate(cancels[0].getCanceledAt())
+				.cancelReason(cancels[0].getCancelReason())
+				.refundBank(refundBank)							// 가상계좌 결제시 고객 환불 계좌 은행
+				.refundAccount(refundAccount)					// 가상계좌 결제시 고객 환불 계좌 번호
 				.build();
 	}
 }

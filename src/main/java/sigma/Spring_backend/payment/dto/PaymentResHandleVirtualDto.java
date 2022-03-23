@@ -9,7 +9,7 @@ public class PaymentResHandleVirtualDto {
 	String bank;						// 우리",
 	String customerName;				// 박토스",
 	String dueDate;						// 2021-02-05T21:05:09+09:00",
-	String expired;						//
+	boolean expired;						//
 	String settlementStatus;			// INCOMPLETED",
 	String refundStatus;				// NONE"
 }
