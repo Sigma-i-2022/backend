@@ -67,7 +67,7 @@ public class CancelPaymentService {
 		String paymentKey = cancelPaymentReq.getPaymentKey();
 		String cancelReason = cancelPaymentReq.getCancelReason();
 		// 고객 환불 은행 및 계좌
-		String refundBank = cancelPaymentReq.getBank();
+		REFUND_BANK_TYPE refundBankType = cancelPaymentReq.getBank();
 		String refundAccount = cancelPaymentReq.getAccountNumber();
 		Payment payment = paymentRepository.findByPaymentKey(paymentKey)
 				.orElseThrow(() -> new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND));
@@ -115,7 +115,7 @@ public class CancelPaymentService {
 		try {
 			cancelPaymentSave(
 					payment.getPayType(), paymentKey, paymentCancelResDto,
-					cancelAmount, refundBank, refundAccount
+					cancelAmount, refundBankType, refundAccount
 			);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -125,7 +125,7 @@ public class CancelPaymentService {
 
 	private void cancelPaymentSave(
 			PAY_TYPE payType, String paymentKey, PaymentResHandleDto paymentCancelResDto,
-			Long cancelAmount, String refundBank, String refundAccount
+			Long cancelAmount, REFUND_BANK_TYPE refundBank, String refundAccount
 	) {
 		paymentRepository
 				.findByPaymentKey(paymentKey)
@@ -136,7 +136,7 @@ public class CancelPaymentService {
 					if (payType.equals(PAY_TYPE.CARD)) {
 						cancelPayment = paymentCancelResDto.toCancelPaymentByCard();
 					} else {
-						cancelPayment = paymentCancelResDto.toCancelPaymentByVirtual(refundBank, refundAccount);
+						cancelPayment = paymentCancelResDto.toCancelPaymentByVirtual(refundBank.getBankName(), refundAccount);
 					}
 					P.getCustomer().addCancelPayment(cancelPayment);
 					log.info("[결제 취소 세팅]");

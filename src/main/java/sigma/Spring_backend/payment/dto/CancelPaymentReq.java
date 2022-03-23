@@ -10,7 +10,7 @@ public class CancelPaymentReq {
 	@ApiModelProperty(value = "결제 취소 사유")
 	private String cancelReason;
 	@ApiModelProperty(value = "환불 입금 기관")
-	private String bank;
+	private REFUND_BANK_TYPE bank;
 	@ApiModelProperty(value = "환불 입금 계좌번호")
 	private String accountNumber;
 	@ApiModelProperty(value = "환불 입금 예금주 성함")
