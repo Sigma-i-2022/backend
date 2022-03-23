@@ -1,14 +1,20 @@
 package sigma.Spring_backend.socialSingin.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.socialSingin.domain.User;
 
 import java.util.Map;
 
+@Setter
+@Getter
 public class OAuthAttributes {
     private Map<String, Object> attributes;
     private String nameAttributeKey;
     private String email;
     private String userId;
+
 
     public OAuthAttributes(Map<String, Object> attributes, String nameAttributeKey, String email) {
         this.attributes = attributes;
@@ -34,39 +40,8 @@ public class OAuthAttributes {
         return new OAuthAttributes(attributes, userNameAttributeName, (String) attributes.get("email"));
     }
 
-    public Map<String, Object> getAttributes() {
-        return attributes;
-    }
 
-    public void setAttributes(Map<String, Object> attributes) {
-        this.attributes = attributes;
-    }
-
-    public String getNameAttributeKey() {
-        return nameAttributeKey;
-    }
-
-    public void setNameAttributeKey(String nameAttributeKey) {
-        this.nameAttributeKey = nameAttributeKey;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public User toEntity() { return new User(email); }
+    public Member toEntity() { return new Member(email); }
 
 
 

@@ -10,6 +10,15 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import sigma.Spring_backend.baseUtil.advice.ExMessage;
+import sigma.Spring_backend.baseUtil.config.DateConfig;
+import sigma.Spring_backend.baseUtil.exception.BussinessException;
+import sigma.Spring_backend.memberMypage.entity.CommonMypage;
+import sigma.Spring_backend.memberMypage.repository.CommonMypageRepository;
+import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
+import sigma.Spring_backend.memberSignup.repository.AuthorizeCodeRepository;
+import sigma.Spring_backend.memberUtil.entity.Member;
+import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 import sigma.Spring_backend.socialSingin.domain.User;
 import sigma.Spring_backend.socialSingin.repository.UserRepository;
 import sigma.Spring_backend.socialSingin.dto.OAuthAttributes;
@@ -22,6 +31,15 @@ import java.util.Collections;
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private CommonMypageRepository commonMypageRepository;
+
+    @Autowired
+    private AuthorizeCodeRepository authorizeCodeRepository;
 
     @Autowired
     private HttpSession httpSession;
@@ -40,7 +58,9 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         // OAuth2 로그인을 통해 가져온 OAuth2User의 attribute를 담아주는 of 메소드.
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
-        User user = saveOrUpdate(attributes);
+        if (memberRepository.findByEmailFJ(attributes.getEmail()).isEmpty()) {
+            this.saveOrUpdate(attributes);
+        }
         //httpSession.setAttribute("user", new SessionUser(user));
 
         System.out.println(attributes.getAttributes());
@@ -49,16 +69,39 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 , attributes.getNameAttributeKey());
     }
 
-    private User saveOrUpdate(OAuthAttributes attributes) {
-        User user = userRepository.findByEmail(attributes.getEmail())
-                .map(entity -> entity.update(attributes.getUserId()))
-                .orElse(attributes.toEntity());
+    private void saveOrUpdate(OAuthAttributes attributes) {
+        String userId  = attributes.getEmail().substring(0,attributes.getEmail().indexOf("@"));
 
-        return userRepository.save(user);
+            Member member = Member.builder()
+                    .email(attributes.getEmail())
+                    .userId(userId)
+                    .password("")
+                    .signupType("S")
+                    .registDate(new DateConfig().getNowDate())
+                    .updateDate(new DateConfig().getNowDate())
+                    .activateYn("Y")
+                    .reportedYn("N")
+                    .crdiYn("N")
+                    .build();
+
+            CommonMypage commonMypage = commonMypageRepository.save(CommonMypage.builder()
+                    .email(attributes.getEmail())
+                    .intro("")
+                    .userId(userId)
+                    .profileImgUrl("")
+                    .build());
+
+            AuthorizeMember authorize = authorizeCodeRepository.save(AuthorizeMember.builder()
+                    .email(attributes.getEmail())
+                    .code("000000")
+                    .expired(true)
+                    .build());
+
+
+            member.setMypage(commonMypage);
+            member.setAuthorizeUser(authorize);
+
+            memberRepository.save(member);
+        }
+
     }
-
-
-
-
-
-}
