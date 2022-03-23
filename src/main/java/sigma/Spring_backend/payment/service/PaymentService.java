@@ -20,6 +20,8 @@ import sigma.Spring_backend.payment.entity.Payment;
 import sigma.Spring_backend.payment.entity.PaymentWebhook;
 import sigma.Spring_backend.payment.repository.PaymentRepository;
 import sigma.Spring_backend.payment.repository.PaymentWebhookRepository;
+import sigma.Spring_backend.reservation.entity.Reservation;
+import sigma.Spring_backend.reservation.repository.ReservationRepo;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -35,6 +37,7 @@ public class PaymentService {
 	private final PaymentRepository paymentRepository;
 	private final MemberRepository memberRepository;
 	private final PaymentWebhookRepository webhookRepository;
+	private final ReservationRepo reservationRepo;
 
 	@Value("${payments.toss.test_client_api_key}")
 	private String testClientApiKey;
@@ -63,6 +66,19 @@ public class PaymentService {
 		String payType = paymentReq.getPayType().getName();
 		String customerEmail = paymentReq.getCustomerEmail();
 		String orderName = paymentReq.getOrderName().name();
+		Long reservationSeq = paymentReq.getReservationSeq();
+
+		Reservation reservation = reservationRepo.findById(reservationSeq)
+				.orElseThrow(() -> new BussinessException(ExMessage.RESERVATION_ERROR_NOT_FOUND));
+		if (reservation.getPayYn().equals("Y"))
+			throw new BussinessException(ExMessage.RESERVATION_ERROR_ALREADY_PAY);
+
+		if (reservation.getCancelYn().equals("Y"))
+			throw new BussinessException(ExMessage.RESERVATION_ERROR_ALREADY_CANCEL);
+
+		if (paymentRepository.findByReservationSeq(reservationSeq).isPresent()) {
+			throw new BussinessException("이미 결제 신청된 예약입니다. 결제를 완료해주세요.");
+		}
 
 		if (amount == null || amount != 3000) {
 			throw new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_PRICE);
@@ -80,10 +96,6 @@ public class PaymentService {
 		PaymentRes paymentRes;
 		try {
 			Payment payment = paymentReq.toEntity();
-
-			if (payment.getPayType().equals(PAY_TYPE.VIRTUAL_ACCOUNT)) payment.setPaySuccessYn("N");
-			if (payment.getPayType().equals(PAY_TYPE.CARD)) payment.setPaySuccessYn("Y");
-
 			memberRepository.findByEmailFJ(customerEmail)
 					.ifPresentOrElse(
 							M -> M.addPayment(payment)
@@ -123,9 +135,12 @@ public class PaymentService {
 
 	@Transactional
 	public PaymentResHandleDto requestFinalPayment(String paymentKey, String orderId, Long amount) {
-		PAY_TYPE payType = paymentRepository.findByPaymentKey(paymentKey)
-				.orElseThrow(() -> new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND))
-				.getPayType();
+		Payment pay = paymentRepository.findByPaymentKey(paymentKey)
+				.orElseThrow(() -> new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND));
+		PAY_TYPE payType = pay.getPayType();
+		Long reservationSeq = pay.getReservationSeq();
+		Reservation reservation = reservationRepo.findById(reservationSeq)
+				.orElseThrow(() -> new BussinessException(ExMessage.RESERVATION_ERROR_NOT_FOUND));
 
 		RestTemplate rest = new RestTemplate();
 
@@ -165,6 +180,8 @@ public class PaymentService {
 						payment.setCardCompany(card.getCompany());
 						payment.setCardNumber(card.getNumber());
 						payment.setCardReceiptUrl(card.getReceiptUrl());
+						payment.setPaySuccessYn("Y");
+						reservation.setPayYn("Y");
 					});
 		} else if (payType.equals(PAY_TYPE.VIRTUAL_ACCOUNT)) {
 			PaymentResHandleVirtualDto virtualAccount = payResDto.getVirtualAccount();
@@ -175,6 +192,7 @@ public class PaymentService {
 						payment.setVirtualDueDate(virtualAccount.getDueDate());
 						payment.setVirtualRefundStatus(virtualAccount.getRefundStatus());
 						payment.setVirtualSecret(payResDto.getSecret());
+						payment.setPaySuccessYn("N");
 					});
 		}
 
@@ -215,6 +233,10 @@ public class PaymentService {
 
 		Payment payment = paymentRepository.findByOrderId(orderId)
 				.orElseThrow(() -> new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND));
+		Long reservationSeq = payment.getReservationSeq();
+		Reservation reservation = reservationRepo.findById(reservationSeq)
+				.orElseThrow(() -> new BussinessException(ExMessage.RESERVATION_ERROR_NOT_FOUND));
+
 
 		if (status.equals("DONE")) {
 			log.info("입금 확인");
@@ -226,6 +248,7 @@ public class PaymentService {
 					.ifPresentOrElse(P -> {
 						log.info("결제 성공 체크");
 						P.setPaySuccessYn("Y");
+						reservation.setPayYn("Y");
 					}, () -> {
 						throw new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND);
 					});
@@ -242,6 +265,8 @@ public class PaymentService {
 							P.setPaySuccessYn("N");
 						}
 						P.setCancelYn("Y");
+						reservation.setPayYn("N");
+						reservation.setCancelYn("Y");
 					}, () -> {
 						throw new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND);
 					});

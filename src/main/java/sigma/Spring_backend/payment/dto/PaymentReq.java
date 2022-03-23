@@ -38,6 +38,7 @@ public class PaymentReq {
 				.customerEmail(customerEmail)
 				.customerName(customerName)
 				.cancelYn("N")
+				.paySuccessYn("N")
 				.createDate(new DateConfig().getNowDate())
 				.build();
 	}

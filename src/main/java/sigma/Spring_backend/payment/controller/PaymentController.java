@@ -101,7 +101,7 @@ public class PaymentController {
 			notes = "토스페이먼츠에서 가상계좌로 입금을 확인하면 주는 알림을 처리합니다."
 	)
 	public CommonResult confirmVirtualAccountIncome(
-			@RequestParam(value = "요청 본문", required = false) @ModelAttribute TossVirtualDto tossVirtualDto
+			@ApiParam(value = "요청 본문", required = true) @ModelAttribute TossVirtualDto tossVirtualDto
 	) {
 		log.info("secret = " + tossVirtualDto.getSecret());
 		log.info("status = " + tossVirtualDto.getStatus());
@@ -119,11 +119,11 @@ public class PaymentController {
 
 	@PostMapping("/webhook")
 	@ApiOperation(
-			value = "가상계좌 입금 알림 콜백 처리",
-			notes = "토스페이먼츠에서 가상계좌로 입금을 확인하면 주는 알림을 처리합니다."
+			value = "토스페이먼츠 웹 훅 처리",
+			notes = "토스페이먼츠에서 결제 단계별로 보내주는 웹 훅 이벤트를 처리합니다."
 	)
 	public CommonResult tossPaymentWebhook(
-			@ModelAttribute TossWebhookDto webhookDto
+			@ApiParam(value = "웹 훅 본문") @ModelAttribute TossWebhookDto webhookDto
 	) {
 		log.info("webhookDto.getEventType() = " + webhookDto.getEventType());
 		log.info("webhookDto.getData().getPaymentKey() = " + webhookDto.getData().getPaymentKey());

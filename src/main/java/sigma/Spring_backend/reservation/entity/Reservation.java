@@ -41,40 +41,44 @@ public class Reservation {
 
 	@Setter
 	@Column(nullable = false)
-	private String confirmedReserveTime; // HH:mm - HH:mm
+	private String confirmedReserveTime; 		// HH:mm - HH:mm
 
 	@Enumerated(EnumType.STRING)
-	private CrdiServiceType serviceType;
+	private CrdiServiceType serviceType;		// 상품 타입
 
 	@Enumerated(EnumType.STRING)
-	private CrdiServiceSystem serviceSystem;
+	private CrdiServiceSystem serviceSystem;	// 상담 방법 (줌, 오카)
 
 	@Column(nullable = false, length = 500)
-	private String requireText;
+	private String requireText;					// 예약 시 요구사항 작성
 
 	@Setter
 	@Column(nullable = false)
-	private String activateYnOfClient;
+	private String activateYnOfClient;	// 클라이언트 예약목록 중 가리기 여부
 
 	@Setter
 	@Column(nullable = false)
-	private String activateYnOfCrdi;
+	private String activateYnOfCrdi;	// 코디 예약목록 중 가리기 여부
 
 	@Setter
 	@Column(nullable = false)
-	private String confirmResvYn;
-
-	@Setter
-	@Column(nullable = false)
-	private String confirmPayYn;
-
-	@Setter
-	@Column(nullable = false)
-	private String cancelYn;
+	private String confirmResvYn;		// 코디네이터 예약 확정 여부
 
 	@Setter
 	@Column
-	private String reviewedYn;
+	private String payYn;				// 카드 or 가상계좌 결제 여부
+
+	@Setter
+	@Column(nullable = false)
+	private String confirmPayYn;		// 구매 확정 여부 (리뷰 작성 용)
+
+	@Setter
+	@Column(nullable = false)
+	private String cancelYn;			// 취소 여부
+
+	@Setter
+	@Column
+	private String reviewedYn;			// 리뷰 작성 여부
 
 	@Setter
 	@OneToMany(mappedBy = "reservation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -95,10 +99,10 @@ public class Reservation {
 				.serviceSystem(serviceSystem)
 				.reserveDay(reserveDay)
 				.price(3000)
-				.reserveDay(reserveDay)
 				.reserveTimes(reserveTimes)
 				.confirmedReserveTime(confirmedReserveTime)
 				.requireText(requireText)
+				.payYn(payYn)
 				.confirmResvYn(confirmResvYn)
 				.confirmPayYn(confirmPayYn)
 				.reviewedYn(reviewedYn)
