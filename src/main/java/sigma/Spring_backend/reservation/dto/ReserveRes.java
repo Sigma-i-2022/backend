@@ -21,7 +21,7 @@ public class ReserveRes {
 	private CrdiServiceSystem serviceSystem;
 	private Integer price;
 	private String reserveDay;
-	private String reserveTimes;
+	private ReservePartTimeListReq reserveTimes;
 	private String confirmedReserveTime;
 	private String requireText;
 	private String payYn;
@@ -29,4 +29,5 @@ public class ReserveRes {
 	private String confirmPayYn;
 	private String reviewedYn;
 	private String cancelYn;
+	private String requestReservationTime;
 }

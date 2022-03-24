@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.reservation.entity.Reservation;
 
 import javax.validation.constraints.NotBlank;
@@ -73,6 +74,7 @@ public class ReserveReq {
 				.confirmPayYn("N")
 				.cancelYn("N")
 				.reviewedYn("N")
+				.requestReservationTime(new DateConfig().getNowDate())
 				.build();
 	}
 }

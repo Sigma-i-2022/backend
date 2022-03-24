@@ -1,13 +1,14 @@
 package sigma.Spring_backend.reservation.entity;
 
 import lombok.*;
-import sigma.Spring_backend.reservation.dto.CrdiServiceSystem;
-import sigma.Spring_backend.reservation.dto.CrdiServiceType;
-import sigma.Spring_backend.reservation.dto.ReserveRes;
+import sigma.Spring_backend.reservation.dto.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -80,6 +81,9 @@ public class Reservation {
 	@Column
 	private String reviewedYn;			// 리뷰 작성 여부
 
+	@Column(nullable = false)
+	private String requestReservationTime;
+
 	@Setter
 	@OneToMany(mappedBy = "reservation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Builder.Default
@@ -91,6 +95,11 @@ public class Reservation {
 	}
 
 	public ReserveRes toDto() {
+		List<ReservePartTimeReq> collect =
+				Arrays.stream(reserveTimes.split(","))
+				.map(ReservePartTimeReq::new)
+				.collect(Collectors.toList());
+
 		return ReserveRes.builder()
 				.seq(seq)
 				.crdiId(crdiId)
@@ -99,7 +108,8 @@ public class Reservation {
 				.serviceSystem(serviceSystem)
 				.reserveDay(reserveDay)
 				.price(3000)
-				.reserveTimes(reserveTimes)
+				.reserveDay(reserveDay)
+				.reserveTimes(new ReservePartTimeListReq(collect))
 				.confirmedReserveTime(confirmedReserveTime)
 				.requireText(requireText)
 				.payYn(payYn)
@@ -107,6 +117,7 @@ public class Reservation {
 				.confirmPayYn(confirmPayYn)
 				.reviewedYn(reviewedYn)
 				.cancelYn(cancelYn)
+				.requestReservationTime(requestReservationTime)
 				.build();
 	}
 }

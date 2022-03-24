@@ -110,14 +110,6 @@ public class ReservationService {
 			return false;
 		}
 
-		// 예약 시간의 끝이 시작보다 빠르면 안댐
-		for (ReservePartTimeReq reserveTime : reserveReq.getReserveTimes().getReservePartTimeReqs()) {
-			if (reserveTime.getStartTime().compareTo(reserveTime.getEndTime()) >= 0) {
-				log.error("WRONG TIME DATA");
-				return false;
-			}
-		}
-
 		return true;
 	}
 
