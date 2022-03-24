@@ -187,4 +187,6 @@ public class Member {
 				.updateDate(updateDate)
 				.build();
 	}
+
+	public Member(String email) {this.email = email;}
 }
