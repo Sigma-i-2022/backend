@@ -27,17 +27,6 @@ public class ReservationController {
 	private final ResponseService responseService;
 	private final int FAIL = -1;
 
-	@GetMapping("/common/all")
-	@ApiOperation(value = "예약 목록 전체 조회", notes = "모든 예약을 조회합니다.")
-	public ListResult<ReserveRes> getAllResv() {
-		try {
-			return responseService.getListResult(reservationService.getAllReservations());
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BussinessException(e.getMessage());
-		}
-	}
-
 	@GetMapping("/common/list")
 	@ApiOperation(value = "공통 예약 목록 조회", notes = "코디/고객 별 예약 목록을 조회합니다.")
 	public ListResult<ReserveRes> getAllReserveOfCrdi(
@@ -102,35 +91,29 @@ public class ReservationController {
 	@PostMapping("/crdi/fix")
 	@ApiOperation(value = "코디네이터 예약 확정", notes = "코디네이터가 신청받은 예약을 확정합니다.")
 	public CommonResult confirmResvByCrdi(
-			@ApiParam(value = "코디 아이디", required = true) @RequestParam String crdiId,
+			@ApiParam(value = "코디 이메일", required = true) @RequestParam String crdiEmail,
 			@ApiParam(value = "예약 번호", required = true) @RequestParam Long reservationSeq,
 			@ApiParam(value = "확정 시간", required = true) @RequestBody ReservePartTimeReq resvTime
 	) {
 		try {
-			boolean success = reservationService.confirmReservation(crdiId, reservationSeq, resvTime);
-
-			if (success) {
-				return responseService.getSuccessResult();
-			} else {
-				return responseService.getFailResult(
-						FAIL,
-						ExMessage.RESERVATION_ERROR_CANCEL_CASE_CRDI.getMessage()
-				);
-			}
+			reservationService.confirmReservation(crdiEmail, reservationSeq, resvTime);
+			return responseService.getSuccessResult();
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BussinessException(e.getMessage());
+			return responseService.getFailResult(
+					FAIL,
+					e.getMessage()
+			);
 		}
 	}
 
 	@PostMapping("/client/pay")
 	@ApiOperation(value = "고객 예약상품 구매 확정", notes = "고객이 예약완료된 예약상품의 구매를 완료합니다.")
 	public CommonResult confirmPayByClient(
-			@ApiParam(value = "고객 아이디", required = true) @RequestParam String clientId,
+			@ApiParam(value = "고객 이메일", required = true) @RequestParam String clientEmail,
 			@ApiParam(value = "예약 번호", required = true) @RequestParam Long reservationSeq
 	) {
 		try {
-			boolean success = reservationService.confirmPay(clientId, reservationSeq);
+			boolean success = reservationService.confirmPay(clientEmail, reservationSeq);
 
 			if (success) {
 				return responseService.getSuccessResult();

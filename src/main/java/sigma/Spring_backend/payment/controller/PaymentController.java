@@ -4,9 +4,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
+import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.baseUtil.dto.ListResult;
 import sigma.Spring_backend.baseUtil.dto.SingleResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
@@ -14,6 +16,7 @@ import sigma.Spring_backend.baseUtil.service.ResponseService;
 import sigma.Spring_backend.payment.dto.*;
 import sigma.Spring_backend.payment.service.PaymentService;
 
+@Slf4j
 @Api(tags = "12. 결제")
 @RequestMapping("/v1/api/payment")
 @RestController
@@ -89,6 +92,52 @@ public class PaymentController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BussinessException(e.getMessage());
+		}
+	}
+
+	@PostMapping("/virtual/income")
+	@ApiOperation(
+			value = "가상계좌 입금 알림 콜백 처리",
+			notes = "토스페이먼츠에서 가상계좌로 입금을 확인하면 주는 알림을 처리합니다."
+	)
+	public CommonResult confirmVirtualAccountIncome(
+			@ApiParam(value = "요청 본문", required = true) @ModelAttribute TossVirtualDto tossVirtualDto
+	) {
+		log.info("secret = " + tossVirtualDto.getSecret());
+		log.info("status = " + tossVirtualDto.getStatus());
+		log.info("orderId = " + tossVirtualDto.getOrderId());
+		try {
+			paymentService.handleVirtualAccountIncome(tossVirtualDto);
+			return responseService.getSuccessResult();
+		} catch (Exception e) {
+			return responseService.getFailResult(
+					FAIL,
+					e.getMessage()
+			);
+		}
+	}
+
+	@PostMapping("/webhook")
+	@ApiOperation(
+			value = "토스페이먼츠 웹 훅 처리",
+			notes = "토스페이먼츠에서 결제 단계별로 보내주는 웹 훅 이벤트를 처리합니다."
+	)
+	public CommonResult tossPaymentWebhook(
+			@ApiParam(value = "웹 훅 본문") @ModelAttribute TossWebhookDto webhookDto
+	) {
+		log.info("webhookDto.getEventType() = " + webhookDto.getEventType());
+		log.info("webhookDto.getData().getPaymentKey() = " + webhookDto.getData().getPaymentKey());
+		log.info("webhookDto.getData().getStatus() = " + webhookDto.getData().getStatus());
+		log.info("webhookDto.getData().getOrderId() = " + webhookDto.getData().getOrderId());
+
+		try {
+			paymentService.registTossPaymentWebhook(webhookDto);
+			return responseService.getSuccessResult();
+		} catch (Exception e) {
+			return responseService.getFailResult(
+					FAIL,
+					e.getMessage()
+			);
 		}
 	}
 }

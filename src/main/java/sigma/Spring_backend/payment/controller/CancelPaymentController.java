@@ -7,12 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
-import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.baseUtil.dto.ListResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
 import sigma.Spring_backend.payment.dto.CancelPaymentRes;
+import sigma.Spring_backend.payment.dto.CancelPaymentReq;
 import sigma.Spring_backend.payment.service.CancelPaymentService;
 
 @Api(tags = "13. 결제 취소")
@@ -33,18 +33,19 @@ public class CancelPaymentController {
 					"고객이 예약확정 되지 않은 결제를 취소합니다."
 	)
 	public CommonResult requestPaymentCancel(
-			@ApiParam(value = "토스 측 주문 고유 번호", required = true) @RequestParam String paymentKey,
-			@ApiParam(value = "결제 취소 사유", required = true) @RequestParam String cancelReason,
 			@ApiParam(value = "코디 번호", required = true) @RequestParam Long memberSeq,
-			@ApiParam(value = "예약 번호", required = true) @RequestParam Long reservationSeq
-	) {
-		boolean result = cancelPaymentService.requestPaymentCancel(paymentKey, cancelReason, memberSeq, reservationSeq);
-		if (result) {
+			@ApiParam(value = "예약 번호", required = true) @RequestParam Long reservationSeq,
+			@ApiParam(value = "가상계좌 취소시 작성") @ModelAttribute CancelPaymentReq cancelPaymentReq
+			) {
+		try {
+			cancelPaymentService.requestPaymentCancel(memberSeq, reservationSeq, cancelPaymentReq);
 			return responseService.getSuccessResult();
-		} else return responseService.getFailResult(
-				FAIL,
-				ExMessage.PAYMENT_CANCEL_ERROR_FAIL.getMessage()
-		);
+		} catch (Exception e) {
+			return responseService.getFailResult(
+					-1,
+					e.getMessage()
+			);
+		}
 	}
 
 	@GetMapping("/{memberSeq}")

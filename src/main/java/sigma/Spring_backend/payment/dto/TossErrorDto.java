@@ -1,11 +1,11 @@
 package sigma.Spring_backend.payment.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 @AllArgsConstructor
-public enum PayType {
-	CARD("카드");
-	private final String name;
+public class TossErrorDto {
+	String code;
+	String message;
 }

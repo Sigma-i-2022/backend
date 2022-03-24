@@ -68,6 +68,7 @@ public class ReserveReq {
 				.confirmedReserveTime(reserveTimes.getReservePartTimeReqs().get(0).toString())
 				.activateYnOfClient("Y")
 				.activateYnOfCrdi("Y")
+				.payYn("N")
 				.confirmResvYn("N")
 				.confirmPayYn("N")
 				.cancelYn("N")

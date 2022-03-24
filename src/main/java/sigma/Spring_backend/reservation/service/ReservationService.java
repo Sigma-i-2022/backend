@@ -10,6 +10,8 @@ import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
+import sigma.Spring_backend.payment.entity.Payment;
+import sigma.Spring_backend.payment.repository.PaymentRepository;
 import sigma.Spring_backend.reservation.dto.ReservePartTimeReq;
 import sigma.Spring_backend.reservation.dto.ReserveReq;
 import sigma.Spring_backend.reservation.dto.ReserveRes;
@@ -32,6 +34,7 @@ public class ReservationService {
 	private final MemberRepository memberRepository;
 	private final ReservationRepo reservationRepo;
 	private final MemberReservationRepo memberReservationRepo;
+	private final PaymentRepository paymentRepository;
 
 	@Transactional(readOnly = true)
 	public List<ReserveRes> getAllReservations() {
@@ -160,24 +163,41 @@ public class ReservationService {
 	}
 
 	@Transactional
-	public boolean confirmReservation(String crdiId, Long reservationSeq, ReservePartTimeReq resvTime) {
+	public void confirmReservation(String crdiEmail, Long reservationSeq, ReservePartTimeReq resvTime) {
+
+		Payment payment = paymentRepository.findByReservationSeq(reservationSeq)
+				.orElseThrow(() -> new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND));
+
+		if (payment.getCancelYn().equals("Y")) {
+			throw new BussinessException(ExMessage.RESERVATION_ERROR_ALREADY_CANCEL);
+		}
+
+		if (payment.getPaySuccessYn().equals("N")) {
+			throw new BussinessException(ExMessage.PAYMENT_ERROR_NOT_PAY);
+		}
+
 		reservationRepo.findById(reservationSeq)
-				.filter(R -> R.getCrdiId().equals(crdiId))
+				.filter(R -> R.getCrdiEmail().equals(crdiEmail))
 				.ifPresentOrElse(
 						R -> {
+							if (R.getCancelYn().equals("Y")) {
+								throw new BussinessException(ExMessage.RESERVATION_ERROR_ALREADY_CANCEL);
+							}
+							if (R.getPayYn().equals("N")) {
+								throw new BussinessException(ExMessage.RESERVATION_ERROR_NOT_PAY);
+							}
 							R.setConfirmResvYn("Y");
 							R.setConfirmedReserveTime(resvTime.toString());
 						}, () -> {
 							throw new BussinessException(ExMessage.RESERVATION_ERROR_NOT_FOUND);
 						}
 				);
-		return true;
 	}
 
 	@Transactional
-	public boolean confirmPay(String clientId, Long reservationSeq) {
+	public boolean confirmPay(String clientEmail, Long reservationSeq) {
 		reservationRepo.findById(reservationSeq)
-				.filter(R -> R.getClientId().equals(clientId))
+				.filter(R -> R.getClientEmail().equals(clientEmail))
 				.filter(R -> R.getConfirmResvYn().equals("Y")) // 코티네이터가 예약 확정
 				.ifPresentOrElse(
 						R -> R.setConfirmPayYn("Y")

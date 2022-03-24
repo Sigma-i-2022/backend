@@ -24,31 +24,45 @@ public class PaymentResHandleDto {
 	PaymentResHandleCardDto card;	// : 카드 결제,
 	PaymentResHandleCancelDto[] cancels;	// : 결제 취소 이력 관련 객체
 	String type;                    // : "NORMAL",	결제 타입 정보 (NOMAL, BILLING, CONNECTPAY)
+	PaymentResHandleVirtualDto virtualAccount;          // : 가상 계좌 결제 시 관련 객체
+	String secret;                  // : null,		가상 계좌로 결제 시 입금 콜백 검증 값
 /*
-	String virtualAccount;          // : null,		가상 계좌 결제 시 관련 객체
 	String transfer;                // : null,		계좌이체 결제 시 관련 객체
 	String mobilePhone;             // : null,		휴대폰 결제 시 관련 객체
 	String giftCertificate;         // : null,		상품권 결제 시 관련 객체
 	String cashReceipt;             // : null,		현금 영수증 관련 객체
 	String discount;                // : null,		카드사 할인 정보
-	String secret;                  // : null,		가상 계좌로 결제 시 입금 콜백 검증 값
 	String easyPay;                 // : null,		간편결제 결제시 정보
 	String taxFreeAmount;			// : 0			면세금액
 */
 
-	public CancelPayment toCancelPayment() {
+	public CancelPayment toCancelPaymentByCard() {
 		return CancelPayment.builder()
 				.orderId(orderId)
 				.orderName(orderName)
 				.paymentKey(paymentKey)
 				.requestedAt(requestedAt)
 				.approvedAt(approvedAt)
-				.cardCompany(card.getCompany())
-				.cardNumber(card.getNumber())
-				.receiptUrl(card.getReceiptUrl())
 				.cancelAmount(cancels[0].getCancelAmount())
 				.cancelDate(cancels[0].getCanceledAt())
 				.cancelReason(cancels[0].getCancelReason())
+				.cardCompany(card.getCompany())					// 카드 취소의 경우에만 들어감
+				.cardNumber(card.getNumber())					// 카드 취소의 경우에만 들어감
+				.cardReceiptUrl(card.getReceiptUrl())				// 카드 취소의 경우에만 들어감
+				.build();
+	}
+
+	public CancelPayment toCancelPaymentByVirtual(String refundBank, String refundAccount) {
+		return CancelPayment.builder()
+				.orderId(orderId)
+				.orderName(orderName)
+				.paymentKey(paymentKey)
+				.requestedAt(requestedAt)
+				.cancelAmount(cancels[0].getCancelAmount())
+				.cancelDate(cancels[0].getCanceledAt())
+				.cancelReason(cancels[0].getCancelReason())
+				.refundBank(refundBank)							// 가상계좌 결제시 고객 환불 계좌 은행
+				.refundAccount(refundAccount)					// 가상계좌 결제시 고객 환불 계좌 번호
 				.build();
 	}
 }

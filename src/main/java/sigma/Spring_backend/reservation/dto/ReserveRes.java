@@ -24,6 +24,7 @@ public class ReserveRes {
 	private String reserveTimes;
 	private String confirmedReserveTime;
 	private String requireText;
+	private String payYn;
 	private String confirmResvYn;
 	private String confirmPayYn;
 	private String reviewedYn;
