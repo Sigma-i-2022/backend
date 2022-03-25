@@ -112,7 +112,7 @@ public class ClientLookController {
 		}
 	}
 
-	@PostMapping("/image")
+	@DeleteMapping
 	@ApiOperation(value = "고객 룩 페이지 삭제", notes = "고객의 단일 룩 페이지를 삭제합니다.")
 	public CommonResult deleteLookPage(
 			@ApiParam(value = "룩 페이지 번호") @RequestParam Long lookSeq
