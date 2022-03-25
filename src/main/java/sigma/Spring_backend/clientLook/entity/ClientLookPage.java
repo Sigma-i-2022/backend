@@ -19,7 +19,7 @@ public class ClientLookPage {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long seq;
 
-	@Column(unique = true, nullable = false)
+	@Column(nullable = false)
 	private String clientEmail;
 
 	@Column(length = 300)

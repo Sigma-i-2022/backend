@@ -15,32 +15,32 @@ import javax.persistence.Enumerated;
 @AllArgsConstructor
 public class ClientLookPageReq {
 
-	@ApiModelProperty("회원 이메일")
+	@ApiModelProperty(value = "회원 이메일", required = true)
 	private String clientEmail;
 
-	@ApiModelProperty("룩 페이지 설명")
+	@ApiModelProperty("룩 페이지 설명", required = true)
 	@Builder.Default
 	private String explanation = "";
 
-	@ApiModelProperty("키워드 1")
+	@ApiModelProperty("키워드 1", required = true)
 	@Enumerated(EnumType.STRING)
 	private Keyword keyword1;
 
-	@ApiModelProperty("키워드 2")
+	@ApiModelProperty("키워드 2", required = true)
 	@Enumerated(EnumType.STRING)
 	private Keyword keyword2;
 
-	@ApiModelProperty("키워드 3")
+	@ApiModelProperty("키워드 3", required = true)
 	@Enumerated(EnumType.STRING)
 	private Keyword keyword3;
 
-	@ApiModelProperty("상의 설명")
+	@ApiModelProperty("상의 설명", required = true)
 	private String topInfo;
 
-	@ApiModelProperty("하의 설명")
+	@ApiModelProperty("하의 설명", required = true)
 	private String bottomInfo;
 
-	@ApiModelProperty("신발 설명")
+	@ApiModelProperty("신발 설명", required = true)
 	private String shoeInfo;
 
 	public ClientLookPage toEntity(String imagePathUrl) {
