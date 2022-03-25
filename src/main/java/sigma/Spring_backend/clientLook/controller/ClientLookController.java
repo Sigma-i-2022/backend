@@ -33,7 +33,7 @@ public class ClientLookController {
 	@ApiOperation(value = "고객 단일 룩 페이지 생성", notes = "고객의 단일 룩 페이지를 생성합니다")
 	public CommonResult registClientLookPage(
 			@ApiParam(value = "룩북 페이지 요청 객체") @ModelAttribute ClientLookPageReq lookPageReq,
-			@ApiParam(value = "이미지 파일") @RequestParam MultipartFile imageFile
+			@ApiParam(value = "이미지 파일", required = true) @RequestParam MultipartFile imageFile
 	) {
 		try {
 			clientLookService.registLookPage(lookPageReq, imageFile);
