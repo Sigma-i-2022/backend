@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.baseUtil.dto.SingleResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
@@ -75,10 +74,10 @@ public class CommonMypageController {
 	@ApiOperation(value = "코디네이터 마이페이지 등록", notes = "코디네이터의 마이페이지를 등록합니다.")
 	public CommonResult crdiMypageRegist(
 			@ApiParam(name = "코디마이페이지등록") @ModelAttribute CrdiMypageReq crdiMypageReq,
-			@ApiParam(name = "코디네이터 이미지 파일") @RequestParam MultipartFile profileImg
+			@ApiParam(name = "코디네이터 이미지 파일 UUID") @RequestParam String uuid
 	) {
 		try {
-			commonMypageServiceImpl.registCrdiMypage(crdiMypageReq, profileImg);
+			commonMypageServiceImpl.registCrdiMypage(crdiMypageReq, uuid);
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -110,10 +109,10 @@ public class CommonMypageController {
 	@ApiOperation(value = "프로필 이미지 등록/수정", notes = "회원의 이미지를 S3에 업로드하고 해당 URL을 등록/수정합니다.")
 	public CommonResult registMemberProfileImage(
 			@ApiParam(value = "회원 이메일") @RequestParam String memberEmail,
-			@ApiParam(value = "회원 이미지") @RequestParam MultipartFile memberImageFile
+			@ApiParam(value = "회원 이미지 UUID") @RequestParam String uuid
 	) {
 		try {
-			commonMypageServiceImpl.updateProfileImg(memberEmail, memberImageFile);
+			commonMypageServiceImpl.updateProfileImg(memberEmail, uuid);
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -126,7 +126,7 @@ class CommonMypageServiceImplTest {
 				.willReturn("test_url");
 
 		// when
-		commonMypageServiceImpl.updateProfileImg(member.getEmail(), multipartFile);
+		commonMypageServiceImpl.updateProfileImg(member.getEmail(), "");
 
 		// then
 		assertEquals(

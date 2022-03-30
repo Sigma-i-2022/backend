@@ -3,7 +3,6 @@ package sigma.Spring_backend.crdiPage.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder

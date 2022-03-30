@@ -6,8 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import sigma.Spring_backend.awsUtil.service.AwsService;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
@@ -19,6 +17,7 @@ import sigma.Spring_backend.chat.entity.MessageType;
 import sigma.Spring_backend.chat.repository.ChatMessageRepository;
 import sigma.Spring_backend.chat.repository.ChatRoomRepository;
 import sigma.Spring_backend.chat.repository.MemberChatRoomConnectionRepository;
+import sigma.Spring_backend.imageUtil.service.ImageService;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
@@ -35,7 +34,7 @@ public class ChatService {
 	private final ChatMessageRepository chatMessageRepository;
 	private final ChatRoomRepository chatRoomRepository;
 	private final MemberRepository memberRepository;
-	private final AwsService awsService;
+	private final ImageService imageService;
 	/*
 	회원채팅방이 생성되는 순간 -> 회원채팅방에 회원이 등록되어야 하고 & 채팅방이 등록되어야 한다.
 	회원채팅방 : 회원을 가짐, 채팅방을 가짐
@@ -114,7 +113,7 @@ public class ChatService {
 	채팅입력 : MessageType 별로 나눠서 진행
 	 */
 	@Transactional
-	public ChatMessage sendChat(ChatMessageReq message, MultipartFile imageFile) {
+	public ChatMessage sendChat(ChatMessageReq message, String uuid) {
 		Long chatRoomId = message.getChatRoomId();
 		String memberEmail = message.getSenderEmail();
 
@@ -145,17 +144,17 @@ public class ChatService {
 
 			return chatMessage;
 		} else if (message.getChatType().equals(MessageType.IMAGE)) {
-			String awsImgUrl = awsService.imageUploadToS3("/chatRoom", imageFile);
+			String url = imageService.requestImageUrl(uuid);
 			chatRoom.addImage(
 					ImageUrl.builder()
-					.url(awsImgUrl)
+					.url(url)
 					.build()
 			);
 			ChatMessage chatMessage = message.toEntity();
 
 			chatMessage.setSenderId(sender.getUserId());
 			chatMessage.setSenderProfileImgUrl(senderImg);
-			chatMessage.setImagePathUrl(awsImgUrl);
+			chatMessage.setImagePathUrl(url);
 			chatRoom.addChatMessage(chatMessage);
 
 			return chatMessage;

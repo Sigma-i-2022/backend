@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.awsUtil.service.AwsService;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.config.DateConfig;
@@ -14,12 +13,11 @@ import sigma.Spring_backend.clientLook.dto.ClientLookPageReq;
 import sigma.Spring_backend.clientLook.dto.ClientLookPageRes;
 import sigma.Spring_backend.clientLook.entity.ClientLookPage;
 import sigma.Spring_backend.clientLook.repository.ClientLookPageRepository;
+import sigma.Spring_backend.imageUtil.service.ImageService;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -30,18 +28,19 @@ public class ClientLookService {
 	private final ClientLookPageRepository memberLookPageRepo;
 	private final MemberRepository memberRepository;
 	private final AwsService awsService;
+	private final ImageService imageService;
 
 	/*
 		룩 페이지 등록
 	 */
 	@Transactional
-	public void registLookPage(ClientLookPageReq clientLookPageReq, MultipartFile imageFile) {
+	public void registLookPage(ClientLookPageReq clientLookPageReq, String uuid) {
 		// 1. 입력 폼 데이터 검증
-		boolean verify = verifyLookPage(clientLookPageReq, imageFile);
+		boolean verify = verifyLookPage(clientLookPageReq);
 		if (!verify) throw new BussinessException("룩 페이지에 필요한 정보가 없습니다.");
 
 		// 2. AWS 이미지 업로드 후 이미지 경로 받기
-		String imagePathUrl = awsService.imageUploadToS3("/memberLookImage", imageFile);
+		String imagePathUrl = imageService.requestImageUrl(uuid);;
 
 		// 3. 엔티티 생성 후 DB 저장
 		try {
@@ -53,11 +52,8 @@ public class ClientLookService {
 		}
 	}
 
-	private boolean verifyLookPage(ClientLookPageReq clientLookPageReq, MultipartFile imageFile) {
+	private boolean verifyLookPage(ClientLookPageReq clientLookPageReq) {
 		if (clientLookPageReq.getClientEmail() == null || clientLookPageReq.getClientEmail().equals("")) {
-			return false;
-		}
-		if (imageFile == null || imageFile.isEmpty()) {
 			return false;
 		}
 		return true;
@@ -95,11 +91,11 @@ public class ClientLookService {
 	}
 
 	@Transactional
-	public void updateLookPageImage(Long key, MultipartFile requestImage) {
+	public void updateLookPageImage(Long key, String uuid) {
 		if (key == null) throw new BussinessException("입력 값 문제");
 		ClientLookPage lookPage = memberLookPageRepo.findById(key)
 				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
-		String imagePathUrl = awsService.imageUploadToS3("/memberLookImage", requestImage);
+		String imagePathUrl = imageService.requestImageUrl(uuid);
 		lookPage.setImagePathUrl(imagePathUrl);
 		lookPage.setUpdateDate(new DateConfig().getNowDate());
 		memberLookPageRepo.save(lookPage);
