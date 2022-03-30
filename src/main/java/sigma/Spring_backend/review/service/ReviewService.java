@@ -115,4 +115,31 @@ public class ReviewService {
 				.map(Review::toDto)
 				.collect(Collectors.toList());
 	}
+
+	@Transactional
+	public void deActivateReview(Long reviewSeq) {
+		reviewRepo.findById(reviewSeq)
+				.ifPresentOrElse(
+						R -> R.setActivateYn("N")
+						, () -> {
+							throw new BussinessException(ExMessage.REVIEW_ERROR_NOT_FOUND);
+						}
+				);
+	}
+
+	@Transactional
+	public void updateReview(Long reviewSeq, String crdiEmail, String content) {
+		memberRepository.findByEmailFJ(crdiEmail)
+				.filter(M -> M.getCrdiYn().equals("Y"))
+				.ifPresentOrElse(
+						M -> M.getReviews()
+								.stream()
+								.filter(R -> R.getSeq().equals(reviewSeq))
+								.findFirst()
+								.orElseThrow(() -> new BussinessException(ExMessage.REVIEW_ERROR_NOT_FOUND))
+								.setContent(content)
+						, () -> {
+							throw new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND);
+						});
+	}
 }
