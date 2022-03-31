@@ -49,6 +49,42 @@ public class ReviewController {
 		}
 	}
 
+	@DeleteMapping
+	@ApiOperation(value = "리뷰 삭제", notes = "리뷰를 삭제합니다.")
+	public CommonResult removeReview(
+			@ApiParam(value = "리뷰 번호", required = true) @RequestParam Long reviewSeq
+	) {
+		try {
+			reviewService.deActivateReview(reviewSeq);
+			return responseService.getSuccessResult();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return responseService.getFailResult(
+					-1,
+					e.getMessage()
+			);
+		}
+	}
+
+	@PutMapping
+	@ApiOperation(value = "리뷰 수정", notes = "고객이 리뷰를 수정합니다.")
+	public CommonResult updateReview(
+			@ApiParam(value = "리뷰 번호", required = true) @RequestParam Long reviewSeq,
+			@ApiParam(value = "코디네이터 이메일", required = true) @RequestParam String crdiEmail,
+			@ApiParam(value = "수정 내용", required = true) @RequestParam String content
+	) {
+		try {
+			reviewService.updateReview(reviewSeq, crdiEmail, content);
+			return responseService.getSuccessResult();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return responseService.getFailResult(
+					-1,
+					e.getMessage()
+			);
+		}
+	}
+
 	@GetMapping("/report")
 	@ApiOperation(value = "신고 된 리뷰 전체 조회", notes = "신고 받은 모든 리뷰를 가져옵니다.")
 	public ListResult<ReviewRes> getAllReportedReviews() {

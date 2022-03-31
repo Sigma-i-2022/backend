@@ -49,6 +49,7 @@ public class Review {
 	@Column(nullable = false)
 	private String weight;
 
+	@Setter
 	@Column(length = 300)
 	private String content;
 
