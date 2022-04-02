@@ -1,7 +1,9 @@
 package sigma.Spring_backend.memberMypage.service;
 
-import org.springframework.web.multipart.MultipartFile;
-import sigma.Spring_backend.memberMypage.dto.*;
+import sigma.Spring_backend.memberMypage.dto.ClientMypageRes;
+import sigma.Spring_backend.memberMypage.dto.CommonUpdateInfoReq;
+import sigma.Spring_backend.memberMypage.dto.CrdiMypageReq;
+import sigma.Spring_backend.memberMypage.dto.CrdiMypageRes;
 
 public interface CommonMypageServiceInterface {
 	/*
@@ -22,7 +24,7 @@ public interface CommonMypageServiceInterface {
 	/*
 	코디네이터 마이페이지 등록
 	 */
-	void registCrdiMypage(CrdiMypageReq crdiProfileReq, MultipartFile profileImg);
+	void registCrdiMypage(CrdiMypageReq crdiProfileReq, String uuid);
 
 	/*
 	코디네이터 마이페이지 소개란 수정
@@ -32,5 +34,5 @@ public interface CommonMypageServiceInterface {
 	/*
 	마이페이지 프로필 이미지 수정
 	 */
-	void updateProfileImg(String email, MultipartFile imageFile);
+	void updateProfileImg(String email, String uuid);
 }

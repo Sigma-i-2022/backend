@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.baseUtil.dto.ListResult;
 import sigma.Spring_backend.baseUtil.dto.SingleResult;
@@ -33,10 +32,10 @@ public class ClientLookController {
 	@ApiOperation(value = "고객 단일 룩 페이지 생성", notes = "고객의 단일 룩 페이지를 생성합니다")
 	public CommonResult registClientLookPage(
 			@ApiParam(value = "룩북 페이지 요청 객체") @ModelAttribute ClientLookPageReq lookPageReq,
-			@ApiParam(value = "이미지 파일", required = true) @RequestParam MultipartFile imageFile
+			@ApiParam(value = "이미지 파일 UUID", required = true) @RequestParam String uuid
 	) {
 		try {
-			clientLookService.registLookPage(lookPageReq, imageFile);
+			clientLookService.registLookPage(lookPageReq, uuid);
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -98,10 +97,10 @@ public class ClientLookController {
 	@ApiOperation(value = "고객 룩 페이지 이미지 수정", notes = "고객의 단일 룩 페이지 이미지를 수정합니다.")
 	public CommonResult updateLookPageImage(
 			@ApiParam(value = "룩 페이지 번호") @RequestParam Long lookSeq,
-			@ApiParam(value = "룩 페이지 요청 객체") @RequestBody MultipartFile requestImage
+			@ApiParam(value = "이미지 UUID") @RequestBody String uuid
 	) {
 		try {
-			clientLookService.updateLookPageImage(lookSeq, requestImage);
+			clientLookService.updateLookPageImage(lookSeq, uuid);
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
 			e.printStackTrace();

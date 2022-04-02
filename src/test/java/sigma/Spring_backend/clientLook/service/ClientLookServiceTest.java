@@ -99,7 +99,7 @@ class ClientLookServiceTest {
 				.willReturn(Optional.of(member));
 
 		// when
-		clientLookService.registLookPage(clientLookPageReq, multipartFile);
+		clientLookService.registLookPage(clientLookPageReq, "uuid");
 
 		//then
 		Assertions.assertThat(
@@ -174,7 +174,7 @@ class ClientLookServiceTest {
 				.willReturn("aws test url");
 
 		//when
-		clientLookService.updateLookPageImage(1L, multipartFile);
+		clientLookService.updateLookPageImage(1L, "uuid");
 
 		//then
 		Assertions.assertThat(clientLookService.getLookPage(1L).getImagePathUrl())

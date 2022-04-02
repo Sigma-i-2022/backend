@@ -1,6 +1,5 @@
 package sigma.Spring_backend.chat.controller;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +8,6 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.chat.dto.ChatMessageReq;
 import sigma.Spring_backend.chat.entity.ChatMessage;
 import sigma.Spring_backend.chat.service.ChatService;
@@ -30,9 +28,9 @@ public class ChatWsController {
 	public ChatMessage message(
 			@DestinationVariable Long roomSeq,
 			ChatMessageReq message,
-			@Nullable MultipartFile imageFile
+			@Nullable String uuid
 	) {
-		return chatService.sendChat(message, imageFile);
+		return chatService.sendChat(message, uuid);
 	}
 
 	@MessageMapping("/chat/notify/{roomSeq}")
