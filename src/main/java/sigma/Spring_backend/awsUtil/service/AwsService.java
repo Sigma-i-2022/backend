@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 
 import java.time.ZoneId;
@@ -53,8 +54,9 @@ public class AwsService {
 
 		amazonS3 = createAwsCredentials();
 
+		String[] yymmdd = new DateConfig().getNowDate().split(" ")[0].split("-");
 		String fileName = createFileName(multipartFile);
-		String path = "/upload" + (uploadPath.charAt(0) == '/' ? uploadPath : ("/" + uploadPath));
+		String path = "/upload/" + yymmdd[0] + "/" + yymmdd[1] + "/" + yymmdd[2];
 
 		imagePathUrl.append(bucketUrl)
 				.append(path)
