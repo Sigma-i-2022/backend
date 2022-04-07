@@ -2,6 +2,7 @@ package sigma.Spring_backend.crdiPage.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,14 +62,11 @@ public class CrdiPageService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<CrdiWorkRes> getWorks(String crdiEmail) {
-		Optional<Member> memberOpt = memberRepository.findByEmailFJ(crdiEmail);
-
-		return memberOpt.map(m -> m.getWork()
-						.stream()
-						.map(CrdiWork::toDto)
-						.collect(Collectors.toList()))
-				.orElseGet(ArrayList::new);
+	public List<CrdiWorkRes> getWorks(String crdiEmail, PageRequest pageRequest) {
+		return crdiWorkRepository.findAllByEmail(crdiEmail,pageRequest)
+				.stream()
+				.map(CrdiWork::toDto)
+				.collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
