@@ -23,6 +23,9 @@ public class CrdiWork {
     @Builder.Default
     private String explanation = "";
 
+    @Column(unique = true, nullable = false)
+    private String email;
+
     @Column
     private String imagePathUrl;
 
