@@ -158,7 +158,7 @@ public class PaymentService {
 		PaymentResHandleDto payResDto;
 		try {
 			payResDto = rest.postForEntity(
-					tossOriginUrl + paymentKey,
+					tossOriginUrl + "/payments/" + paymentKey,
 					new HttpEntity<>(param, headers),
 					PaymentResHandleDto.class
 			).getBody();
