@@ -5,6 +5,7 @@ import lombok.Data;
 import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.submall.entity.Submall;
 
+import java.text.SimpleDateFormat;
 import java.util.UUID;
 
 @Data
@@ -33,6 +34,7 @@ public class SubmallReqDto {
 				.type(type)
 				.accountNumber(account.getAccountNumber())
 				.bank(account.getBank())
+				.activate(true)
 				.build();
 	}
 
@@ -46,9 +48,10 @@ public class SubmallReqDto {
 			curType = "CORPORATE";
 			curBusinessNumber = businessNumber;
 		}
+		String subMallId = new SimpleDateFormat("yyMMdd HH:mm:ss.SSS").format(System.currentTimeMillis());
 
 		return TosspaymentSubmallReq.builder()
-				.subMallId(new DateConfig().getNowDate()+companyName)
+				.subMallId(subMallId)
 				.companyName(companyName)
 				.representativeName(representativeName)
 				.businessNumber(curBusinessNumber)

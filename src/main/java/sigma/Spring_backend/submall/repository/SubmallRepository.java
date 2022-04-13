@@ -8,5 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface SubmallRepository extends JpaRepository<Submall, Long> {
-	Optional<Submall> findByCrdiEmail(String email);
+	Optional<Submall> findByCrdiEmailAndActivateTrue(String email);
+
+	void deleteByCrdiEmail(String email);
 }

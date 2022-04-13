@@ -17,7 +17,7 @@ public class Submall {
 	@Column(name = "seq", nullable = false)
 	private Long seq;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String crdiEmail;
 
 	@Column(nullable = false)
@@ -42,11 +42,17 @@ public class Submall {
 	private String bank;
 
 	@Setter
-	@OneToOne
+	@Column(nullable = false)
+	private boolean activate;
+
+	@Setter
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "CRDI_SEQ")
 	private Member crdi;
 
 	public SubmallResDto toDto() {
 		return SubmallResDto.builder()
+				.crdiEmail(crdiEmail)
 				.submallId(submallId)
 				.companyName(companyName)
 				.representativeName(representativeName)

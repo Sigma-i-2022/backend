@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubmallResDto {
+	private String crdiEmail;
 	private String submallId;
 	private String companyName;
 	private String representativeName;

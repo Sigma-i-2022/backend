@@ -84,16 +84,6 @@ public class Member {
 		authorizeUser.setMember(this);
 	}
 
-	@OneToOne(mappedBy = "crdi", cascade = CascadeType.ALL)
-	@JoinColumn
-	@Builder.Default
-	private Submall submall = new Submall();
-
-	public void setSubmall(Submall submall) {
-		this.submall = submall;
-		submall.setCrdi(this);
-	}
-
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<ClientLookPage> pages = new ArrayList<>();
@@ -183,6 +173,15 @@ public class Member {
 	public void addCancelPayment(CancelPayment cancelPayment) {
 		this.cancelPayments.add(cancelPayment);
 		cancelPayment.setCustomer(this);
+	}
+
+	@OneToMany(mappedBy = "crdi", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Builder.Default
+	private List<Submall> submalls = new ArrayList<>();
+
+	public void addSubmalls(Submall submall) {
+		this.submalls.add(submall);
+		submall.setCrdi(this);
 	}
 
 	public MemberResponseDto toDto() {

@@ -57,22 +57,22 @@ public class SubmallService {
 	@Transactional
 	public SubmallResDto registSubmall(SubmallReqDto submallReqDto) {
 
-		if (submallRepository.findByCrdiEmail(submallReqDto.getCrdiEmail()).isPresent()) {
-			throw new BussinessException("고객님 앞으로 서브몰이 이미 등록되어있습니다.");
+		Optional<Submall> submallOptional = submallRepository
+				.findByCrdiEmailAndActivateTrue(submallReqDto.getCrdiEmail());
+		if (submallOptional.isPresent()) {
+			throw new BussinessException(ExMessage.SUBMALL_ERROR_ALREADY_REGIST);
 		}
 
 		if (!(submallReqDto.getType().equals("법인") || submallReqDto.getType().equals("개인"))) {
-			throw new BussinessException("잘못된 사업자 유형 입니다.");
+			throw new BussinessException(ExMessage.SUBMALL_ERROR_WRONG_BUSINESS_NUMBER);
 		}
 
 		if (submallReqDto.getType().equals("법인") && submallReqDto.getBusinessNumber().length() != 10) {
-			throw new BussinessException("잘못된 사업자 번호 입니다.");
+			throw new BussinessException(ExMessage.SUBMALL_ERROR_WRONG_BUSINESS_NUMBER);
 		}
 
 		RestTemplate rest = new RestTemplate();
-
 		HttpHeaders headers = new HttpHeaders();
-
 		String encodedAuth = new String(Base64.getEncoder().encode((testSecretApiKey + ":").getBytes(StandardCharsets.UTF_8)));
 		headers.setBasicAuth(encodedAuth);
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -103,9 +103,9 @@ public class SubmallService {
 			Submall submall = submallReqDto.toEntity(submallReq.getSubMallId());
 			memberRepository.findByEmailFJ(submallReqDto.getCrdiEmail())
 					.ifPresentOrElse(
-							C -> C.setSubmall(submall)
+							C -> C.addSubmalls(submall)
 							, () -> {
-								throw new BussinessException(ExMessage.UNDEFINED_ERROR);
+								throw new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND);
 							});
 			return submall.toDto();
 		} catch (Exception e) {
@@ -115,17 +115,15 @@ public class SubmallService {
 
 	@Transactional(readOnly = true)
 	public SubmallResDto getSubmall(String crdiEmail) {
-		return submallRepository.findByCrdiEmail(crdiEmail)
-				.orElseThrow(() -> new BussinessException(ExMessage.UNDEFINED_ERROR))
+		return submallRepository.findByCrdiEmailAndActivateTrue(crdiEmail)
+				.orElseThrow(() -> new BussinessException(ExMessage.SUBMALL_ERROR_NONE))
 				.toDto();
 	}
 
 	@Transactional(readOnly = true)
 	public List<TosspaymentSubmallRes> getAllSubmall() {
 		RestTemplate rest = new RestTemplate();
-
 		HttpHeaders headers = new HttpHeaders();
-
 		String encodedAuth = new String(Base64.getEncoder().encode((testSecretApiKey + ":").getBytes(StandardCharsets.UTF_8)));
 		headers.setBasicAuth(encodedAuth);
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -160,7 +158,43 @@ public class SubmallService {
 		return null;
 	}
 
+	@Transactional
 	public String deleteSubmall(String crdiEmail) {
-		return null;
+		Submall submall = submallRepository.findByCrdiEmailAndActivateTrue(crdiEmail)
+				.orElseThrow(() -> new BussinessException("고객 앞으로 등록된 서브몰이 없습니다."));
+		String submallId = submall.getSubmallId();
+
+		RestTemplate rest = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		String encodedAuth = new String(Base64.getEncoder().encode((testSecretApiKey + ":").getBytes(StandardCharsets.UTF_8)));
+		headers.setBasicAuth(encodedAuth);
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+		String responseSubmallId;
+		try {
+			responseSubmallId = rest.exchange(
+					tossOriginUrl + "/payouts/sub-malls/" + submallId + "/delete",
+					HttpMethod.POST,
+					new HttpEntity<>(headers),
+					String.class
+			).getBody();
+			if (responseSubmallId == null) throw new BussinessException("NULL");
+		} catch (Exception e) {
+			String errorResponse = e.getMessage().split(": ")[1];
+			String errorMessage = new Gson()
+					.fromJson(
+							errorResponse.substring(1, errorResponse.length() - 1),
+							TossErrorDto.class
+					).getMessage();
+			throw new BussinessException(errorMessage);
+		}
+
+		if (!responseSubmallId.equals(submallId)) {
+			throw new BussinessException("제거된 서브몰이 일치하지 않습니다.");
+		}
+		submall.setActivate(false);
+
+		return responseSubmallId;
 	}
 }
