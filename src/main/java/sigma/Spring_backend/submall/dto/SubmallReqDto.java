@@ -2,11 +2,9 @@ package sigma.Spring_backend.submall.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.submall.entity.Submall;
 
 import java.text.SimpleDateFormat;
-import java.util.UUID;
 
 @Data
 public class SubmallReqDto {
@@ -20,7 +18,7 @@ public class SubmallReqDto {
 	private String type;
 	@ApiModelProperty(value = "사업자 등록 번호 (법인의 경우 입력)", example = "0000000000")
 	private String businessNumber;
-	private AccountDto account;
+	private SubmallAccountDto account;
 
 	public Submall toEntity(String subMallId) {
 		if(type.equals("개인")) businessNumber = "";
@@ -33,7 +31,7 @@ public class SubmallReqDto {
 				.businessNumber(businessNumber)
 				.type(type)
 				.accountNumber(account.getAccountNumber())
-				.bank(account.getBank())
+				.bank(account.getBank().getName())
 				.activate(true)
 				.build();
 	}
@@ -56,7 +54,7 @@ public class SubmallReqDto {
 				.representativeName(representativeName)
 				.businessNumber(curBusinessNumber)
 				.type(curType)
-				.account(account)
+				.account(account.toTossAccount())
 				.build();
 	}
 }

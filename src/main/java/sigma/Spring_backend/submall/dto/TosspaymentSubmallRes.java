@@ -9,6 +9,6 @@ public class TosspaymentSubmallRes {
 	private String representativeName;
 	private String type;
 	private String businessNumber;
-	private AccountDto account;
+	private TosspaymentSubmallAccountDto account;
 	private String metadata;
 }

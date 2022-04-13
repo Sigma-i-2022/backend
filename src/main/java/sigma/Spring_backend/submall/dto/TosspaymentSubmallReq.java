@@ -15,5 +15,5 @@ public class TosspaymentSubmallReq {
 	private String representativeName;
 	private String businessNumber;
 	private String type;
-	private AccountDto account;
+	private TosspaymentSubmallAccountDto account;
 }
