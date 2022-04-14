@@ -138,6 +138,7 @@ public class SubmallService {
 					TosspaymentSubmallRes[].class
 			).getBody();
 		} catch (Exception e) {
+			e.printStackTrace();
 			String errorResponse = e.getMessage().split(": ")[1];
 			String errorMessage = new Gson()
 					.fromJson(

@@ -10,5 +10,4 @@ public class TosspaymentSubmallRes {
 	private String type;
 	private String businessNumber;
 	private TosspaymentSubmallAccountDto account;
-	private String metadata;
 }
