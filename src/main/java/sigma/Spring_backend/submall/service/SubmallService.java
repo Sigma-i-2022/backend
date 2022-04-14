@@ -15,10 +15,7 @@ import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 import sigma.Spring_backend.payment.dto.TossErrorDto;
-import sigma.Spring_backend.submall.dto.SubmallReqDto;
-import sigma.Spring_backend.submall.dto.SubmallResDto;
-import sigma.Spring_backend.submall.dto.TosspaymentSubmallReq;
-import sigma.Spring_backend.submall.dto.TosspaymentSubmallRes;
+import sigma.Spring_backend.submall.dto.*;
 import sigma.Spring_backend.submall.entity.Submall;
 import sigma.Spring_backend.submall.repository.SubmallRepository;
 
@@ -138,7 +135,6 @@ public class SubmallService {
 					TosspaymentSubmallRes[].class
 			).getBody();
 		} catch (Exception e) {
-			e.printStackTrace();
 			String errorResponse = e.getMessage().split(": ")[1];
 			String errorMessage = new Gson()
 					.fromJson(
@@ -155,8 +151,45 @@ public class SubmallService {
 		return Arrays.asList(submallRes);
 	}
 
-	public SubmallResDto updateSubmall(SubmallReqDto submallReqDto) {
-		return null;
+	@Transactional
+	public SubmallResDto updateSubmall(String crdiEmail, SubmallUpdateReq submallReqDto)
+	{
+		Submall submall = submallRepository.findByCrdiEmailAndActivateTrue(crdiEmail)
+				.orElseThrow(() -> new BussinessException(ExMessage.SUBMALL_ERROR_NONE));
+
+		RestTemplate rest = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		String authorization = new String(Base64.getEncoder().encode((testSecretApiKey + ":").getBytes(StandardCharsets.UTF_8)));
+		headers.setBasicAuth(authorization);
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+		TosspaymentSubmallUpdateReq tosspaymentSubmallReq = submallReqDto.toTossReq();
+		TosspaymentSubmallRes tosspaymentSubmallRes;
+		try {
+			tosspaymentSubmallRes = rest.postForObject(
+					tossOriginUrl + "/payouts/sub-malls/" + submall.getSubmallId(),
+					new HttpEntity<>(new Gson().toJson(tosspaymentSubmallReq), headers),
+					TosspaymentSubmallRes.class
+			);
+			if (tosspaymentSubmallRes == null) throw new BussinessException("NULL");
+		} catch (Exception e) {
+			String errorResponse = e.getMessage().split(": ")[1];
+			String errorMessage = new Gson()
+					.fromJson(
+							errorResponse.substring(1, errorResponse.length() - 1),
+							TossErrorDto.class
+					).getMessage();
+			throw new BussinessException(errorMessage);
+		}
+
+		submall.setBank(submallReqDto.getAccount().getBank().getName());
+		submall.setAccountNumber(submallReqDto.getAccount().getAccountNumber());
+		submall.setBusinessNumber(submallReqDto.getBusinessNumber());
+		submall.setRepresentativeName(submallReqDto.getRepresentativeName());
+		submall.setCompanyName(submallReqDto.getCompanyName());
+
+		return submall.toDto();
 	}
 
 	@Transactional

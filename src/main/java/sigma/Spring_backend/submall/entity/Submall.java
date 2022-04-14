@@ -23,21 +23,26 @@ public class Submall {
 	@Column(nullable = false)
 	private String submallId;
 
+	@Setter
 	@Column(nullable = false)
 	private String companyName;
 
+	@Setter
 	@Column(nullable = false)
 	private String representativeName;
 
+	@Setter
 	@Column
 	private String businessNumber;
 
 	@Column
 	private String type;
 
+	@Setter
 	@Column(nullable = false)
 	private String accountNumber;
 
+	@Setter
 	@Column(nullable = false)
 	private String bank;
 

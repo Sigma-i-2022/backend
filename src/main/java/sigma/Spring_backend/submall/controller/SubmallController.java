@@ -12,6 +12,7 @@ import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
 import sigma.Spring_backend.submall.dto.SubmallReqDto;
 import sigma.Spring_backend.submall.dto.SubmallResDto;
+import sigma.Spring_backend.submall.dto.SubmallUpdateReq;
 import sigma.Spring_backend.submall.dto.TosspaymentSubmallRes;
 import sigma.Spring_backend.submall.service.SubmallService;
 
@@ -72,11 +73,12 @@ public class SubmallController {
 	@PutMapping
 	@ApiOperation(value = "서브몰 수정", notes = "판매자가 자신의 서브몰을 수정합니다.")
 	public SingleResult<SubmallResDto> updateSubmall(
-			@ApiParam(value = "요청 객체") @ModelAttribute SubmallReqDto submallReqDto
+			@ApiParam(value = "요청자 이메일", required = true) @RequestParam String crdiEmail,
+			@ApiParam(value = "요청 객체") @ModelAttribute SubmallUpdateReq submallUpdateReq
 	) {
 		try {
 			return responseService.getSingleResult(
-					submallService.updateSubmall(submallReqDto)
+					submallService.updateSubmall(crdiEmail, submallUpdateReq)
 			);
 		} catch (Exception e) {
 			e.printStackTrace();
