@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
@@ -61,10 +63,13 @@ public class CrdiPageController {
 	@GetMapping("/all")
 	@ApiOperation(value = "코디네이터 작품 전체 조회", notes = "코디네이터 작품을 전체 조회합니다.")
 	public ListResult<CrdiWorkRes> getCrdiWorks(
-			@ApiParam(value = "코디 이메일") @RequestParam String crdiEmail
+			@ApiParam(value = "코디 이메일") @RequestParam String crdiEmail,
+			@ApiParam(value = "PAGE 번호 (0부터)", required = true) @RequestParam(defaultValue = "0") int page,
+			@ApiParam(value = "PAGE 크기", required = true) @RequestParam(defaultValue = "20") int size
 	) {
+		PageRequest pageRequest = PageRequest.of(page,size, Sort.by("updateDate").descending());
 		try {
-			return responseService.getListResult(crdiPageService.getWorks(crdiEmail));
+			return responseService.getListResult(crdiPageService.getWorks(crdiEmail,pageRequest));
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BussinessException(e.getMessage());
