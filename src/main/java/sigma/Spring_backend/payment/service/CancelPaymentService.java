@@ -74,7 +74,7 @@ public class CancelPaymentService {
 
 		RestTemplate rest = new RestTemplate();
 
-		URI uri = URI.create(tossOriginUrl + paymentKey + "/cancel");
+		URI uri = URI.create(tossOriginUrl + "/payments/" + paymentKey + "/cancel");
 
 		HttpHeaders headers = new HttpHeaders();
 		byte[] secretKeyByte = (testSecretApiKey + ":").getBytes(StandardCharsets.UTF_8);

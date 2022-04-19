@@ -14,6 +14,7 @@ import sigma.Spring_backend.payment.entity.CancelPayment;
 import sigma.Spring_backend.payment.entity.Payment;
 import sigma.Spring_backend.reservation.entity.MemberReservation;
 import sigma.Spring_backend.review.entity.Review;
+import sigma.Spring_backend.submall.entity.Submall;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -172,6 +173,15 @@ public class Member {
 	public void addCancelPayment(CancelPayment cancelPayment) {
 		this.cancelPayments.add(cancelPayment);
 		cancelPayment.setCustomer(this);
+	}
+
+	@OneToMany(mappedBy = "crdi", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Builder.Default
+	private List<Submall> submalls = new ArrayList<>();
+
+	public void addSubmalls(Submall submall) {
+		this.submalls.add(submall);
+		submall.setCrdi(this);
 	}
 
 	public MemberResponseDto toDto() {
