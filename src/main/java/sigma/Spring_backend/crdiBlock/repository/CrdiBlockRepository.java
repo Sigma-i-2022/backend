@@ -12,6 +12,6 @@ import java.util.Optional;
 @Repository
 public interface CrdiBlockRepository extends JpaRepository<CrdiBlock, Long> {
 
-    @Query("select b.crdiEmail from CrdiBlock b where b.email = :email")
-    List<String> findByEmail(@Param("email") String email);
+    @Query("select b.crdiEmail from CrdiBlock b where b.email = ?1")
+    List<String> findByEmail(String email);
 }
