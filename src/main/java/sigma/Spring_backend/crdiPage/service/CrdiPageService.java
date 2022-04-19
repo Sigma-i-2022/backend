@@ -73,11 +73,16 @@ public class CrdiPageService {
 	public List<CrdiRes> getCrdiList(String email) {
 		String crdiYn = "Y";
 		List<String> crdiBlockList = crdiBlockRepository.findByEmail(email);
+
 		List<CrdiRes> crdiRes = new ArrayList<>();
+		List<Member> memberList = new ArrayList<>();
 		List<String> imageWorkList = new ArrayList<>();
 		double reviewStart = 0;
-		if(!crdiBlockList.isEmpty()){
-			List<Member> memberList= memberRepository.findByCrdiYnAndEmailNotIn(crdiYn,crdiBlockList);
+		if (!crdiBlockList.isEmpty()){
+			memberList = memberRepository.findByCrdiYnAndEmailNotIn(crdiYn, crdiBlockList);
+		}else {
+			memberList = memberRepository.findByCrdiYn(crdiYn);
+		}
 			for(Member member : memberList){
 				CrdiRes crdi = new CrdiRes();
 
@@ -95,7 +100,6 @@ public class CrdiPageService {
 
 			}
 
-		}
 		return crdiRes;
 	}
 

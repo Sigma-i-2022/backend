@@ -21,4 +21,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmailFJ(String email);
 
     List<Member> findByCrdiYnAndEmailNotIn(String crdiYn,List<String> crdiEmail);
+
+    List<Member> findByCrdiYn(String crdiYn);
 }
