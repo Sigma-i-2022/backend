@@ -88,6 +88,7 @@ public class CrdiPageService {
 
 				imageWorkList = member.getWork().stream().map(CrdiWork::getImagePathUrl).collect(Collectors.toList());
 				reviewStart = member.getReviews().stream().mapToDouble(Review::getStar).average().orElse(0);
+				crdi.setCrdiEmail(member.getEmail());
 				crdi.setImageWorkImageList(imageWorkList);
 				crdi.setImagePathUrl(member.getMypage().getProfileImgUrl());
 				crdi.setId(member.getUserId());
