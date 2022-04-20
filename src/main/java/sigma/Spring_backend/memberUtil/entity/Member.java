@@ -107,8 +107,7 @@ public class Member {
 	}
 
 	public void removeWork(CrdiWork crdiWork) {
-		work.remove(crdiWork);
-		crdiWork.setMember(null);
+		crdiWork.setActivateYn("N");
 	}
 
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY)

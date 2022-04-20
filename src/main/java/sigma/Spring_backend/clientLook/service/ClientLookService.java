@@ -40,7 +40,7 @@ public class ClientLookService {
 		if (!verify) throw new BussinessException("룩 페이지에 필요한 정보가 없습니다.");
 
 		// 2. AWS 이미지 업로드 후 이미지 경로 받기
-		String imagePathUrl = imageService.requestImageUrl(uuid);;
+		String imagePathUrl = imageService.requestImageUrl(uuid);
 
 		// 3. 엔티티 생성 후 DB 저장
 		try {

@@ -21,6 +21,9 @@ public class CrdiWorkReq {
     private String topInfo;
     private String bottomInfo;
     private String shoeInfo;
+    private String keyword1;
+    private String keyword2;
+    private String keyword3;
 
     public CrdiWork toEntity(String imagePathUrl){
         return CrdiWork.builder()
@@ -31,6 +34,10 @@ public class CrdiWorkReq {
                 .topInfo(this.topInfo)
                 .bottomInfo(this.bottomInfo)
                 .shoeInfo(this.shoeInfo)
+                .keyword1(this.keyword1)
+                .keyword2(this.keyword2)
+                .keyword3(this.keyword3)
+                .activateYn("Y")
                 .updateDate(new DateConfig().getNowDate())
                 .registDate(new DateConfig().getNowDate())
                 .build();
