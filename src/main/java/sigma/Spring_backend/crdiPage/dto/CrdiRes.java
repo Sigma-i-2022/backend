@@ -6,7 +6,7 @@ import java.util.List;
 
 @Data
 public class CrdiRes {
-
+    private String crdiEmail;
     private String imagePathUrl;
     private String id;
     private String sTag1;
