@@ -33,10 +33,63 @@ public class CrdiPageController {
 	@ApiOperation(value = "코디네이터 작품 등록", notes = "코디네이터의 작품을 등록합니다.")
 	public CommonResult registCrdiWork(
 			@ApiParam(value = "코데네이터 작품 요청 객체") @ModelAttribute CrdiWorkReq crdiWorkReq,
-			@ApiParam(value = "이미지 파일") @RequestParam MultipartFile imageFile
+			@ApiParam(value = "이미지 파일") @RequestParam String uuid
 	) {
 		try {
-			crdiPageService.registCrdiWork(crdiWorkReq, imageFile);
+			crdiPageService.registCrdiWork(crdiWorkReq, uuid);
+			return responseService.getSuccessResult();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return responseService.getFailResult(
+					FAIL,
+					e.getMessage()
+			);
+		}
+	}
+
+	@PutMapping("/update")
+	@ApiOperation(value = "코디 작품 수정", notes = "코디 작품 정보를 수정합니다.")
+	public CommonResult updateCrdiWork(
+			@ApiParam(value = "작품 페이지 번호") @RequestParam Long workSeq,
+			@ApiParam(value = "작품 요청 객체") @ModelAttribute CrdiWorkReq crdiWorkReq
+	){
+		try {
+			crdiPageService.updateCrdiWork(workSeq,crdiWorkReq);
+			return responseService.getSuccessResult();
+		}catch (Exception e){
+			e.printStackTrace();
+			return  responseService.getFailResult(
+					FAIL,
+					e.getMessage()
+			);
+		}
+	}
+
+	@PutMapping("/updateImg")
+	@ApiOperation(value = "코디 작품 이미지 수정", notes = "코디 작품 이미지를 수정합니다.")
+	public CommonResult updateCrdiWorkImg(
+			@ApiParam(value = "작품 페이지 번호") @RequestParam Long workSeq,
+			@ApiParam(value = "이미지 UUID") @RequestBody String uuid
+	){
+		try {
+			crdiPageService.updateCrdiWorkImg(workSeq,uuid);
+			return responseService.getSuccessResult();
+		}catch (Exception e){
+			e.printStackTrace();
+			return  responseService.getFailResult(
+					FAIL,
+					e.getMessage()
+			);
+		}
+	}
+
+	@DeleteMapping
+	@ApiOperation(value = "코디 작품 삭제", notes = "코디의 작품 삭제합니다.")
+	public CommonResult deleteCrdiWork(
+			@ApiParam(value = "작품 페이지 번호") @RequestParam Long workSeq
+	) {
+		try {
+			crdiPageService.deleteCrdiWork(workSeq);
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
 			e.printStackTrace();

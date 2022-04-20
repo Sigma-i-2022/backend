@@ -17,6 +17,9 @@ public class CrdiWorkRes {
     private String topInfo;
     private String bottomInfo;
     private String shoeInfo;
+    private String keyword1;
+    private String keyword2;
+    private String keyword3;
     private String registDate;
     private String updateDate;
 }

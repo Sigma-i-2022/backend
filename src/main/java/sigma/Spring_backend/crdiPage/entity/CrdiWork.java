@@ -45,10 +45,22 @@ public class CrdiWork {
     private String shoeInfo;
 
     @Column
+    private String keyword1;
+
+    @Column
+    private String keyword2;
+
+    @Column
+    private String keyword3;
+
+    @Column
     private String registDate;
 
     @Column
     private String updateDate;
+
+    @Column
+    private String activateYn;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "work_seq")
@@ -68,6 +80,9 @@ public class CrdiWork {
                 .topInfo(topInfo)
                 .bottomInfo(bottomInfo)
                 .shoeInfo(shoeInfo)
+                .keyword1(keyword1)
+                .keyword2(keyword2)
+                .keyword3(keyword3)
                 .registDate(registDate)
                 .updateDate(updateDate)
                 .build();
