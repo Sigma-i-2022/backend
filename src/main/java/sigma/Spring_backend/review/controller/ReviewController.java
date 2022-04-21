@@ -7,8 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.baseUtil.dto.ListResult;
+import sigma.Spring_backend.baseUtil.dto.SingleResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
+import sigma.Spring_backend.review.dto.ReplyRes;
 import sigma.Spring_backend.review.dto.ReviewReq;
 import sigma.Spring_backend.review.dto.ReviewRes;
 import sigma.Spring_backend.review.service.ReviewService;
@@ -123,6 +125,54 @@ public class ReviewController {
 			reviewService.writeReply(reviewSeq, crdiEmail, replyContent);
 			return responseService.getSuccessResult();
 		}  catch (Exception e) {
+			e.printStackTrace();
+			throw new BussinessException(e.getMessage());
+		}
+	}
+
+	@DeleteMapping("/reply")
+	@ApiOperation(value = "답글 삭제", notes = "답글을 삭제합니다.")
+	public CommonResult removeReply(
+			@ApiParam(value = "답글 번호", required = true) @RequestParam Long replySeq
+	) {
+		try {
+			reviewService.deActivateReply(replySeq);
+			return responseService.getSuccessResult();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return responseService.getFailResult(
+					-1,
+					e.getMessage()
+			);
+		}
+	}
+
+	@PutMapping("/reply")
+	@ApiOperation(value = "답글 수정", notes = "답글을 수정합니다.")
+	public CommonResult updateRelpy(
+			@ApiParam(value = "답글 번호", required = true) @RequestParam Long replySeq,
+			@ApiParam(value = "수정 내용", required = true) @RequestParam String content
+	) {
+		try {
+			reviewService.updateReply(replySeq, content);
+			return responseService.getSuccessResult();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return responseService.getFailResult(
+					-1,
+					e.getMessage()
+			);
+		}
+	}
+
+	@GetMapping("/reply")
+	@ApiOperation(value = "리뷰별 답글 조회", notes = "답글 조회를 합니다.")
+	public SingleResult<ReplyRes> getReply(
+			@ApiParam(value = "리뷰 번호", required = true) @RequestParam Long reviewSeq
+	) {
+		try {
+			return responseService.getSingleResult(reviewService.getReply(reviewSeq));
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BussinessException(e.getMessage());
 		}
