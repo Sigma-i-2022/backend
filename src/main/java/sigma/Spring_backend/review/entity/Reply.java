@@ -1,6 +1,8 @@
 package sigma.Spring_backend.review.entity;
 
 import lombok.*;
+import sigma.Spring_backend.review.dto.ReplyRes;
+import sigma.Spring_backend.review.dto.ReviewRes;
 
 import javax.persistence.*;
 
@@ -23,10 +25,22 @@ public class Reply {
     @Column
     private String crdiEmail;
 
+    @Column
+    private String activeYN;
+
     @Setter
     @OneToOne
     @JoinColumn(name="REVIEW_SEQ")
     private Review review;
+
+    public ReplyRes toDto() {
+        return ReplyRes.builder()
+                .seq(seq)
+                .replyContent(replyContent)
+                .crdiEmail(crdiEmail)
+                .reviewSeq(review.getSeq())
+                .build();
+    }
 
 
 }

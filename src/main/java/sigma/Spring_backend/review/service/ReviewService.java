@@ -5,10 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
+import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
+import sigma.Spring_backend.crdiPage.entity.CrdiWork;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 import sigma.Spring_backend.reservation.repository.ReservationRepo;
+import sigma.Spring_backend.review.dto.ReplyRes;
 import sigma.Spring_backend.review.dto.ReviewReq;
 import sigma.Spring_backend.review.dto.ReviewRes;
 import sigma.Spring_backend.review.entity.Reply;
@@ -89,6 +92,7 @@ public class ReviewService {
 		reply.setReview(review);
 		reply.setCrdiEmail(crdiEmail);
 		reply.setReplyContent(replyContent);
+		reply.setActiveYN("Y");
 		try {
 			replyRepository.save(reply);
 		} catch (Exception e) {
@@ -141,5 +145,36 @@ public class ReviewService {
 						, () -> {
 							throw new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND);
 						});
+	}
+
+	@Transactional
+	public void deActivateReply(Long replySeq) {
+		replyRepository.findById(replySeq)
+				.ifPresentOrElse(
+						R -> R.setActiveYN("N")
+						, () -> {
+							throw new BussinessException(ExMessage.REPLY_ERROR_NOT_FOUND);
+						}
+				);
+	}
+
+	@Transactional
+	public void updateReply(Long replySeq, String content) {
+		if(replySeq == null) throw new BussinessException("키 입력이 잘못되었습니다.");
+
+		replyRepository.findById(replySeq)
+				.ifPresentOrElse(
+						R -> R.setReplyContent(content)
+						, () -> {
+							throw new BussinessException(ExMessage.REPLY_ERROR_NOT_FOUND);
+						}
+				);
+	}
+
+	@Transactional
+	public ReplyRes getReply(Long reviewSeq){
+		Reply reply = replyRepository.findByReviewSeq(reviewSeq)
+				.orElseThrow(()-> new BussinessException("해당하는 답글이 없습니다."));
+		return reply.toDto();
 	}
 }
