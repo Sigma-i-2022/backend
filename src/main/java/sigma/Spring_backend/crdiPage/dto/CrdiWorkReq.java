@@ -27,6 +27,7 @@ public class CrdiWorkReq {
 
     public CrdiWork toEntity(String imagePathUrl){
         return CrdiWork.builder()
+                .email(crdiEmail)
                 .explanation(this.explanation)
                 .imagePathUrl(imagePathUrl)
                 .weight(this.weight)
