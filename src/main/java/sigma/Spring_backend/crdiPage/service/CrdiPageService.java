@@ -106,6 +106,7 @@ public class CrdiPageService {
 	public List<CrdiWorkRes> getWorks(String crdiEmail, PageRequest pageRequest) {
 		return crdiWorkRepository.findAllByEmail(crdiEmail,pageRequest)
 				.stream()
+				.filter(p -> p.getActivateYn().equals("Y"))
 				.map(CrdiWork::toDto)
 				.collect(Collectors.toList());
 	}

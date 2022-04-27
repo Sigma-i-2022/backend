@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.baseUtil.dto.ListResult;
+import sigma.Spring_backend.baseUtil.dto.SingleResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
 import sigma.Spring_backend.reservation.dto.ReservePartTimeReq;
@@ -26,6 +27,19 @@ public class ReservationController {
 	private final ReservationService reservationService;
 	private final ResponseService responseService;
 	private final int FAIL = -1;
+
+	@GetMapping
+	@ApiOperation(value = "예약 조회", notes = "SEQ를 이용하여 예약 조회")
+	public SingleResult<ReserveRes> getReserveBySeq(
+			@ApiParam(value = "예약 SEQ", required = true) @RequestParam Long seq
+	) {
+		try {
+			return responseService.getSingleResult(reservationService.getReservation(seq));
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BussinessException(e.getMessage());
+		}
+	}
 
 	@GetMapping("/common/list")
 	@ApiOperation(value = "공통 예약 목록 조회", notes = "코디/고객 별 예약 목록을 조회합니다.")

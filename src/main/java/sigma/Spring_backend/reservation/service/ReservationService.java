@@ -37,6 +37,13 @@ public class ReservationService {
 	private final PaymentRepository paymentRepository;
 
 	@Transactional(readOnly = true)
+	public ReserveRes getReservation(Long seq) {
+		return reservationRepo.findById(seq)
+				.orElseThrow(() -> new BussinessException(ExMessage.RESERVATION_ERROR_NOT_FOUND))
+				.toDto();
+	}
+
+	@Transactional(readOnly = true)
 	public List<ReserveRes> getAllReservations() {
 		return reservationRepo.findAll()
 				.stream().map(Reservation::toDto)
