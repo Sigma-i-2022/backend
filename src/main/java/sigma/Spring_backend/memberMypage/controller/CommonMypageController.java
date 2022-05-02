@@ -73,8 +73,10 @@ public class CommonMypageController {
 	@PostMapping("/crdi")
 	@ApiOperation(value = "코디네이터 마이페이지 등록", notes = "코디네이터의 마이페이지를 등록합니다.")
 	public CommonResult crdiMypageRegist(
-			@ApiParam(name = "코디마이페이지등록") @ModelAttribute CrdiMypageReq crdiMypageReq,
-			@ApiParam(name = "코디네이터 이미지 파일 UUID") @RequestParam String uuid
+			@ApiParam(value = "코디마이페이지등록", required = true)
+			@ModelAttribute CrdiMypageReq crdiMypageReq,
+			@ApiParam(value = "코디네이터 이미지 파일 UUID")
+			@RequestParam(required = false) String uuid
 	) {
 		try {
 			commonMypageServiceImpl.registCrdiMypage(crdiMypageReq, uuid);
@@ -91,7 +93,7 @@ public class CommonMypageController {
 	@PutMapping("/crdi")
 	@ApiOperation(value = "코디네이터 마이페이지 소개란 수정", notes = "코디네이터의 마이페이지 소개란을 수정합니다.")
 	public CommonResult crdiMypageUpdate(
-			@ApiParam(name = "코디마이페이지수정") @ModelAttribute CommonUpdateInfoReq updateInfoReq
+			@ApiParam(value = "코디마이페이지수정") @ModelAttribute CommonUpdateInfoReq updateInfoReq
 	) {
 		try {
 			commonMypageServiceImpl.updateCrdiMypageInfo(updateInfoReq);

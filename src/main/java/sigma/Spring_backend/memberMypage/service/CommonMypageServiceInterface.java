@@ -1,5 +1,6 @@
 package sigma.Spring_backend.memberMypage.service;
 
+import org.springframework.lang.Nullable;
 import sigma.Spring_backend.memberMypage.dto.ClientMypageRes;
 import sigma.Spring_backend.memberMypage.dto.CommonUpdateInfoReq;
 import sigma.Spring_backend.memberMypage.dto.CrdiMypageReq;
@@ -24,7 +25,7 @@ public interface CommonMypageServiceInterface {
 	/*
 	코디네이터 마이페이지 등록
 	 */
-	void registCrdiMypage(CrdiMypageReq crdiProfileReq, String uuid);
+	void registCrdiMypage(CrdiMypageReq crdiProfileReq, @Nullable String uuid);
 
 	/*
 	코디네이터 마이페이지 소개란 수정

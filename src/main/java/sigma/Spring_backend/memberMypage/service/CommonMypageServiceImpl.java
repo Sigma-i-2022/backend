@@ -2,6 +2,7 @@ package sigma.Spring_backend.memberMypage.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sigma.Spring_backend.awsUtil.service.AwsService;
@@ -60,9 +61,8 @@ public class CommonMypageServiceImpl implements CommonMypageServiceInterface {
 
 	@Override
 	@Transactional
-	public void registCrdiMypage(CrdiMypageReq crdiProfileReq, String uuid) {
+	public void registCrdiMypage(CrdiMypageReq crdiProfileReq, @Nullable String uuid) {
 		try {
-			String url = imageService.requestImageUrl(uuid);
 			CommonMypage mypage = memberRepository.findByEmailFJ(crdiProfileReq.getEmail())
 					.filter(c -> c.getCrdiYn().equals("Y"))
 					.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND))
@@ -71,10 +71,12 @@ public class CommonMypageServiceImpl implements CommonMypageServiceInterface {
 			mypage.setUserId(crdiProfileReq.getUserId());
 			mypage.setIntro(crdiProfileReq.getIntro());
 			mypage.setExpertYN(crdiProfileReq.getExpertYN());
-			mypage.setSTag1(crdiProfileReq.getSTag1());
-			mypage.setSTag2(crdiProfileReq.getSTag2());
-			mypage.setSTag3(crdiProfileReq.getSTag3());
-			mypage.setProfileImgUrl(url);
+			mypage.setSTag1(crdiProfileReq.getTag1());
+			mypage.setSTag2(crdiProfileReq.getTag2());
+			mypage.setSTag3(crdiProfileReq.getTag3());
+			if (uuid != null) {
+				mypage.setProfileImgUrl(imageService.requestImageUrl(uuid));
+			}
 		} catch (Exception e) {
 			throw new BussinessException(ExMessage.MEMBER_MYPAGE_ERROR_DB);
 		}
