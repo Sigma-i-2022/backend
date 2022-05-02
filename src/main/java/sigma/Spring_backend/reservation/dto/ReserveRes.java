@@ -16,7 +16,9 @@ import java.time.LocalDateTime;
 public class ReserveRes {
 	private Long seq;
 	private String crdiId;
+	private String crdiEmail;
 	private String clientId;
+	private String clientEmail;
 	private CrdiServiceType serviceType;
 	private CrdiServiceSystem serviceSystem;
 	private Integer price;
