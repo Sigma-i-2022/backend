@@ -13,7 +13,6 @@ import sigma.Spring_backend.baseUtil.dto.ListResult;
 import sigma.Spring_backend.baseUtil.dto.SingleResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
-import sigma.Spring_backend.reservation.dto.ReservePartTimeReq;
 import sigma.Spring_backend.reservation.dto.ReserveReq;
 import sigma.Spring_backend.reservation.dto.ReserveRes;
 import sigma.Spring_backend.reservation.service.ReservationService;
@@ -58,7 +57,7 @@ public class ReservationController {
 	}
 
 	@PostMapping("/client")
-	@ApiOperation(value = "고객 코디네이터예약 신청", notes = "고객이 코디네이터에게 코디 예약을 합니다.")
+	@ApiOperation(value = "고객 코디네이터 예약 신청", notes = "고객이 코디네이터에게 코디 예약을 합니다.")
 	public CommonResult reserveCrdi(
 			@ApiParam(value = "코디 예약 신청", required = true) @RequestBody ReserveReq reserveReq
 	) {
@@ -107,7 +106,7 @@ public class ReservationController {
 	public CommonResult confirmResvByCrdi(
 			@ApiParam(value = "코디 이메일", required = true) @RequestParam String crdiEmail,
 			@ApiParam(value = "예약 번호", required = true) @RequestParam Long reservationSeq,
-			@ApiParam(value = "확정 시간", required = true) @RequestBody ReservePartTimeReq resvTime
+			@ApiParam(value = "확정 시간 (HH:mm)", required = true) @RequestParam String resvTime
 	) {
 		try {
 			reservationService.confirmReservation(crdiEmail, reservationSeq, resvTime);

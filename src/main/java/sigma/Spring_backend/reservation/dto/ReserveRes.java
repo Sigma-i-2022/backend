@@ -1,13 +1,11 @@
 package sigma.Spring_backend.reservation.dto;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -23,7 +21,7 @@ public class ReserveRes {
 	private CrdiServiceSystem serviceSystem;
 	private Integer price;
 	private String reserveDay;
-	private ReservePartTimeListReq reserveTimes;
+	private List<String> reserveTimes;
 	private String confirmedReserveTime;
 	private String requireText;
 	private String payYn;

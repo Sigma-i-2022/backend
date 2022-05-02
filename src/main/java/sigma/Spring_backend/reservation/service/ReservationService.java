@@ -12,7 +12,6 @@ import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 import sigma.Spring_backend.payment.entity.Payment;
 import sigma.Spring_backend.payment.repository.PaymentRepository;
-import sigma.Spring_backend.reservation.dto.ReservePartTimeReq;
 import sigma.Spring_backend.reservation.dto.ReserveReq;
 import sigma.Spring_backend.reservation.dto.ReserveRes;
 import sigma.Spring_backend.reservation.entity.MemberReservation;
@@ -20,9 +19,6 @@ import sigma.Spring_backend.reservation.entity.Reservation;
 import sigma.Spring_backend.reservation.repository.MemberReservationRepo;
 import sigma.Spring_backend.reservation.repository.ReservationRepo;
 
-import java.awt.print.Pageable;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -162,7 +158,7 @@ public class ReservationService {
 	}
 
 	@Transactional
-	public void confirmReservation(String crdiEmail, Long reservationSeq, ReservePartTimeReq resvTime) {
+	public void confirmReservation(String crdiEmail, Long reservationSeq, String resvTime) {
 
 		Payment payment = paymentRepository.findByReservationSeq(reservationSeq)
 				.orElseThrow(() -> new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND));
@@ -185,8 +181,17 @@ public class ReservationService {
 							if (R.getPayYn().equals("N")) {
 								throw new BussinessException(ExMessage.RESERVATION_ERROR_NOT_PAY);
 							}
-							R.setConfirmResvYn("Y");
-							R.setConfirmedReserveTime(resvTime.toString());
+							String[] allReservationTime = R.getReserveTimes().split(",");
+							boolean isMatch = false;
+							for (String time : allReservationTime) {
+								if (time.equals(resvTime)) {
+									isMatch = true;
+									R.setConfirmResvYn("Y");
+									R.setConfirmedReserveTime(resvTime);
+								}
+							}
+							if (!isMatch)
+								throw new BussinessException(ExMessage.RESERVATION_ERROR_NOT_FOUND);
 						}, () -> {
 							throw new BussinessException(ExMessage.RESERVATION_ERROR_NOT_FOUND);
 						}

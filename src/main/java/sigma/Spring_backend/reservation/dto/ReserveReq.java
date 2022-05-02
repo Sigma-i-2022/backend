@@ -9,7 +9,7 @@ import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.reservation.entity.Reservation;
 
 import javax.validation.constraints.NotBlank;
-import java.util.Comparator;
+import java.util.List;
 
 @Data
 @Builder
@@ -50,11 +50,14 @@ public class ReserveReq {
 
 	@NotBlank
 	@ApiModelProperty(value = "예약 요청 시간대")
-	private ReservePartTimeListReq reserveTimes;
+	private List<String> reserveTimes;
 
 	public Reservation toEntity() {
 		String[] date = reserveDay.split("-");
-		reserveTimes.getReservePartTimeReqs().sort(Comparator.comparing(ReservePartTimeReq::getStartTime));
+		StringBuilder reservationTimes = new StringBuilder();
+		for (String reserveTime : reserveTimes) {
+			reservationTimes.append(reserveTime).append(",");
+		}
 
 		return Reservation.builder()
 				.crdiId(crdiId)
@@ -65,8 +68,8 @@ public class ReserveReq {
 				.serviceType(serviceType)
 				.serviceSystem(serviceSystem)
 				.requireText(requireText)
-				.reserveTimes(reserveTimes.toString())
-				.confirmedReserveTime(reserveTimes.getReservePartTimeReqs().get(0).toString())
+				.reserveTimes(reservationTimes.toString())
+				.confirmedReserveTime(reserveTimes.get(0))
 				.activateYnOfClient("Y")
 				.activateYnOfCrdi("Y")
 				.payYn("N")
