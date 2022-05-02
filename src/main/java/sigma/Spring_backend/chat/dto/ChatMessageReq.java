@@ -1,5 +1,6 @@
 package sigma.Spring_backend.chat.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,15 +17,15 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatMessageReq {
-	@NotBlank
+	@ApiModelProperty(required = true)
 	private Long chatRoomId;
-	@NotBlank
+	@ApiModelProperty(required = true)
 	private MessageType chatType;
-	@NotBlank
+	@ApiModelProperty(required = true)
 	private String senderEmail;
-	@NotBlank
+	@ApiModelProperty(required = true)
 	private String senderId;
-	@NotBlank
+	@ApiModelProperty(required = true)
 	@Size(min = 1, max = 1000)
 	private String message;
 

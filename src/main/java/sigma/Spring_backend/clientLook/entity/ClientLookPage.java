@@ -30,16 +30,13 @@ public class ClientLookPage {
 	private String imagePathUrl;
 
 	@Column
-	@Enumerated(EnumType.STRING)
-	private Keyword keyword1;
+	private String keyword1;
 
 	@Column
-	@Enumerated(EnumType.STRING)
-	private Keyword keyword2;
+	private String keyword2;
 
 	@Column
-	@Enumerated(EnumType.STRING)
-	private Keyword keyword3;
+	private String keyword3;
 
 	@Column
 	private String topInfo;

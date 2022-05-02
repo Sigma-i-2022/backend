@@ -1,5 +1,6 @@
 package sigma.Spring_backend.chat.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,9 @@ import sigma.Spring_backend.memberUtil.entity.Member;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberChatRoomConnDto {
+	@ApiModelProperty(required = true)
 	private Member member;
+	@ApiModelProperty(required = true)
 	private ChatRoom chatRoom;
 
 	public MemberChatRoomConnection toEntity() {

@@ -23,16 +23,13 @@ public class ClientLookPageReq {
 	private String explanation = "";
 
 	@ApiModelProperty(value = "키워드 1", required = true)
-	@Enumerated(EnumType.STRING)
-	private Keyword keyword1;
+	private String keyword1;
 
 	@ApiModelProperty(value = "키워드 2", required = true)
-	@Enumerated(EnumType.STRING)
-	private Keyword keyword2;
+	private String keyword2;
 
 	@ApiModelProperty(value = "키워드 3", required = true)
-	@Enumerated(EnumType.STRING)
-	private Keyword keyword3;
+	private String keyword3;
 
 	@ApiModelProperty(value = "상의 설명", required = true)
 	private String topInfo;

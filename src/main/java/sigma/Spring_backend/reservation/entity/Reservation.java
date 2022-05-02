@@ -1,12 +1,13 @@
 package sigma.Spring_backend.reservation.entity;
 
 import lombok.*;
-import sigma.Spring_backend.reservation.dto.*;
+import sigma.Spring_backend.reservation.dto.CrdiServiceSystem;
+import sigma.Spring_backend.reservation.dto.CrdiServiceType;
+import sigma.Spring_backend.reservation.dto.ReserveRes;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +43,7 @@ public class Reservation {
 
 	@Setter
 	@Column(nullable = false)
-	private String confirmedReserveTime; 		// HH:mm - HH:mm
+	private String confirmedReserveTime; 		// HH:mm
 
 	@Enumerated(EnumType.STRING)
 	private CrdiServiceType serviceType;		// 상품 타입
@@ -95,21 +96,22 @@ public class Reservation {
 	}
 
 	public ReserveRes toDto() {
-		List<ReservePartTimeReq> collect =
-				Arrays.stream(reserveTimes.split(","))
-				.map(ReservePartTimeReq::new)
+
+		List<String> collect = Arrays.stream(reserveTimes.split(","))
 				.collect(Collectors.toList());
 
 		return ReserveRes.builder()
 				.seq(seq)
 				.crdiId(crdiId)
+				.crdiEmail(crdiEmail)
 				.clientId(clientId)
+				.clientEmail(clientEmail)
 				.serviceType(serviceType)
 				.serviceSystem(serviceSystem)
 				.reserveDay(reserveDay)
 				.price(3000)
 				.reserveDay(reserveDay)
-				.reserveTimes(new ReservePartTimeListReq(collect))
+				.reserveTimes(collect)
 				.confirmedReserveTime(confirmedReserveTime)
 				.requireText(requireText)
 				.payYn(payYn)

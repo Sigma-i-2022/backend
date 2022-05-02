@@ -1,5 +1,6 @@
 package sigma.Spring_backend.memberUtil.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import sigma.Spring_backend.baseUtil.config.DateConfig;
 import sigma.Spring_backend.memberUtil.entity.Member;
@@ -9,9 +10,13 @@ import sigma.Spring_backend.memberUtil.entity.Member;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberRequestDto {
+    @ApiModelProperty(required = true)
     private String userId;
+    @ApiModelProperty(required = true)
     private String email;
+    @ApiModelProperty(required = true)
     private String password;
+    @ApiModelProperty(required = true)
     private String signupType;
 
     public Member toEntity() {

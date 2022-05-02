@@ -25,16 +25,13 @@ public class ClientLookPageRes {
 	private String imagePathUrl;
 
 	@ApiModelProperty("키워드 1")
-	@Enumerated(EnumType.STRING)
-	private Keyword keyword1;
+	private String keyword1;
 
 	@ApiModelProperty("키워드 2")
-	@Enumerated(EnumType.STRING)
-	private Keyword keyword2;
+	private String keyword2;
 
 	@ApiModelProperty("키워드 3")
-	@Enumerated(EnumType.STRING)
-	private Keyword keyword3;
+	private String keyword3;
 
 	@ApiModelProperty("상의 설명")
 	private String topInfo;

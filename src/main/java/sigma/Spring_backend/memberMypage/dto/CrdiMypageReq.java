@@ -1,31 +1,28 @@
 package sigma.Spring_backend.memberMypage.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import sigma.Spring_backend.memberMypage.entity.CommonMypage;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CrdiMypageReq {
-	@NotBlank
+	@ApiModelProperty(required = true)
 	private String email;
-	@NotBlank
+	@ApiModelProperty(required = true)
 	private String userId;
-	@Size(max = 500, message = "500자 이하로 작성하세요.")
+	@ApiModelProperty(required = true)
 	private String intro;
-	@NotBlank
+	@ApiModelProperty(required = true)
 	private String expertYN;
-	@NotBlank
-	private String sTag1;
-	private String sTag2;
-	private String sTag3;
+	private String tag1;
+	private String tag2;
+	private String tag3;
 
 	public CommonMypage toEntity(String profileImgUrl) {
 		return CommonMypage.builder()
@@ -33,9 +30,9 @@ public class CrdiMypageReq {
 				.userId(userId)
 				.intro(intro)
 				.expertYN(expertYN)
-				.sTag1(sTag1)
-				.sTag2(sTag2)
-				.sTag3(sTag3)
+				.sTag1(tag1)
+				.sTag2(tag2)
+				.sTag3(tag3)
 				.profileImgUrl(profileImgUrl)
 				.build();
 	}
