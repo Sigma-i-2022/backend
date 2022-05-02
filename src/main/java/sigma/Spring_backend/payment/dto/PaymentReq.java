@@ -15,17 +15,17 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaymentReq {
-	@ApiModelProperty("예약번호")
+	@ApiModelProperty(value = "예약번호", required = true)
 	private Long reservationSeq;
-	@ApiModelProperty("지불방법")
+	@ApiModelProperty(value = "지불방법", required = true)
 	private PAY_TYPE payType;
-	@ApiModelProperty("지불금액")
+	@ApiModelProperty(value = "지불금액", required = true)
 	private Long amount;
-	@ApiModelProperty("주문 상품 이름")
+	@ApiModelProperty(value = "주문 상품 이름", required = true)
 	private ORDER_NAME_TYPE orderName;
-	@ApiModelProperty("구매자 이메일")
+	@ApiModelProperty(value = "구매자 이메일", required = true)
 	private String customerEmail;
-	@ApiModelProperty("구매자 이름")
+	@ApiModelProperty(value = "구매자 이름", required = true)
 	private String customerName;
 
 	public Payment toEntity() {

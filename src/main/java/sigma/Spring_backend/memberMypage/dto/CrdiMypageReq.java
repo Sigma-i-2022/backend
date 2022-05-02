@@ -1,5 +1,6 @@
 package sigma.Spring_backend.memberMypage.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,15 +15,16 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CrdiMypageReq {
-	@NotBlank
+	@ApiModelProperty(required = true)
 	private String email;
-	@NotBlank
+	@ApiModelProperty(required = true)
 	private String userId;
+	@ApiModelProperty(required = true)
 	@Size(max = 500, message = "500자 이하로 작성하세요.")
 	private String intro;
-	@NotBlank
+	@ApiModelProperty(required = true)
 	private String expertYN;
-	@NotBlank
+	@ApiModelProperty(required = true)
 	private String sTag1;
 	private String sTag2;
 	private String sTag3;

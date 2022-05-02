@@ -1,5 +1,6 @@
 package sigma.Spring_backend.crdiPage.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,7 @@ import sigma.Spring_backend.crdiPage.entity.CrdiWork;
 @AllArgsConstructor
 public class CrdiWorkReq {
 
+    @ApiModelProperty(required = true)
     private String crdiEmail;
 
     @Builder.Default
