@@ -128,7 +128,10 @@ public class CrdiPageService {
 			for(Member member : memberList){
 				CrdiRes crdi = new CrdiRes();
 
-				imageWorkList = member.getWork().stream().map(CrdiWork::getImagePathUrl).collect(Collectors.toList());
+				imageWorkList = member.getWork().stream()
+						.filter(W -> W.getActivateYn().equals("Y"))
+						.map(CrdiWork::getImagePathUrl)
+						.collect(Collectors.toList());
 				reviewStart = member.getReviews().stream().mapToDouble(Review::getStar).average().orElse(0);
 				crdi.setCrdiEmail(member.getEmail());
 				crdi.setImageWorkImageList(imageWorkList);
