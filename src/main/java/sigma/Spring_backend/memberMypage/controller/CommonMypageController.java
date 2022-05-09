@@ -30,7 +30,7 @@ public class CommonMypageController {
 	@GetMapping("/client")
 	@ApiOperation(value = "고객 마이페이지 조회", notes = "고객의 마이페이지를 가져옵니다.")
 	public SingleResult<ClientMypageRes> memberMypageGet(
-			@ApiParam(value = "고객 번호", required = true) @RequestParam String email
+			@ApiParam(value = "고객 이메일", required = true) @RequestParam String email
 	) {
 		try {
 			return responseService.getSingleResult(commonMypageServiceImpl.getClientMypage(email));
