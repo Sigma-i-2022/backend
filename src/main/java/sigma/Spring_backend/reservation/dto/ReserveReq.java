@@ -74,7 +74,7 @@ public class ReserveReq {
 				.activateYnOfCrdi("Y")
 				// TODO : 임시 결제 관련 Y 처리
 				.payYn("Y") // N : 지불 여부
-				.confirmPayYn("Y") // N : 구매(지불) 확정 여부
+				.confirmPayYn("N")
 				.confirmResvYn("N")
 				.cancelYn("N")
 				.reviewedYn("N")
