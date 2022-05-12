@@ -72,8 +72,7 @@ public class ReserveReq {
 				.confirmedReserveTime(reserveTimes.get(0))
 				.activateYnOfClient("Y")
 				.activateYnOfCrdi("Y")
-				// TODO : 임시 결제 관련 Y 처리
-				.payYn("Y") // N : 지불 여부
+				.payYn("N")
 				.confirmPayYn("N")
 				.confirmResvYn("N")
 				.cancelYn("N")
