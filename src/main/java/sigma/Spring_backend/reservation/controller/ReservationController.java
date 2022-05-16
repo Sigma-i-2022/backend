@@ -57,21 +57,14 @@ public class ReservationController {
 	}
 
 	@PostMapping("/client")
-	@ApiOperation(value = "고객 코디네이터 예약 신청", notes = "고객이 코디네이터에게 코디 예약을 합니다.")
-	public CommonResult reserveCrdi(
+	@ApiOperation(value = "고객 코디네이터 예약 신청", notes = "고객이 코디네이터에게 코디 예약을 후 예약 시퀀스를 반환합니다.")
+	public SingleResult<Long> reserveCrdi(
 			@ApiParam(value = "코디 예약 신청", required = true) @RequestBody ReserveReq reserveReq
 	) {
 		try {
-			boolean success = reservationService.reserveCrdi(reserveReq);
-
-			if (success) {
-				return responseService.getSuccessResult();
-			} else {
-				return responseService.getFailResult(
-						-1,
-						ExMessage.RESERVATION_ERROR.getMessage()
-				);
-			}
+			return responseService.getSingleResult(
+					reservationService.reserveCrdi(reserveReq)
+			);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BussinessException(e.getMessage());

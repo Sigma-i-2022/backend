@@ -89,10 +89,10 @@ public class ReviewService {
 				.orElseThrow(() -> new BussinessException(ExMessage.REVIEW_ERROR_NOT_FOUND));
 		Reply reply = new Reply();
 
-		reply.setReview(review);
 		reply.setCrdiEmail(crdiEmail);
 		reply.setReplyContent(replyContent);
 		reply.setActiveYN("Y");
+		review.setReply(reply);
 		try {
 			replyRepository.save(reply);
 		} catch (Exception e) {

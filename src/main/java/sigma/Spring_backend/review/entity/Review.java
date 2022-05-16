@@ -72,6 +72,16 @@ public class Review {
 	@Column
 	private String reportContent;
 
+	@OneToOne
+	@Builder.Default
+	@JoinColumn(name="REPLY_SEQ")
+	private Reply reply = null;
+
+	public void setReply(Reply reply) {
+		this.reply = reply;
+		reply.setReview(this);
+	}
+
 	@Setter
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "COORDINATOR_SEQ")
@@ -93,6 +103,7 @@ public class Review {
 				.reportedYn(reportedYn)
 				.reportReason(reportReason)
 				.reportContent(reportContent)
+				.replyRes(reply == null ? null : reply.toDto())
 				.build();
 	}
 }

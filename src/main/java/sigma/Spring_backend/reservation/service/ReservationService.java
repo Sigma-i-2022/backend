@@ -47,7 +47,7 @@ public class ReservationService {
 	}
 
 	@Transactional
-	public boolean reserveCrdi(ReserveReq reserveReq) {
+	public Long reserveCrdi(ReserveReq reserveReq) {
 		boolean verify = verifyReserveReq(reserveReq);
 		if (!verify) throw new BussinessException(ExMessage.RESERVATION_ERROR_FORMAT);
 
@@ -76,11 +76,10 @@ public class ReservationService {
 			reservation.addMemberReservation(clientReservation);
 			reservation.addMemberReservation(crdiReservation);
 
-			reservationRepo.save(reservation);
+			return reservationRepo.save(reservation).getSeq();
 		} catch (Exception e) {
 			throw new BussinessException(ExMessage.DB_ERROR_SAVE);
 		}
-		return true;
 	}
 
 	private boolean verifyReserveReq(ReserveReq reserveReq) {

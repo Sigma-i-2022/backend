@@ -29,8 +29,7 @@ public class Reply {
     private String activeYN;
 
     @Setter
-    @OneToOne
-    @JoinColumn(name="REVIEW_SEQ")
+    @OneToOne(mappedBy = "reply")
     private Review review;
 
     public ReplyRes toDto() {

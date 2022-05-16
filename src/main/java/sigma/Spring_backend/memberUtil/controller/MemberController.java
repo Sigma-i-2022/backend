@@ -43,6 +43,14 @@ public class MemberController {
         return responseService.getSingleResult(byEmail);
     }
 
+    @ApiOperation(value = "아이디 조회", notes = "이메일로 회원의 아이디를 조회합니다.")
+    @GetMapping("/id")
+    public SingleResult<String> findMemberId(
+            @ApiParam(value = "회원 이메일", required = true) @RequestParam String email
+    ) {
+        return responseService.getSingleResult(memberService.findMemberId(email));
+    }
+
     @ApiOperation(value = "모든 회원 조회", notes = "모든 회원을 조회합니다.")
     @GetMapping("/all")
     public ListResult<MemberResponseDto> findAllMember() {

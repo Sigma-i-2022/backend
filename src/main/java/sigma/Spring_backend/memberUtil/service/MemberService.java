@@ -66,4 +66,11 @@ public class MemberService {
         memberRepository.findByEmailFJ(email).ifPresent(M -> M.setCrdiYn("Y"));
         return true;
     }
+
+    @Transactional(readOnly = true)
+    public String findMemberId(String email) {
+        return memberRepository.findByEmailFJ(email)
+                .orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND))
+                .getUserId();
+    }
 }
