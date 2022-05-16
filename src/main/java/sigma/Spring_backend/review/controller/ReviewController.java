@@ -25,7 +25,7 @@ public class ReviewController {
 	private final ResponseService responseService;
 
 	@GetMapping
-	@ApiOperation(value = "코디네이터 별 리뷰 조회", notes = "코디네이터에게 달린 모든 리뷰를 가져옵니다.")
+	@ApiOperation(value = "코디네이터 별 리뷰 & 댓글 조회", notes = "코디네이터에게 달린 모든 리뷰와 댓글을 가져옵니다.")
 	public ListResult<ReviewRes> getAllReviews(
 			@ApiParam(value = "코디네이터 이메일", required = true) @RequestParam String email
 	) {

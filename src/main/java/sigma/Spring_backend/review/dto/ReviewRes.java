@@ -24,4 +24,5 @@ public class ReviewRes {
 	private String reportReason;
 	private String reportContent;
 	private String registDate;
+	private ReplyRes replyRes;
 }
