@@ -104,7 +104,7 @@ public class Review {
 				.reportedYn(reportedYn)
 				.reportReason(reportReason)
 				.reportContent(reportContent)
-				.replyRes(reply == null ? null : reply.toDto())
+				.replyRes((reply == null || reply.getActiveYN().equals("N")) ? null : reply.toDto())
 				.build();
 	}
 }
