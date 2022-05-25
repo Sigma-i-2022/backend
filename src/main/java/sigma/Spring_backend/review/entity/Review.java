@@ -88,11 +88,12 @@ public class Review {
 	private Member coordinator;
 
 
-	public ReviewRes toDto() {
+	public ReviewRes toDto(String reviewerProfileImageUrl) {
 		return ReviewRes.builder()
 				.seq(seq)
 				.reservationSeq(reservationSeq)
 				.reviewerId(reviewerId)
+				.reviewerProfileImagerUrl(reviewerProfileImageUrl)
 				.coordinatorId(coordinatorId)
 				.star(star)
 				.sex(sex.name())

@@ -57,7 +57,7 @@ public class ReviewService {
 						R -> {
 							if (R.getConfirmPayYn().equals("N")) {
 								throw new BussinessException("구매확정이 되지 않았습니다.");
-							}else if (R.getReviewedYn().equals("Y")) {
+							} else if (R.getReviewedYn().equals("Y")) {
 								throw new BussinessException(ExMessage.REVIEW_ERROR_ALREADY_REVIEWED);
 							} else R.setReviewedYn("Y");
 						}
@@ -108,7 +108,12 @@ public class ReviewService {
 
 		return crdi.getReviews()
 				.stream().filter(R -> R.getActivateYn().equals("Y"))
-				.map(Review::toDto)
+				.map(R ->
+						R.toDto(memberRepository.findByEmailFJ(R.getReviewerEmail())
+								.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND))
+								.getMypage()
+								.getProfileImgUrl())
+				)
 				.collect(Collectors.toList());
 	}
 
@@ -116,7 +121,12 @@ public class ReviewService {
 	public List<ReviewRes> getAllReportedReviews() {
 		return reviewRepo.findAll()
 				.stream().filter(R -> R.getReportedYn().equals("Y"))
-				.map(Review::toDto)
+				.map(R -> R.toDto(
+						memberRepository.findByEmailFJ(R.getReviewerEmail())
+								.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND))
+								.getMypage()
+								.getProfileImgUrl())
+				)
 				.collect(Collectors.toList());
 	}
 
@@ -160,7 +170,7 @@ public class ReviewService {
 
 	@Transactional
 	public void updateReply(Long replySeq, String content) {
-		if(replySeq == null) throw new BussinessException("키 입력이 잘못되었습니다.");
+		if (replySeq == null) throw new BussinessException("키 입력이 잘못되었습니다.");
 
 		replyRepository.findById(replySeq)
 				.ifPresentOrElse(
@@ -172,9 +182,9 @@ public class ReviewService {
 	}
 
 	@Transactional
-	public ReplyRes getReply(Long reviewSeq){
+	public ReplyRes getReply(Long reviewSeq) {
 		Reply reply = replyRepository.findByReviewSeq(reviewSeq)
-				.orElseThrow(()-> new BussinessException("해당하는 답글이 없습니다."));
+				.orElseThrow(() -> new BussinessException("해당하는 답글이 없습니다."));
 		return reply.toDto();
 	}
 }
