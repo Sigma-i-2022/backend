@@ -14,6 +14,7 @@ public class ReviewRes {
 	private Long seq;
 	private Long reservationSeq;
 	private String reviewerId;
+	private String reviewerProfileImagerUrl;
 	private String coordinatorId;
 	private Integer star;
 	private String sex;
