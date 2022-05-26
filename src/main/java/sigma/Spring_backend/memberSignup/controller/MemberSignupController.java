@@ -120,7 +120,6 @@ public class MemberSignupController {
 	@ApiOperation(value = "코디 자격 신청", notes = "코디네이터 신청")
 	public  CommonResult crdiJoin(
 			@ApiParam(value = "코디 이메일", required = true) @RequestParam(name = "email") String email,
-			@ApiParam(value = "코디 아이디", required = true) @RequestParam(name = "userId") String userId,
 			@ApiParam(value = "코디 경력사항", required = true) @RequestParam(name = "career") String career,
 			@ApiParam(value = "코디 URL1") @RequestParam(name = "url1", required = false) String url1,
 			@ApiParam(value = "코디 URL2") @RequestParam(name = "url2", required = false) String url2,
@@ -130,7 +129,6 @@ public class MemberSignupController {
 	) {
 		Map<String, String> crdiInfoMap = new HashMap<>();
 		crdiInfoMap.put("email", email);
-		crdiInfoMap.put("userId", userId);
 		crdiInfoMap.put("career", career);
 		crdiInfoMap.put("url1",url1);
 		crdiInfoMap.put("url2",url2);
