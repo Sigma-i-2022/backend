@@ -17,9 +17,6 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 public class MemberReportReq {
 	@NotBlank
-	@ApiModelProperty(value = "회원 번호")
-	private Long memberSeq;
-	@NotBlank
 	@ApiModelProperty(value = "회원 이메일")
 	private String memberEmail;
 	@NotBlank

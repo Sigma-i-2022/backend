@@ -143,7 +143,6 @@ public class MemberSignupService {
 	public void crdiJoin(Map<String, String> crdiInfoMap) {
 
 		String email = crdiInfoMap.get("email");
-		String userId = crdiInfoMap.get("userId");
 		String career = crdiInfoMap.get("career");
 		String url1 = crdiInfoMap.get("url1");
 		String url2 = crdiInfoMap.get("url2");
@@ -159,6 +158,10 @@ public class MemberSignupService {
 		if (career == null || "".equals(career)) {
 			throw new BussinessException("경력사항을 입력해주세요.");
 		}
+
+		String userId = memberRepository.findByEmailFJ(email)
+				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND))
+				.getUserId();
 
 		try {
 

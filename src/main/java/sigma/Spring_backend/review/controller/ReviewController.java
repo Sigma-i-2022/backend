@@ -102,8 +102,8 @@ public class ReviewController {
 	@ApiOperation(value = "리뷰 신고", notes = "작성된 리뷰를 신고합니다.\n(현재 구현은 리뷰를 신고하여도 삭제하지는 않고 신고 리포트만 쌓임)")
 	public CommonResult reportReview(
 			@ApiParam(value = "리뷰 번호", required = true) @RequestParam Long reviewSeq,
-			@ApiParam(value = "리뷰 신고 사유") @RequestParam String reason,
-			@ApiParam(value = "리뷰 신고 내용") @RequestParam String content
+			@ApiParam(value = "리뷰 신고 사유", required = true) @RequestParam String reason,
+			@ApiParam(value = "리뷰 신고 내용", required = true) @RequestParam String content
 	) {
 		try {
 			reviewService.reportReview(reviewSeq, reason, content);
@@ -115,11 +115,11 @@ public class ReviewController {
 	}
 
 	@PostMapping("/reply")
-	@ApiOperation(value = "리뷰 답글", notes = "리뷰에 대한 답글 작성")
+	@ApiOperation(value = "답글", notes = "리뷰에 대한 답글 작성")
 	public CommonResult writeReply(
 			@ApiParam(value = "리뷰 번호", required = true) @RequestParam Long reviewSeq,
-			@ApiParam(value = "코디이메일") @RequestParam String crdiEmail,
-			@ApiParam(value = "답글내용") @RequestParam String replyContent
+			@ApiParam(value = "코디이메일", required = true) @RequestParam String crdiEmail,
+			@ApiParam(value = "답글 내용", required = true) @RequestParam String replyContent
 	) {
 		try {
 			reviewService.writeReply(reviewSeq, crdiEmail, replyContent);
