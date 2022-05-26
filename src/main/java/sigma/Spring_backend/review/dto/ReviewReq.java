@@ -20,14 +20,8 @@ public class ReviewReq {
 	@ApiModelProperty(value = "예약 번호")
 	private Long reservationSeq;
 	@NotBlank
-	@ApiModelProperty(value = "작성자 ID")
-	private String reviewerId;
-	@NotBlank
 	@ApiModelProperty(value = "작성자 이메일")
 	private String reviewerEmail;
-	@NotBlank
-	@ApiModelProperty(value = "코디네이터 ID")
-	private String coordinatorId;
 	@NotBlank
 	@ApiModelProperty(value = "코디네이터 이메일")
 	private String coordinatorEmail;
@@ -45,7 +39,7 @@ public class ReviewReq {
 	@ApiModelProperty(value = "내용")
 	private String content;
 
-	public Review toEntity() {
+	public Review toEntity(String reviewerId, String coordinatorId) {
 		return Review.builder()
 				.reservationSeq(reservationSeq)
 				.reviewerId(reviewerId)

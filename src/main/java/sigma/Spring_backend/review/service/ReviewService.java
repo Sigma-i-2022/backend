@@ -39,9 +39,11 @@ public class ReviewService {
 
 		Member coordinator = memberRepository.findByEmailFJ(reviewReq.getCoordinatorEmail())
 				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
+		Member reviewer = memberRepository.findByEmailFJ(reviewReq.getReviewerEmail())
+				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 
 		try {
-			coordinator.addReview(reviewReq.toEntity());
+			coordinator.addReview(reviewReq.toEntity(reviewer.getUserId(), coordinator.getUserId()));
 		} catch (Exception e) {
 			throw new BussinessException(ExMessage.DB_ERROR_SAVE);
 		}

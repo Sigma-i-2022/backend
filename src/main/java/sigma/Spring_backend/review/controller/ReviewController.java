@@ -115,11 +115,11 @@ public class ReviewController {
 	}
 
 	@PostMapping("/reply")
-	@ApiOperation(value = "리뷰 답글", notes = "리뷰에 대한 답글 작성")
+	@ApiOperation(value = "답글", notes = "리뷰에 대한 답글 작성")
 	public CommonResult writeReply(
 			@ApiParam(value = "리뷰 번호", required = true) @RequestParam Long reviewSeq,
 			@ApiParam(value = "코디이메일") @RequestParam String crdiEmail,
-			@ApiParam(value = "답글내용") @RequestParam String replyContent
+			@ApiParam(value = "답글 내용") @RequestParam String replyContent
 	) {
 		try {
 			reviewService.writeReply(reviewSeq, crdiEmail, replyContent);
