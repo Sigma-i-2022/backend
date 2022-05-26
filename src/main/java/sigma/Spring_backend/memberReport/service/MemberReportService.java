@@ -25,7 +25,7 @@ public class MemberReportService {
 	@Transactional
 	public void reportMember(MemberReportReq memberReportReq) {
 		try {
-			memberRepository.findBySeqFJ(memberReportReq.getMemberSeq())
+			memberRepository.findByEmailFJ(memberReportReq.getMemberEmail())
 					.ifPresentOrElse(
 							M -> M.addReport(memberReportReq.toEntity())
 							, () -> {
