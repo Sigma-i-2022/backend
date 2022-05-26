@@ -25,14 +25,6 @@ public class ReserveReq {
 	private String clientEmail;
 
 	@NotBlank
-	@ApiModelProperty(value = "코디네이터 아이디", example = "코디네이터 아이디")
-	private String crdiId;
-
-	@NotBlank
-	@ApiModelProperty(value = "고객 아이디", example = "고객 아이디")
-	private String clientId;
-
-	@NotBlank
 	@ApiModelProperty(value = "예약 요청 날짜", example = "yyyy-MM-dd")
 	private String reserveDay;
 
@@ -52,7 +44,7 @@ public class ReserveReq {
 	@ApiModelProperty(value = "예약 요청 시간대")
 	private List<String> reserveTimes;
 
-	public Reservation toEntity() {
+	public Reservation toEntity(String crdiId, String clientId) {
 		String[] date = reserveDay.split("-");
 		StringBuilder reservationTimes = new StringBuilder();
 		for (String reserveTime : reserveTimes) {
@@ -60,10 +52,10 @@ public class ReserveReq {
 		}
 
 		return Reservation.builder()
-				.crdiId(crdiId)
 				.crdiEmail(crdiEmail)
-				.clientId(clientId)
 				.clientEmail(clientEmail)
+				.crdiId(crdiId)
+				.clientId(clientId)
 				.reserveDay(date[0] + "년 " + date[1] + "월 " + date[2] + "일")
 				.serviceType(serviceType)
 				.serviceSystem(serviceSystem)

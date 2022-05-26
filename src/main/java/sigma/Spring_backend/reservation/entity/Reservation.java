@@ -30,16 +30,16 @@ public class Reservation {
 	private String crdiEmail;
 
 	@Column(nullable = false)
-	private String crdiId;
-
-	@Column(nullable = false)
 	private String clientId;
 
 	@Column(nullable = false)
-	private String reserveDay; // yyyy년 MM월 dd일
+	private String crdiId;
 
 	@Column(nullable = false)
-	private String reserveTimes;
+	private String reserveDay; 					// yyyy년 MM월 dd일
+
+	@Column(nullable = false)
+	private String reserveTimes;				// 예약 요청 시간 목록
 
 	@Setter
 	@Column(nullable = false)
@@ -56,34 +56,34 @@ public class Reservation {
 
 	@Setter
 	@Column(nullable = false)
-	private String activateYnOfClient;	// 클라이언트 예약목록 중 가리기 여부
+	private String activateYnOfClient;			// 클라이언트 예약목록 중 가리기 여부
 
 	@Setter
 	@Column(nullable = false)
-	private String activateYnOfCrdi;	// 코디 예약목록 중 가리기 여부
+	private String activateYnOfCrdi;			// 코디 예약목록 중 가리기 여부
 
 	@Setter
 	@Column(nullable = false)
-	private String confirmResvYn;		// 코디네이터 예약 확정 여부
+	private String confirmResvYn;				// 코디네이터 예약 확정 여부
 
 	@Setter
 	@Column
-	private String payYn;				// 카드 or 가상계좌 결제 여부
+	private String payYn;						// 카드 or 가상계좌 결제 여부
 
 	@Setter
 	@Column(nullable = false)
-	private String confirmPayYn;		// 구매 확정 여부 (리뷰 작성 용)
+	private String confirmPayYn;				// 구매 확정 여부 (리뷰 작성 용)
 
 	@Setter
 	@Column(nullable = false)
-	private String cancelYn;			// 취소 여부
+	private String cancelYn;					// 취소 여부
 
 	@Setter
 	@Column
-	private String reviewedYn;			// 리뷰 작성 여부
+	private String reviewedYn;					// 리뷰 작성 여부
 
 	@Column(nullable = false)
-	private String requestReservationTime;
+	private String requestReservationTime;		// 예약 요청 시각
 
 	@Setter
 	@OneToMany(mappedBy = "reservation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

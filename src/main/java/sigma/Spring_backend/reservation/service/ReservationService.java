@@ -52,11 +52,11 @@ public class ReservationService {
 		if (!verify) throw new BussinessException(ExMessage.RESERVATION_ERROR_FORMAT);
 
 		try {
-			Reservation reservation = reserveReq.toEntity();
 			Member client = memberRepository.findByEmailFJ(reserveReq.getClientEmail())
 					.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 			Member crdi = memberRepository.findByEmailFJ(reserveReq.getCrdiEmail())
 					.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
+			Reservation reservation = reserveReq.toEntity(client.getUserId(), crdi.getUserId());
 
 			MemberReservation clientReservation = MemberReservation.builder()
 					.member(client)
