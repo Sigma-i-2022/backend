@@ -18,6 +18,7 @@ import sigma.Spring_backend.submall.entity.Submall;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -65,6 +66,13 @@ public class Member {
 	@Setter
 	@Column
 	private String crdiYn;
+
+	@Column
+	private String role;
+
+	public List<String> getRoles() {
+		return new ArrayList<>(Collections.singleton(role));
+	}
 
 	@OneToOne
 	@JoinColumn(name = "MYPAGE_SEQ", nullable = false)
