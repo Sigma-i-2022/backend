@@ -5,7 +5,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
-import sigma.Spring_backend.baseUtil.advice.JwtMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.baseUtil.jwt.exception.JwtException;
 import sigma.Spring_backend.memberUtil.entity.Member;

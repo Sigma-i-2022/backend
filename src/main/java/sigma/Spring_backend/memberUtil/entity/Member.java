@@ -70,6 +70,10 @@ public class Member {
 	@Column
 	private String role;
 
+	@Setter
+	@Column(length = 1000)
+	private String refreshToken;
+
 	public List<String> getRoles() {
 		return new ArrayList<>(Collections.singleton(role));
 	}

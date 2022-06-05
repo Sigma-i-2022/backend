@@ -1,12 +1,12 @@
 package sigma.Spring_backend.baseUtil.jwt.exception;
 
-import sigma.Spring_backend.baseUtil.advice.JwtMessage;
+import sigma.Spring_backend.baseUtil.jwt.dto.JwtError;
 
 public class JwtException extends RuntimeException {
 	public JwtException() {
 	}
 
-	public JwtException(JwtMessage message) {
+	public JwtException(JwtError message) {
 		super(message.name());
 	}
 

@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import sigma.Spring_backend.baseUtil.jwt.authFilter.CustomAuthenticationFilter;
 import sigma.Spring_backend.baseUtil.jwt.authFilter.CustomAuthorizationFilter;
 import sigma.Spring_backend.socialSingin.LoginSuccessHandler;
@@ -47,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilter(corsConfig.corsFilter())
 				.formLogin().disable()
 				.httpBasic().disable()
-				.addFilter(new CustomAuthenticationFilter(authenticationManager()))
+				.addFilter(authenticationFilter())
 				.addFilter(new CustomAuthorizationFilter(authenticationManager()))
 				.authorizeRequests()
 				.antMatchers("/v1/api/*")
@@ -66,6 +67,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable()
 				.cors().disable()
 				.headers().frameOptions().disable();
+	}
+
+	public UsernamePasswordAuthenticationFilter authenticationFilter() throws Exception {
+		CustomAuthenticationFilter customAuthenticationFilter
+				= new CustomAuthenticationFilter(authenticationManager());
+		customAuthenticationFilter.setFilterProcessesUrl("/v1/api/login");
+		return customAuthenticationFilter;
 	}
 }
 
