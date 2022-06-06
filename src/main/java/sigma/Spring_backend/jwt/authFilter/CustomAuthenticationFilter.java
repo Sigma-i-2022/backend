@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.jwt.auth.PrincipalUserDetails;
 import sigma.Spring_backend.jwt.service.JwtService;
 import sigma.Spring_backend.memberSignup.dto.LoginDto;
@@ -58,10 +59,15 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
 		jwtService.setResponseOfAccessToken(response, accessToken);
 		jwtService.setResponseOfRefreshToken(response, refreshToken);
+		jwtService.setResponseMessage(true, response, "로그인 성공");
 	}
 
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
 		log.info("인증 실패");
+		ExMessage failMessage = failed.getMessage().equals(ExMessage.MEMBER_ERROR_NOT_FOUND_ENG.getMessage()) ?
+				ExMessage.MEMBER_ERROR_NOT_FOUND :
+				ExMessage.MEMBER_ERROR_PASSWORD;
+		jwtService.setResponseMessage(false, response, "로그인 실패" + ": " + failMessage);
 	}
 }

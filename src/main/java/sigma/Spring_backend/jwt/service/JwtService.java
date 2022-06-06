@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import lombok.RequiredArgsConstructor;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -140,5 +142,23 @@ public class JwtService implements JwtServiceInterface {
 
 	public void setResponseOfRefreshToken(HttpServletResponse response, String token) {
 		response.addHeader(Jwt.REFRESH_TOKEN_HEADER, Jwt.TOKEN_PREFIX + token);
+	}
+
+	@Override
+	public void setResponseMessage(boolean result, HttpServletResponse response, String message) throws IOException {
+		JSONObject object = new JSONObject();
+		response.setContentType("application/json;charset=UTF-8");
+		if (result) {
+			response.setStatus(HttpServletResponse.SC_OK);
+			object.put("success", true);
+			object.put("code", -1);
+			object.put("message", message);
+		} else {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			object.put("success", false);
+			object.put("code", 1);
+			object.put("message", message);
+		}
+		response.getWriter().print(object);
 	}
 }
