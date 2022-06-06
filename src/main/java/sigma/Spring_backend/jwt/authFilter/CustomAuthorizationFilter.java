@@ -23,6 +23,6 @@ public class CustomAuthorizationFilter extends BasicAuthenticationFilter {
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-		log.info("인증 / 권한 검증");
+		log.info("인가 / 권한 검증");
 	}
 }
