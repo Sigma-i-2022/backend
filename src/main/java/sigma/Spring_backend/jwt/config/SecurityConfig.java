@@ -3,18 +3,19 @@ package sigma.Spring_backend.jwt.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 import sigma.Spring_backend.jwt.authFilter.CustomAuthenticationFilter;
 import sigma.Spring_backend.jwt.authFilter.CustomAuthorizationFilter;
 import sigma.Spring_backend.jwt.exception.CustomAccessDeniedHandler;
 import sigma.Spring_backend.jwt.exception.CustomAuthenticationEntryPoint;
+import sigma.Spring_backend.jwt.filter.BeforeSecurityFilter;
 import sigma.Spring_backend.jwt.service.JwtService;
 import sigma.Spring_backend.socialSingin.LoginSuccessHandler;
 import sigma.Spring_backend.socialSingin.service.CustomOAuth2UserService;
@@ -43,6 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		http.addFilterBefore(new BeforeSecurityFilter(), BasicAuthenticationFilter.class);
 		http.csrf().disable();
 		http
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -53,7 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilter(authenticationFilter())
 				.addFilter(new CustomAuthorizationFilter(authenticationManager(), jwtService))
 				.authorizeRequests()
-				.antMatchers("/v1/api/*").access("hasRole('USER') or hasRole('ADMIN')")
+				.antMatchers("/v1/api/*")
+				.access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
 				.anyRequest().permitAll() // 모든 요청에 대해서 허용하라.
 
 				.and()
@@ -69,7 +72,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.oauth2Login()
 				.successHandler(new LoginSuccessHandler())
 				.userInfoEndpoint()
-				.userService(customOAuth2UserService);
+				.userService(customOAuth2UserService)
+		;
 	}
 
 	public UsernamePasswordAuthenticationFilter authenticationFilter() throws Exception {

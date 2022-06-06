@@ -3,7 +3,10 @@ package sigma.Spring_backend.jwt.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JwtService implements JwtServiceInterface {
@@ -47,17 +51,34 @@ public class JwtService implements JwtServiceInterface {
 	}
 
 	@Override
-	public boolean isExpiredToken(String token) {
-		try {
-			JWT.require(Algorithm.HMAC512(SECRET_KEY)).build().verify(token);
-		} catch (TokenExpiredException expiredException) {
-			return true;
-		}
-		return false;
+	public String extractRefreshToken(HttpServletRequest request) {
+		return request
+				.getHeader(Jwt.REFRESH_TOKEN_HEADER)
+				.replace(Jwt.TOKEN_PREFIX, "");
 	}
 
 	@Override
-	public boolean isExpiredInSevenDayToken(String token) {
+	public String extractAccessToken(HttpServletRequest request) {
+		return request
+				.getHeader(Jwt.ACCESS_TOKEN_HEADER)
+				.replace(Jwt.TOKEN_PREFIX, "");
+	}
+
+	@Override
+	public boolean isNotExpiredToken(String token) {
+		try {
+			JWT.require(Algorithm.HMAC512(SECRET_KEY)).build().verify(token);
+		} catch (TokenExpiredException expiredException) {
+			throw new JwtException(JwtError.JWT_REFRESH_EXPIRED);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			throw new JwtException(JwtError.JWT_REFRESH_NOT_VALID);
+		}
+		return true;
+	}
+
+	@Override
+	public boolean isExpiredInSevenDayTokenOrThrow(String token) {
 		try {
 			Date expiresAt = JWT.require(Algorithm.HMAC512(SECRET_KEY))
 					.build()
@@ -74,13 +95,16 @@ public class JwtService implements JwtServiceInterface {
 				return true;
 			}
 		} catch (TokenExpiredException e) {
-			return true;
+			throw new JwtException(JwtError.JWT_REFRESH_EXPIRED);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			throw new JwtException(JwtError.JWT_REFRESH_NOT_VALID);
 		}
 		return false;
 	}
 
 	@Override
-	public boolean isValidHeader(HttpServletRequest request) {
+	public boolean isValidHeaderOrThrow(HttpServletRequest request) {
 
 		String accessToken = request.getHeader(Jwt.ACCESS_TOKEN_HEADER);
 		String refreshToken = request.getHeader(Jwt.REFRESH_TOKEN_HEADER);
@@ -91,48 +115,61 @@ public class JwtService implements JwtServiceInterface {
 			}
 		}
 
-//		throw new JwtException(JwtError.JWT_HEADER_NOT_VALID);
-//		request.setAttribute(Jwt.EXCEPTION, JwtError.JWT_HEADER_NOT_VALID.getMessage());
-		return false;
+		throw new JwtException(JwtError.JWT_HEADER_NOT_VALID);
 	}
 
 	@Override
-	public boolean isValidToken(String token) {
+	public JwtError checkValidTokenOrThrow(String token) {
 		try {
 			JWT.require(Algorithm.HMAC512(SECRET_KEY))
 					.build()
 					.verify(token);
-			return true;
+			return JwtError.JWT_VALID_TOKEN;
+		} catch (TokenExpiredException e) {
+			return JwtError.JWT_ACCESS_EXPIRED;
 		} catch (Exception e) {
-			return false;
+			log.error(e.getMessage());
+			throw new JwtException(JwtError.JWT_ACCESS_NOT_VALID);
 		}
 	}
 
 	@Override
 	public Member getMemberByToken(String token) {
 		return memberRepository.findByRefreshTokenFJ(token)
-				.orElseThrow(() -> new JwtException(JwtError.JWT_MEMBER_NOT_FOUND));
+				.orElseThrow(() -> new JwtException(JwtError.JWT_MEMBER_NOT_FOUND_TOKEN));
 	}
 
 	@Override
 	public Member getMemberByUsername(String username) {
 		return memberRepository.findByEmailFJ(username)
-				.orElseThrow(() -> new JwtException(JwtError.JWT_MEMBER_NOT_FOUND));
+				.orElseThrow(() -> new JwtException(JwtError.JWT_MEMBER_NOT_FOUND_USERNAME));
 	}
 
 	@Override
 	@Transactional
-	public void updateRefreshTokenOfUser(Member member, String token) {
+	public void setRefreshTokenToUser(Member member, String token) {
 		memberRepository.findByEmailFJ(member.getEmail())
-				.orElseThrow(() -> new JwtException(JwtError.JWT_MEMBER_NOT_FOUND))
+				.orElseThrow(() -> new JwtException(JwtError.JWT_MEMBER_NOT_FOUND_TOKEN))
 				.setRefreshToken(token);
+	}
+
+	@Override
+	@Transactional
+	public String updateRefreshTokenOfUser(Member member, String token) {
+		String reissuedRefreshToken = createRefreshToken();
+
+		memberRepository.findByRefreshTokenFJ(token)
+				.orElseThrow(() -> new JwtException(JwtError.JWT_MEMBER_NOT_FOUND_TOKEN))
+				.setRefreshToken(reissuedRefreshToken);
+
+		return reissuedRefreshToken;
 	}
 
 	@Override
 	@Transactional
 	public void removeRefreshTokenOfUser(String token) {
 		memberRepository.findByRefreshTokenFJ(token)
-				.orElseThrow(() -> new JwtException(JwtError.JWT_MEMBER_NOT_FOUND))
+				.orElseThrow(() -> new JwtException(JwtError.JWT_MEMBER_NOT_FOUND_TOKEN))
 				.setRefreshToken(null);
 	}
 

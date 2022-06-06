@@ -1,13 +1,12 @@
 package sigma.Spring_backend.jwt.exception;
 
+import org.springframework.security.core.AuthenticationException;
 import sigma.Spring_backend.jwt.dto.JwtError;
 
-public class JwtException extends RuntimeException {
-	public JwtException() {
-	}
+public class JwtException extends AuthenticationException {
 
 	public JwtException(JwtError message) {
-		super(message.name());
+		super(message.getMessage());
 	}
 
 	public JwtException(String message) {
@@ -16,13 +15,5 @@ public class JwtException extends RuntimeException {
 
 	public JwtException(String message, Throwable cause) {
 		super(message, cause);
-	}
-
-	public JwtException(Throwable cause) {
-		super(cause);
-	}
-
-	public JwtException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
 	}
 }

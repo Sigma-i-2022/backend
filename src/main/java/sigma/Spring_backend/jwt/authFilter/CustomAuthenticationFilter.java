@@ -52,7 +52,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		String refreshToken = jwtService.createRefreshToken();
 
 		Member memberByUsername = jwtService.getMemberByUsername(principal.getUsername());
-		jwtService.updateRefreshTokenOfUser(memberByUsername, refreshToken);
+		jwtService.setRefreshTokenToUser(memberByUsername, refreshToken);
 
 		jwtService.setResponseOfAccessToken(response, accessToken);
 		jwtService.setResponseOfRefreshToken(response, refreshToken);

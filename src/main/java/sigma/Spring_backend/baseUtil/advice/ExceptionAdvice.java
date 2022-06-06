@@ -24,21 +24,21 @@ public class ExceptionAdvice {
     Error Code : -9999
     Message : undefined error
      */
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public CommonResult undefinedException(HttpServletRequest request, Exception e) {
-
-        log.error("\n\n========================================ERROR START========================================");
-        log.error("요청 URL : " + request.getMethod() + " " + request.getRequestURI());
-        log.error("예외 메시지 : " + e.getMessage());
-        e.printStackTrace();
-        log.error("\n========================================ERROR END========================================\n");
-
-        return responseService.getFailResult(
-                -9999,
-                e.getMessage()+"\n\n*****************************\n\n"+ Arrays.toString(e.getStackTrace())
-        );
-    }
+//    @ExceptionHandler(Exception.class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    public CommonResult undefinedException(HttpServletRequest request, Exception e) {
+//
+//        log.error("\n\n========================================ERROR START========================================");
+//        log.error("요청 URL : " + request.getMethod() + " " + request.getRequestURI());
+//        log.error("예외 메시지 : " + e.getMessage());
+//        e.printStackTrace();
+//        log.error("\n========================================ERROR END========================================\n");
+//
+//        return responseService.getFailResult(
+//                -9999,
+//                e.getMessage()+"\n\n*****************************\n\n"+ Arrays.toString(e.getStackTrace())
+//        );
+//    }
 
     /*
 		Multipart Size 예외처리
