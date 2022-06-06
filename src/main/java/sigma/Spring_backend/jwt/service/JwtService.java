@@ -151,12 +151,12 @@ public class JwtService implements JwtServiceInterface {
 		if (result) {
 			response.setStatus(HttpServletResponse.SC_OK);
 			object.put("success", true);
-			object.put("code", -1);
+			object.put("code", 1);
 			object.put("message", message);
 		} else {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			object.put("success", false);
-			object.put("code", 1);
+			object.put("code", -1);
 			object.put("message", message);
 		}
 		response.getWriter().print(object);

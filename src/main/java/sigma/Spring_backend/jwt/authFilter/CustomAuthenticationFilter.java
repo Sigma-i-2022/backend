@@ -34,13 +34,10 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
 		try {
 			LoginDto loginDto = om.readValue(request.getInputStream(), LoginDto.class);
-
-			UsernamePasswordAuthenticationToken authenticationToken =
+			Authentication authentication =
 					new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
-
-			Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-			return authenticate;
-		} catch (Exception e) {
+			return authenticationManager.authenticate(authentication);
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
