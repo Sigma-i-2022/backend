@@ -1,4 +1,4 @@
-package sigma.Spring_backend.baseUtil.jwt.auth;
+package sigma.Spring_backend.jwt.auth;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

@@ -1,15 +1,16 @@
-package sigma.Spring_backend.baseUtil.jwt.auth;
+package sigma.Spring_backend.jwt.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
-import sigma.Spring_backend.baseUtil.jwt.exception.JwtException;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
+@Service
 @RequiredArgsConstructor
 public class PrincipalUserDetailsService implements UserDetailsService {
 

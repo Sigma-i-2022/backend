@@ -19,8 +19,14 @@ import sigma.Spring_backend.memberSignup.entity.AuthorizeMember;
 import sigma.Spring_backend.memberSignup.entity.JoinCrdi;
 import sigma.Spring_backend.memberSignup.repository.AuthorizeCodeRepository;
 import sigma.Spring_backend.memberSignup.repository.CrdiJoinRepository;
+import sigma.Spring_backend.memberUtil.dto.MemberRequestDto;
+import sigma.Spring_backend.memberUtil.dto.Role;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
+import sigma.Spring_backend.memberUtil.service.MemberService;
+import sigma.Spring_backend.submall.dto.SubmallResDto;
+import sigma.Spring_backend.submall.entity.Submall;
+import sigma.Spring_backend.submall.repository.SubmallRepository;
 
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -97,13 +103,14 @@ public class MemberSignupService {
 				Member member = Member.builder()
 						.email(email)
 						.userId(userId)
-						.password(password)
+						.password(passwordEncoder.encode(password))
 						.signupType("E")
 						.registDate(new DateConfig().getNowDate())
 						.updateDate(new DateConfig().getNowDate())
 						.activateYn("Y")
 						.reportedYn("N")
 						.crdiYn("N")
+						.role(Role.USER)
 						.build();
 				initMypage.setUserId(userId);
 				member.setMypage(initMypage);

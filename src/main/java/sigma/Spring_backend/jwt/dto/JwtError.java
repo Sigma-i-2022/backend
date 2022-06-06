@@ -1,4 +1,4 @@
-package sigma.Spring_backend.baseUtil.jwt.dto;
+package sigma.Spring_backend.jwt.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

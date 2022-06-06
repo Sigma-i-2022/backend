@@ -1,9 +1,9 @@
-package sigma.Spring_backend.baseUtil.jwt.authFilter;
+package sigma.Spring_backend.jwt.authFilter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.web.filter.OncePerRequestFilter;
+import sigma.Spring_backend.jwt.service.JwtService;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -14,8 +14,11 @@ import java.io.IOException;
 @Slf4j
 public class CustomAuthorizationFilter extends BasicAuthenticationFilter {
 
-	public CustomAuthorizationFilter(AuthenticationManager authenticationManager) {
+	private final JwtService jwtService;
+
+	public CustomAuthorizationFilter(AuthenticationManager authenticationManager, JwtService jwtService) {
 		super(authenticationManager);
+		this.jwtService = jwtService;
 	}
 
 	@Override

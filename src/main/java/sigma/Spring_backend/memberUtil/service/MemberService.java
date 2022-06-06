@@ -2,12 +2,14 @@ package sigma.Spring_backend.memberUtil.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberUtil.dto.MemberRequestDto;
 import sigma.Spring_backend.memberUtil.dto.MemberResponseDto;
+import sigma.Spring_backend.memberUtil.dto.Role;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
@@ -19,7 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MemberService {
 
-
+    private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
@@ -51,7 +53,9 @@ public class MemberService {
         if (memberRepository.existsByEmail(memberRequestDto.getEmail())) {
             throw new BussinessException(ExMessage.MEMBER_ERROR_DUPLICATE);
         }
-        return memberRepository.save(memberRequestDto.toEntity());
+        return memberRepository.save(
+                memberRequestDto.toEntity(passwordEncoder.encode(memberRequestDto.getPassword()), Role.USER)
+        );
     }
 
     @Transactional

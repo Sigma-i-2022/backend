@@ -1,4 +1,4 @@
-package sigma.Spring_backend.baseUtil.jwt.config;
+package sigma.Spring_backend.jwt.config;
 
 public interface Jwt {
 	String ACCESS = "AccessToken";

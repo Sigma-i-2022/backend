@@ -1,4 +1,4 @@
-package sigma.Spring_backend.baseUtil.jwt.service;
+package sigma.Spring_backend.jwt.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -7,9 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sigma.Spring_backend.baseUtil.jwt.config.Jwt;
-import sigma.Spring_backend.baseUtil.jwt.dto.JwtError;
-import sigma.Spring_backend.baseUtil.jwt.exception.JwtException;
+import sigma.Spring_backend.jwt.config.Jwt;
+import sigma.Spring_backend.jwt.dto.JwtError;
+import sigma.Spring_backend.jwt.exception.JwtException;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 
@@ -28,10 +28,10 @@ public class JwtService implements JwtServiceInterface {
 	private final MemberRepository memberRepository;
 
 	@Override
-	public String createAccessToken(Member member) {
+	public String createAccessToken(String username) {
 		return JWT.create()
 				.withSubject(Jwt.ACCESS)
-				.withClaim(Jwt.USERNAME, member.getEmail())
+				.withClaim(Jwt.USERNAME, username)
 				.withExpiresAt(new Date(System.currentTimeMillis() + Jwt.ACCESS_TOKEN_EXPIRATION))
 				.sign(Algorithm.HMAC512(SECRET_KEY));
 	}
@@ -113,9 +113,15 @@ public class JwtService implements JwtServiceInterface {
 	}
 
 	@Override
+	public Member getMemberByUsername(String username) {
+		return memberRepository.findByEmailFJ(username)
+				.orElseThrow(() -> new JwtException(JwtError.JWT_MEMBER_NOT_FOUND));
+	}
+
+	@Override
 	@Transactional
 	public void updateRefreshTokenOfUser(Member member, String token) {
-		memberRepository.findByRefreshTokenFJ(token)
+		memberRepository.findByEmailFJ(member.getEmail())
 				.orElseThrow(() -> new JwtException(JwtError.JWT_MEMBER_NOT_FOUND))
 				.setRefreshToken(token);
 	}

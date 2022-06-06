@@ -1,4 +1,4 @@
-package sigma.Spring_backend.baseUtil.jwt.config;
+package sigma.Spring_backend.jwt.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
