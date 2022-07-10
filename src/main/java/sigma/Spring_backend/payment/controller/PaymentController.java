@@ -133,6 +133,9 @@ public class PaymentController {
 		try {
 			paymentService.registTossPaymentWebhook(webhookDto);
 			return responseService.getSuccessResult();
+		} catch (NullPointerException npe) {
+			log.error("토스 측 테스트 요청");
+			return responseService.getSuccessResult();
 		} catch (Exception e) {
 			return responseService.getFailResult(
 					FAIL,
