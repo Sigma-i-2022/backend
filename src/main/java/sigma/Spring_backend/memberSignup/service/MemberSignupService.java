@@ -64,7 +64,7 @@ public class MemberSignupService {
 		Optional<AuthorizeMember> dbCode = authorizeCodeRepository.findByEmail(email);
 		if (dbCode.isPresent() && dbCode.get().getCode().equals(userInputCode) && !dbCode.get().isExpired()) {
 			dbCode.get().useCode();
-		}else {
+		} else {
 			throw new BussinessException(ExMessage.EMAIL_ERROR_FORMAT);
 		}
 		try {
@@ -92,8 +92,10 @@ public class MemberSignupService {
 
 		verifyUserInfo(userInfoMap);
 
-		AuthorizeMember authorizeMember = authorizeCodeRepository.findByEmail(email).get();
-		CommonMypage initMypage = commonMypageRepository.findByEmail(email).get();
+		AuthorizeMember authorizeMember = authorizeCodeRepository.findByEmail(email)
+				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NON_VERIFIED_EMAIL));
+		CommonMypage initMypage = commonMypageRepository.findByEmail(email)
+				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_MYPAGE_ERROR_NOT_FOUND));
 		if (memberRepository.findByEmailFJ(email).isPresent()) {
 			throw new BussinessException(ExMessage.MEMBER_ERROR_DUPLICATE);
 		} else if (!authorizeMember.isExpired()) {
@@ -247,7 +249,7 @@ public class MemberSignupService {
 	public MimeMessage createMessage(String toEmail, String member) throws BussinessException {
 		log.info("To : " + toEmail);
 
-		if (!authorizeCodeRepository.findByEmail(toEmail).isPresent()) {
+		if (authorizeCodeRepository.findByEmail(toEmail).isEmpty()) {
 			authorizeCodeRepository.save(AuthorizeMember.builder()
 					.email(toEmail)
 					.code(createCode())
@@ -304,7 +306,8 @@ public class MemberSignupService {
 		msg.append("<h1> 코디네이터신청 </h1>");
 		msg.append("<br>");
 		msg.append("<p>");
-		msg.append(toEmail + "님이 코디네이터신청을 하였습니다.");
+		msg.append(toEmail);
+		msg.append("님이 코디네이터신청을 하였습니다.");
 		msg.append("<p>");
 		msg.append("<br>");
 		msg.append("<div align='center' style='border:3px solid black; font-family:verdana';>");

@@ -34,10 +34,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().mvcMatchers(
+				// >>> swagger 인가 무시
+				"/v2/api-docs",
+				"/swagger-resources/**",
+				"/swagger-ui.html",
+				"/webjars/**",
+				"/swagger/**",
+				// <<<
 				"/image/**",
+				// >>> 회원가입 관련 인가 무시
 				"/v1/api/join/signUp",
 				"/v1/api/join/email",
 				"/v1/api/join/emailCode"
+				// <<<
 		); // /image/** 있는 모든 파일들은 시큐리티 적용을 무시한다.
 		web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations()); // 정적인 리소스들에 대해서 시큐리티 적용 무시.
 	}
@@ -56,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilter(new CustomAuthorizationFilter(authenticationManager(), jwtService))
 				.authorizeRequests()
 				.antMatchers("/v1/api/*")
-				.access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+				.access("hasRole('ROLE_USER')")
 				.anyRequest().permitAll() // 모든 요청에 대해서 허용하라.
 
 				.and()

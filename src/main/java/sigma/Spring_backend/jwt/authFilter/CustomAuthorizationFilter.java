@@ -1,6 +1,8 @@
 package sigma.Spring_backend.jwt.authFilter;
 
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -47,12 +49,14 @@ public class CustomAuthorizationFilter extends BasicAuthenticationFilter {
 
 					// 리프레쉬 토큰이 7일 이내 만료일 경우 새로 발급
 					if (jwtService.isExpiredInSevenDayTokenOrThrow(refreshToken)) {
+						log.info("[REFRESH TOKEN] > 리프레쉬 토큰 재발급");
 						refreshToken = jwtService.updateRefreshTokenOfUser(memberByToken, refreshToken);
 						jwtService.setResponseOfRefreshToken(response, refreshToken);
 					}
 
 					// 액세스 토큰이 만료된 경우 새로 발급
 					if (jwtService.checkValidTokenOrThrow(accessToken) == JwtError.JWT_ACCESS_EXPIRED) {
+						log.info("[ACCESS TOKEN] > 액세스 토큰 재발급");
 						String reissuedAccessToken = jwtService.createAccessToken(memberByToken.getEmail());
 						jwtService.setResponseOfAccessToken(response, reissuedAccessToken);
 					}
@@ -65,6 +69,7 @@ public class CustomAuthorizationFilter extends BasicAuthenticationFilter {
 					SecurityContextHolder.getContext().setAuthentication(authentication);
 				}
 			}
+			log.info("[LOGIN] > 재 로그인 필요");
 		} catch (AuthenticationException jwtException) {
 			log.error("=================================인가 에러=================================");
 			log.error(jwtException.getMessage());
