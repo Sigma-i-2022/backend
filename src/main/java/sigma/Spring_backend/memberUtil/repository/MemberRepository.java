@@ -20,6 +20,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select m from Member m join fetch m.mypage join fetch m.authorizeUser where m.email=?1")
     Optional<Member> findByEmailFJ(String email);
 
+    @Query("select m from Member m join fetch m.mypage join fetch m.authorizeUser where m.refreshToken=?1")
+    Optional<Member> findByRefreshTokenFJ(String token);
+
     List<Member> findByCrdiYnAndEmailNotIn(String crdiYn,List<String> crdiEmail);
 
     List<Member> findByCrdiYn(String crdiYn);

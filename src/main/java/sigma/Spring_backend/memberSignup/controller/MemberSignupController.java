@@ -11,6 +11,7 @@ import sigma.Spring_backend.baseUtil.dto.CommonResult;
 import sigma.Spring_backend.baseUtil.dto.SingleResult;
 import sigma.Spring_backend.baseUtil.service.ResponseService;
 import sigma.Spring_backend.memberSignup.dto.CrdiResponseDto;
+import sigma.Spring_backend.memberSignup.dto.LoginDto;
 import sigma.Spring_backend.memberSignup.service.MemberSignupService;
 
 import java.util.HashMap;
@@ -20,7 +21,7 @@ import java.util.Map;
 @Api(tags = "02. 회원가입")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/api")
+@RequestMapping("/v1/api/join")
 public class MemberSignupController {
 
 	private final MemberSignupService memberSignupService;
@@ -91,7 +92,8 @@ public class MemberSignupController {
 		}
 	}
 
-	@PostMapping("/login")
+	@Deprecated
+	@PostMapping("/login2")
 	@ApiOperation(value = "로그인", notes = "이메일, 비밀번호를 이용하여 로그인")
 	public CommonResult memberSignIn(
 			@ApiParam(value = "회원 이메일", required = true) @RequestParam(name = "email") String email,
@@ -114,6 +116,14 @@ public class MemberSignupController {
 					e.getMessage()
 			);
 		}
+	}
+
+	@PostMapping("/login")
+	@ApiOperation(value = "로그인", notes = "이메일, 패스워드를 이용해서 로그인")
+	public CommonResult login(
+			@ApiParam(value = "로그인 객체", required = true) @RequestBody LoginDto login
+	) {
+		return responseService.getSuccessResult();
 	}
 
 	@PostMapping("/join")

@@ -2,6 +2,8 @@ package sigma.Spring_backend.memberUtil.entity;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import sigma.Spring_backend.chat.entity.MemberChatRoomConnection;
 import sigma.Spring_backend.crdiBlock.entity.CrdiBlock;
 import sigma.Spring_backend.crdiPage.entity.CrdiWork;
@@ -18,6 +20,7 @@ import sigma.Spring_backend.submall.entity.Submall;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -65,6 +68,17 @@ public class Member {
 	@Setter
 	@Column
 	private String crdiYn;
+
+	@Column
+	private String role;
+
+	@Setter
+	@Column(length = 1000)
+	private String refreshToken;
+
+	public List<String> getRoles() {
+		return new ArrayList<>(Collections.singleton(role));
+	}
 
 	@OneToOne
 	@JoinColumn(name = "MYPAGE_SEQ", nullable = false)
@@ -174,7 +188,7 @@ public class Member {
 		cancelPayment.setCustomer(this);
 	}
 
-	@OneToMany(mappedBy = "crdi", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "crdi", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@Builder.Default
 	private List<Submall> submalls = new ArrayList<>();
 
@@ -188,7 +202,7 @@ public class Member {
 				.userSeq(seq)
 				.userId(userId)
 				.email(email)
-				.password(password)
+//				.password(password)
 				.signupType(signupType)
 				.activateYn(activateYn)
 				.crdiYn(crdiYn)
