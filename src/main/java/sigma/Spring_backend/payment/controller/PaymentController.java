@@ -125,12 +125,11 @@ public class PaymentController {
 	public CommonResult tossPaymentWebhook(
 			@ApiParam(value = "웹 훅 본문") @ModelAttribute TossWebhookDto webhookDto
 	) {
-		log.info("webhookDto.getEventType() = " + webhookDto.getEventType());
-		log.info("webhookDto.getData().getPaymentKey() = " + webhookDto.getData().getPaymentKey());
-		log.info("webhookDto.getData().getStatus() = " + webhookDto.getData().getStatus());
-		log.info("webhookDto.getData().getOrderId() = " + webhookDto.getData().getOrderId());
-
 		try {
+			log.info("webhookDto.getEventType() = " + webhookDto.getEventType());
+			log.info("webhookDto.getData().getPaymentKey() = " + webhookDto.getData().getPaymentKey());
+			log.info("webhookDto.getData().getStatus() = " + webhookDto.getData().getStatus());
+			log.info("webhookDto.getData().getOrderId() = " + webhookDto.getData().getOrderId());
 			paymentService.registTossPaymentWebhook(webhookDto);
 			return responseService.getSuccessResult();
 		} catch (NullPointerException npe) {
