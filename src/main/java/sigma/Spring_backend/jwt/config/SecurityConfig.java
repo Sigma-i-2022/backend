@@ -45,8 +45,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				// >>> 회원가입 관련 인가 무시
 				"/v1/api/join/signUp",
 				"/v1/api/join/email",
-				"/v1/api/join/emailCode"
+				"/v1/api/join/emailCode",
 				// <<<
+				// >>> 회원 관리 관련 api
+				"/v1/admin/api/member/**"
+				//<<
 		); // /image/** 있는 모든 파일들은 시큐리티 적용을 무시한다.
 		web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations()); // 정적인 리소스들에 대해서 시큐리티 적용 무시.
 	}
