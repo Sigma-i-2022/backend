@@ -48,8 +48,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				"/v1/api/join/emailCode",
 				// <<<
 				// >>> 회원 관리 관련 api
-				"/v1/admin/api/member/**"
-				//<<
+				"/v1/admin/api/member/**",
+				// <<<
+				// >>> 토스페이먼츠 결제 web hook
+				"/v1/api/payment/fail",
+				"/v1/api/payment/success",
+				"/v1/api/payment/virtual/income",
+				"/v1/api/payment/webhook"
+				// <<<
 		); // /image/** 있는 모든 파일들은 시큐리티 적용을 무시한다.
 		web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations()); // 정적인 리소스들에 대해서 시큐리티 적용 무시.
 	}
