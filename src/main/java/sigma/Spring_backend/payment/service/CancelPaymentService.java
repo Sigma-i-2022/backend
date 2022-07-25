@@ -59,9 +59,9 @@ public class CancelPaymentService {
 	private String tossOriginUrl;
 
 	@Transactional
-	public void requestPaymentCancel(Long memberSeq, Long reservationSeq, CancelPaymentReq cancelPaymentReq) {
+	public void requestPaymentCancel(String email, Long reservationSeq, CancelPaymentReq cancelPaymentReq) {
 		// 예약 취소
-		cancelReservation(memberSeq, reservationSeq);
+		cancelReservation(email, reservationSeq);
 
 		// 토스페이먼츠에게 취소 요청
 		String paymentKey = cancelPaymentReq.getPaymentKey();
@@ -151,8 +151,8 @@ public class CancelPaymentService {
 				});
 	}
 
-	private void cancelReservation(Long memberSeq, Long reservationSeq) {
-		Member member = memberRepository.findBySeqFJ(memberSeq)
+	private void cancelReservation(String email, Long reservationSeq) {
+		Member member = memberRepository.findByEmailFJ(email)
 				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 		if (member.getCrdiYn().equals("Y")) {
 			cancelReservationByCrdi(reservationSeq, member);
@@ -205,9 +205,9 @@ public class CancelPaymentService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<CancelPaymentRes> getAllCancelPayments(Long memberSeq, PageRequest pageRequest) {
+	public List<CancelPaymentRes> getAllCancelPayments(String memberEmail, PageRequest pageRequest) {
 		return cancelPaymentRepository
-				.findAllByCustomerSeq(memberSeq, pageRequest)
+				.findAllByCustomerEmail(memberEmail, pageRequest)
 				.stream().map(CancelPayment::toDto)
 				.collect(Collectors.toList());
 	}

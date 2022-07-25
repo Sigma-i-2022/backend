@@ -13,5 +13,5 @@ public interface CancelPaymentRepository extends JpaRepository<CancelPayment, Lo
 
 	Optional<CancelPayment> findByPaymentKey(String orderId);
 
-	List<CancelPayment> findAllByCustomerSeq(Long customerSeq, Pageable pageable);
+	List<CancelPayment> findAllByCustomerEmail(String memberEmail, Pageable pageable);
 }

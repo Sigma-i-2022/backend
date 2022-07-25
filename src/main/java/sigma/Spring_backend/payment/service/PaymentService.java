@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
+import sigma.Spring_backend.baseUtil.dto.SingleResult;
 import sigma.Spring_backend.baseUtil.exception.BussinessException;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
 import sigma.Spring_backend.payment.dto.*;
@@ -215,14 +216,25 @@ public class PaymentService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<PaymentDto> getAllPayments(Long memberSeq, PageRequest pageRequest) {
-		String email = memberRepository.findBySeqFJ(memberSeq)
+	public List<PaymentDto> getAllPayments(String memberEmail, PageRequest pageRequest) {
+		String email = memberRepository.findByEmailFJ(memberEmail)
 				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND))
 				.getEmail();
 
 		return paymentRepository.findAllByCustomerEmail(email, pageRequest)
 				.stream().map(Payment::toDto)
 				.collect(Collectors.toList());
+	}
+
+	@Transactional(readOnly = true)
+	public PaymentDto getOnePayment(String memberEmail, Long reservationSeq) {
+		String email = memberRepository.findByEmailFJ(memberEmail)
+				.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND))
+				.getEmail();
+
+		return paymentRepository.findByCustomerEmailAndReservationSeq(email, reservationSeq)
+				.orElseThrow(() -> new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND))
+				.toDto();
 	}
 
 	@Transactional
