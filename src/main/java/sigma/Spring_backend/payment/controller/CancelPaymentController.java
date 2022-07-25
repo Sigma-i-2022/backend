@@ -33,12 +33,12 @@ public class CancelPaymentController {
 					"고객이 예약확정 되지 않은 결제를 취소합니다."
 	)
 	public CommonResult requestPaymentCancel(
-			@ApiParam(value = "코디 번호", required = true) @RequestParam Long memberSeq,
+			@ApiParam(value = "이메일", required = true) @RequestParam String email,
 			@ApiParam(value = "예약 번호", required = true) @RequestParam Long reservationSeq,
 			@ApiParam(value = "가상계좌 취소시 작성") @ModelAttribute CancelPaymentReq cancelPaymentReq
 			) {
 		try {
-			cancelPaymentService.requestPaymentCancel(memberSeq, reservationSeq, cancelPaymentReq);
+			cancelPaymentService.requestPaymentCancel(email, reservationSeq, cancelPaymentReq);
 			return responseService.getSuccessResult();
 		} catch (Exception e) {
 			return responseService.getFailResult(
@@ -48,17 +48,17 @@ public class CancelPaymentController {
 		}
 	}
 
-	@GetMapping("/{memberSeq}")
+	@GetMapping
 	@ApiOperation(value = "고객 예약 취소 목록 전체 조회", notes = "고객이 취소한 모든 예약 목록을 조회합니다.")
 	public ListResult<CancelPaymentRes> getAllCancelPayments(
-			@ApiParam(value = "고객 번호", required = true) @PathVariable(name = "memberSeq") Long memberSeq,
+			@ApiParam(value = "고객 이메일", required = true) @RequestParam String memberEmail,
 			@ApiParam(value = "PAGE 번호 (0부터)", required = true) @RequestParam(defaultValue = "0") int page,
 			@ApiParam(value = "PAGE 크기", required = true) @RequestParam(defaultValue = "20") int size
 	) {
 		PageRequest pageRequest = PageRequest.of(page, size, Sort.by("cancelDate").descending());
 		try {
 			return responseService.getListResult(
-					cancelPaymentService.getAllCancelPayments(memberSeq, pageRequest)
+					cancelPaymentService.getAllCancelPayments(memberEmail, pageRequest)
 			);
 		} catch (Exception e) {
 			e.printStackTrace();

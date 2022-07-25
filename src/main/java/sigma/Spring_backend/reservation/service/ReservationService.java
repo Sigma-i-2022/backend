@@ -56,7 +56,7 @@ public class ReservationService {
 					.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
 			Member crdi = memberRepository.findByEmailFJ(reserveReq.getCrdiEmail())
 					.orElseThrow(() -> new BussinessException(ExMessage.MEMBER_ERROR_NOT_FOUND));
-			Reservation reservation = reserveReq.toEntity(client.getUserId(), crdi.getUserId());
+			Reservation reservation = reserveReq.toEntity(crdi.getUserId(), client.getUserId());
 
 			MemberReservation clientReservation = MemberReservation.builder()
 					.member(client)

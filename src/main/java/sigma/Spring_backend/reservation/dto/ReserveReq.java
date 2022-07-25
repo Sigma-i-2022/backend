@@ -21,7 +21,7 @@ public class ReserveReq {
 	private String crdiEmail;
 
 	@NotBlank
-	@ApiModelProperty(value = "고객 이메일", example = "코디네이터 이메일")
+	@ApiModelProperty(value = "고객 이메일", example = "고객 이메일")
 	private String clientEmail;
 
 	@NotBlank

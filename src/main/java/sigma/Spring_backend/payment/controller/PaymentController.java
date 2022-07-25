@@ -77,23 +77,40 @@ public class PaymentController {
 		}
 	}
 
-	@GetMapping("/all/{seq}")
+	@GetMapping("/all")
 	@ApiOperation(value = "고객 별 결제내역 전체 조회", notes = "고객 별 완료된 모든 결제내역을 조회합니다.")
 	public ListResult<PaymentDto> getAllPayments(
-			@ApiParam(value = "고객 번호", required = true) @PathVariable(name = "seq") Long memberSeq,
+			@ApiParam(value = "고객 이메일", required = true) @RequestParam(name = "email") String email,
 			@ApiParam(value = "PAGE 번호 (0부터)", required = true) @RequestParam(defaultValue = "0") int page,
 			@ApiParam(value = "PAGE 크기", required = true) @RequestParam(defaultValue = "20") int size
 	) {
 		PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createDate").descending());
 		try {
 			return responseService.getListResult(
-					paymentService.getAllPayments(memberSeq, pageRequest)
+					paymentService.getAllPayments(email, pageRequest)
 			);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BussinessException(e.getMessage());
 		}
 	}
+
+	@GetMapping("/one")
+	@ApiOperation(value = "고객 단건 결제내역 조회", notes = "고객의 완료된 단건 결제내역을 조회합니다.")
+	public SingleResult<PaymentDto> getOnePayment(
+			@ApiParam(value = "고객 이메일", required = true) @RequestParam(name = "email") String email,
+			@ApiParam(value = "예약 번호", required = true) @RequestParam(name = "reservationSeq") Long reservationSeq
+	) {
+		try {
+			return responseService.getSingleResult(
+					paymentService.getOnePayment(email, reservationSeq)
+			);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BussinessException(e.getMessage());
+		}
+	}
+
 
 	@PostMapping("/virtual/income")
 	@ApiOperation(

@@ -18,4 +18,6 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 	List<Payment> findAllByCustomerEmail(String email, Pageable pageable);
 
 	Optional<Payment> findByReservationSeq(Long reservationSeq);
+
+	Optional<Payment> findByCustomerEmailAndReservationSeq(String customerEmail, Long reservationSeq);
 }
