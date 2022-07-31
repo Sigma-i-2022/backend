@@ -100,6 +100,7 @@ public class Payment {
 
 	public PaymentRes toRes() {
 		return PaymentRes.builder()
+				.reservationSeq(reservationSeq)
 				.payType(payType.getName())
 				.paySuccessYn(paySuccessYn)
 				.amount(amount)

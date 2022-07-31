@@ -171,6 +171,8 @@ public class CancelPaymentService {
 								throw new BussinessException(ExMessage.RESERVATION_ERROR_NOT_PAY);
 							} else if (R.getCancelYn().equals("Y")) {
 								throw new BussinessException(ExMessage.RESERVATION_ERROR_ALREADY_CANCEL);
+							} else if (R.getPayType().equals(PAY_TYPE.VIRTUAL_ACCOUNT)) {
+								throw new BussinessException(ExMessage.RESERVATION_ERROR_VIRTUAL_PAY_TYPE);
 							}
 							R.setCancelYn("Y");
 						}, () -> {

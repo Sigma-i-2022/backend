@@ -28,9 +28,10 @@ public class CancelPaymentController {
 	@PostMapping
 	@ApiOperation(
 			value = "(공통) 코디네이터 예약 결제 완료 건 결제취소",
-			notes = "코디네이터가 예약확정되지 않은 완료된 결제 건에 대해서 결제취소를 요청합니다.<br>" +
-					"고객이 예약확정 된 결제를 시작하기 6시간 전까지 취소합니다.<br>" +
-					"고객이 예약확정 되지 않은 결제를 취소합니다."
+			notes = "코디네이터가 예약확정하지 않은 결제완료 건에 대해서 결제취소합니다.<br>" +
+					"고객이 구매확정 한 결제를 시작시간 6시간 이전일 경우 취소합니다.<br>" +
+					"고객이 예약확정 되지 않은 결제를 취소합니다.<br>" +
+					"참고) 가상계좌 결제건은 코디네이터가 취소할 수 없습니다."
 	)
 	public CommonResult requestPaymentCancel(
 			@ApiParam(value = "이메일", required = true) @RequestParam String email,

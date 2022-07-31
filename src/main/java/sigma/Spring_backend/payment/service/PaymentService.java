@@ -183,6 +183,7 @@ public class PaymentService {
 						payment.setCardReceiptUrl(card.getReceiptUrl());
 						payment.setPaySuccessYn("Y");
 						reservation.setPayYn("Y");
+						reservation.setPayType(PAY_TYPE.CARD);
 					});
 		} else if (payType.equals(PAY_TYPE.VIRTUAL_ACCOUNT)) {
 			PaymentResHandleVirtualDto virtualAccount = payResDto.getVirtualAccount();
@@ -261,6 +262,7 @@ public class PaymentService {
 						log.info("결제 성공 체크");
 						P.setPaySuccessYn("Y");
 						reservation.setPayYn("Y");
+						reservation.setPayType(PAY_TYPE.VIRTUAL_ACCOUNT);
 					}, () -> {
 						throw new BussinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND);
 					});

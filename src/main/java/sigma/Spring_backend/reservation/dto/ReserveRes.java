@@ -17,14 +17,15 @@ public class ReserveRes {
 	private String crdiEmail;
 	private String clientId;
 	private String clientEmail;
-	private CrdiServiceType serviceType;
-	private CrdiServiceSystem serviceSystem;
+	private String serviceType;
+	private String serviceSystem;
 	private Integer price;
 	private String reserveDay;
 	private List<String> reserveTimes;
 	private String confirmedReserveTime;
 	private String requireText;
 	private String payYn;
+	private String payType;
 	private String confirmResvYn;
 	private String confirmPayYn;
 	private String reviewedYn;

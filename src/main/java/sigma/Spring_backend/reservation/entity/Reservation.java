@@ -1,6 +1,7 @@
 package sigma.Spring_backend.reservation.entity;
 
 import lombok.*;
+import sigma.Spring_backend.payment.dto.PAY_TYPE;
 import sigma.Spring_backend.reservation.dto.CrdiServiceSystem;
 import sigma.Spring_backend.reservation.dto.CrdiServiceType;
 import sigma.Spring_backend.reservation.dto.ReserveRes;
@@ -71,6 +72,10 @@ public class Reservation {
 	private String payYn;						// 카드 or 가상계좌 결제 여부
 
 	@Setter
+	@Enumerated(EnumType.STRING)
+	private PAY_TYPE payType;					// 결제 타입 (카드 or 가상계좌)
+
+	@Setter
 	@Column(nullable = false)
 	private String confirmPayYn;				// 구매 확정 여부 (리뷰 작성 용)
 
@@ -106,8 +111,8 @@ public class Reservation {
 				.crdiEmail(crdiEmail)
 				.clientId(clientId)
 				.clientEmail(clientEmail)
-				.serviceType(serviceType)
-				.serviceSystem(serviceSystem)
+				.serviceType(serviceType.getServiceName())
+				.serviceSystem(serviceSystem.getServiceSystemName())
 				.reserveDay(reserveDay)
 				.price(3000)
 				.reserveDay(reserveDay)
@@ -115,6 +120,7 @@ public class Reservation {
 				.confirmedReserveTime(confirmedReserveTime)
 				.requireText(requireText)
 				.payYn(payYn)
+				.payType(payType == null ? "None" : payType.getName())
 				.confirmResvYn(confirmResvYn)
 				.confirmPayYn(confirmPayYn)
 				.reviewedYn(reviewedYn)
