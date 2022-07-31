@@ -44,6 +44,7 @@ public enum ExMessage {
 	, RESERVATION_ERROR_CANCEL_CASE_CRDI("고객의 예약 취소에 실패했습니다.")
 	, RESERVATION_ERROR_ALREADY_PAY("이미 결제된 예약건입니다.")
 	, RESERVATION_ERROR_ALREADY_CANCEL("이미 취소된 예약건입니다. 다시 예약을 진행해주세요.")
+	, RESERVATION_ERROR_VIRTUAL_PAY_TYPE("가상계좌로 결제된 건은 코디네이터가 취소할 수 없습니다.")
 	, RESERVATION_ERROR_NOT_PAY("고객이 아직 결제를 완료하지 않았습니다.")
 	, REVIEW_ERROR_FORMAT("리뷰 요청 폼이 잘못되었습니다.")
 	, REVIEW_ERROR_ALREADY_REVIEWED("이미 리뷰를 작성하였습니다.")
