@@ -15,8 +15,8 @@ public class CrdiWorkReq {
     @ApiModelProperty(required = true)
     private String crdiEmail;
 
-    @Builder.Default
-    private String explanation  = "";
+    @ApiModelProperty(required = true)
+    private String explanation;
 
     private String weight;
     private String height;
@@ -29,17 +29,17 @@ public class CrdiWorkReq {
 
     public CrdiWork toEntity(String imagePathUrl){
         return CrdiWork.builder()
-                .email(crdiEmail)
-                .explanation(this.explanation)
+                .crdiEmail(crdiEmail)
+                .explanation(explanation)
                 .imagePathUrl(imagePathUrl)
-                .weight(this.weight)
-                .height(this.height)
-                .topInfo(this.topInfo)
-                .bottomInfo(this.bottomInfo)
-                .shoeInfo(this.shoeInfo)
-                .keyword1(this.keyword1)
-                .keyword2(this.keyword2)
-                .keyword3(this.keyword3)
+                .weight(weight)
+                .height(height)
+                .topInfo(topInfo)
+                .bottomInfo(bottomInfo)
+                .shoeInfo(shoeInfo)
+                .keyword1(keyword1)
+                .keyword2(keyword2)
+                .keyword3(keyword3)
                 .activateYn("Y")
                 .updateDate(new DateConfig().getNowDate())
                 .registDate(new DateConfig().getNowDate())

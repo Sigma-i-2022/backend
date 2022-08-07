@@ -2,8 +2,6 @@ package sigma.Spring_backend.memberUtil.entity;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import sigma.Spring_backend.chat.entity.MemberChatRoomConnection;
 import sigma.Spring_backend.crdiBlock.entity.CrdiBlock;
 import sigma.Spring_backend.crdiPage.entity.CrdiWork;
@@ -113,10 +111,10 @@ public class Member {
 
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@Builder.Default
-	private List<CrdiWork> work = new ArrayList<>();
+	private List<CrdiWork> works = new ArrayList<>();
 
 	public void addWork(CrdiWork crdiWork) {
-		work.add(crdiWork);
+		works.add(crdiWork);
 		crdiWork.setMember(this);
 	}
 
@@ -202,7 +200,6 @@ public class Member {
 				.userSeq(seq)
 				.userId(userId)
 				.email(email)
-//				.password(password)
 				.signupType(signupType)
 				.activateYn(activateYn)
 				.crdiYn(crdiYn)

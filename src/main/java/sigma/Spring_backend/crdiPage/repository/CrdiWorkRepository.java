@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface CrdiWorkRepository extends JpaRepository<CrdiWork, Long> {
-    List<CrdiWork> findAllByEmail(String email, Pageable pageable);
+    List<CrdiWork> findAllByCrdiEmail(String crdiEmail, Pageable pageable);
 }

@@ -3,10 +3,8 @@ package sigma.Spring_backend.crdiPage.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import sigma.Spring_backend.awsUtil.service.AwsService;
 import sigma.Spring_backend.baseUtil.advice.ExMessage;
 import sigma.Spring_backend.baseUtil.config.DateConfig;
@@ -20,12 +18,10 @@ import sigma.Spring_backend.crdiPage.repository.CrdiWorkRepository;
 import sigma.Spring_backend.imageUtil.service.ImageService;
 import sigma.Spring_backend.memberUtil.entity.Member;
 import sigma.Spring_backend.memberUtil.repository.MemberRepository;
-import sigma.Spring_backend.review.dto.ReviewRes;
 import sigma.Spring_backend.review.entity.Review;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -104,7 +100,7 @@ public class CrdiPageService {
 
 	@Transactional(readOnly = true)
 	public List<CrdiWorkRes> getWorks(String crdiEmail, PageRequest pageRequest) {
-		return crdiWorkRepository.findAllByEmail(crdiEmail,pageRequest)
+		return crdiWorkRepository.findAllByCrdiEmail(crdiEmail,pageRequest)
 				.stream()
 				.filter(p -> p.getActivateYn().equals("Y"))
 				.map(CrdiWork::toDto)
@@ -128,7 +124,7 @@ public class CrdiPageService {
 			for(Member member : memberList){
 				CrdiRes crdi = new CrdiRes();
 
-				imageWorkList = member.getWork().stream()
+				imageWorkList = member.getWorks().stream()
 						.filter(W -> W.getActivateYn().equals("Y"))
 						.map(CrdiWork::getImagePathUrl)
 						.collect(Collectors.toList());

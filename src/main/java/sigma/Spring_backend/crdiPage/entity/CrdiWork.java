@@ -19,14 +19,13 @@ public class CrdiWork {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
 
-    @Column
-    @Builder.Default
-    private String explanation = "";
-
     @Column(unique = true, nullable = false)
-    private String email;
+    private String crdiEmail;
 
-    @Column
+    @Column(nullable = false)
+    private String explanation;
+
+    @Column(nullable = false)
     private String imagePathUrl;
 
     @Column
@@ -63,7 +62,7 @@ public class CrdiWork {
     private String activateYn;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "work_seq")
+    @JoinColumn(name = "MEMBER_SEQ")
     private Member member;
 
     public Member getMember() {return this.member;}
@@ -73,6 +72,7 @@ public class CrdiWork {
     public CrdiWorkRes toDto() {
         return CrdiWorkRes.builder()
                 .crdiWorkSeq(seq)
+                .crdiEmail(crdiEmail)
                 .explanation(explanation)
                 .imagePathUrl(imagePathUrl)
                 .weight(weight)
