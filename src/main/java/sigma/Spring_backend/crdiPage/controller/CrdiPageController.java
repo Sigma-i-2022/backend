@@ -33,7 +33,7 @@ public class CrdiPageController {
 	@ApiOperation(value = "코디네이터 작품 등록", notes = "코디네이터의 작품을 등록합니다.")
 	public CommonResult registCrdiWork(
 			@ApiParam(value = "코데네이터 작품 요청 객체") @ModelAttribute CrdiWorkReq crdiWorkReq,
-			@ApiParam(value = "이미지 파일") @RequestParam String uuid
+			@ApiParam(value = "이미지 파일", required = true) @RequestParam String uuid
 	) {
 		try {
 			crdiPageService.registCrdiWork(crdiWorkReq, uuid);

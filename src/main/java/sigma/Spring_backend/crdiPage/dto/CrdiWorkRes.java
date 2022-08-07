@@ -10,6 +10,7 @@ import lombok.Data;
 public class CrdiWorkRes {
 
     private Long crdiWorkSeq;
+    private String crdiEmail;
     private String explanation;
     private String imagePathUrl;
     private String weight;

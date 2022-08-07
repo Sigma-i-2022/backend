@@ -13,7 +13,6 @@ public class MemberResponseDto {
     private Long userSeq;
     private String userId;
     private String email;
-    private String password;
     private String signupType;
     private String activateYn;
     private String crdiYn;
