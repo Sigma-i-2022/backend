@@ -19,7 +19,7 @@ public class CrdiWork {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String crdiEmail;
 
     @Column(nullable = false)
