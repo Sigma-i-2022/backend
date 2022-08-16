@@ -1,5 +1,0 @@
-openapi:
-  client_id: 460a4b9a-687e-44d6-839c-875c6b5d8eb7
-  client_secret: 0312e03a-35c9-45f9-a639-67fd60313bec
-  call_back_url: http://localhost:9090/v1/api/openapi/callback
-  agent_code: M202200352
