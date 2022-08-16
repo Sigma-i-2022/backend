@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="sigmadb@sigma-db.cplnqa02qixm.ap-northeast-2.rds.amazonaws.com" uuid="caaf11df-e8a8-46e6-9b19-56a9cddb604a">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://sigma-db.cplnqa02qixm.ap-northeast-2.rds.amazonaws.com:3306/sigmadb</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+  </component>
+</project>
