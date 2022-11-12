@@ -7,6 +7,8 @@
 
 .idea
 .gradle
+.idea/**
+.gradle/**
 
 # User-specific stuff
 .idea/**/workspace.xml
