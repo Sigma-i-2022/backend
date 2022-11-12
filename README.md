@@ -2,7 +2,7 @@
 
 > 역할:  Spring Boot 백엔드
 >
-> 기간: 2021.12 ~ 2021.06
+> 기간: 2021.12 ~ 2022.06
 > 
 > 깃허브: https://github.com/Sigma-i-2022/backend
 
